@@ -1,0 +1,3031 @@
+[
+  {
+    "repo": "data-science-pipelines-operator",
+    "repo_path": "/tmp/agentready-scan/data-science-pipelines-operator",
+    "timestamp": "2026-03-06T17:59:34.039757",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 100,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.yaml",
+          "Has reproduction steps",
+          "Has expected/actual behavior fields",
+          "Has environment/version fields",
+          "Has log/error output fields",
+          "YAML template with required fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Good logging coverage (20/50 sampled files)",
+          "Error wrapping patterns (10 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 90,
+        "evidence": [
+          "Average file: 197 lines (53 source files, generated excluded)",
+          "Files >500 lines: 3 (6%)",
+          "Largest: dspipeline_params.go (907L), dspipeline_controller.go (819L), storage_test.go (562L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "1/54 files are generated (2%)",
+          "Examples: zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 85,
+        "evidence": [
+          "26 test files / 27 source files (ratio: 0.96)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 90,
+        "evidence": [
+          "Makefile targets: test, unittest, functest",
+          "Multiple test types available"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 3 CI workflow(s): functests.yml, nightly_tests.yml, unittests.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 85,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: precommit.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No contributing/development guide found"
+        ],
+        "recommendation": "Add CONTRIBUTING.md with build, test, and debug instructions."
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 85,
+        "evidence": [
+          "~60% unit tests, ~40% infra-dependent (12/20 sampled)",
+          "Makefile separates unit and integration test targets"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go",
+      "Python"
+    ],
+    "verify_gate": null,
+    "overall_score": 80.5,
+    "verify_avg": 86.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "feast",
+    "repo_path": "/tmp/agentready-scan/feast",
+    "timestamp": "2026-03-06T17:59:34.166672",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "CLAUDE.md found (5/7 quality keywords)",
+          "claude.md found (5/7 quality keywords)"
+        ],
+        "recommendation": null
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 90,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.md",
+          "Has reproduction steps",
+          "Has expected/actual behavior fields",
+          "Has environment/version fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (logr) found in go.mod",
+          "Go structured logging (zerolog) found in go.mod",
+          "Error wrapping patterns (8 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 198 lines (1040 source files, generated excluded)",
+          "Files >500 lines: 98 (9%)",
+          "Largest: feature_store.py (3288L), ray.py (2370L), test_search_api.py (2290L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "2/1190 files are generated (0%)",
+          "Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "CODEOWNERS found (CODEOWNERS) with 18 rules"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 50,
+        "evidence": [
+          "339 test files / 849 source files (ratio: 0.40)"
+        ],
+        "recommendation": "Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files."
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 80,
+        "evidence": [
+          "Makefile targets: test, infra/feast-operator/test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 13 CI workflow(s): release.yml, pr_registration_integration_tests.yml, pr_local_integration_tests.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 70,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: linter.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 50,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "0/6 development keywords"
+        ],
+        "recommendation": "Add CONTRIBUTING.md with build, test, and debug instructions."
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~100% unit tests, ~0% infra-dependent (30/30 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Python",
+      "TypeScript",
+      "Go",
+      "Java",
+      "JavaScript"
+    ],
+    "verify_gate": null,
+    "overall_score": 78.6,
+    "verify_avg": 78.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "kserve",
+    "repo_path": "/tmp/agentready-scan/kserve",
+    "timestamp": "2026-03-06T17:59:34.948046",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 80,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.md",
+          "Has reproduction steps",
+          "Has environment/version fields",
+          "Has log/error output fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Error wrapping patterns (7 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 292 lines (877 source files, generated excluded)",
+          "Files >500 lines: 124 (14%)",
+          "Largest: rawkube_controller_test.go (10372L), storage_initializer_injector_test.go (5443L), controller_test.go (5032L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "111/1005 files are generated (11%)",
+          "Examples: api_def.pb.go, graph.pb.go, step_stats.pb.go, function.pb.go, tensor_shape.pb.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 85,
+        "evidence": [
+          "411 test files / 483 source files (ratio: 0.85)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 90,
+        "evidence": [
+          "Makefile targets: test, tools/tf2openapi/test, python/xgbserver/test, python/aiffairness/test, python/lgbserver/test, python/paddleserver/test, python/kserve/test, python/huggingfaceserver/test, python/custom_model/test, python/predictiveserver/test, python/custom_transformer/test, python/pmmlserver/test, python/artexplainer/test, python/sklearnserver/test",
+          "Multiple test types available"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile",
+          "Coverage in CI workflow: go.yml"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 3 CI workflow(s): go.yml, python-test.yml, e2e-test-llmisvc.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 40,
+        "evidence": [
+          "Lint targets in Makefile (but not confirmed in CI)"
+        ],
+        "recommendation": "Add a linting step (golangci-lint, eslint, ruff) to your CI pipeline."
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 60,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "1/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~90% unit tests, ~10% infra-dependent (27/30 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Python",
+      "Go"
+    ],
+    "verify_gate": null,
+    "overall_score": 76.8,
+    "verify_avg": 87.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "kubeflow",
+    "repo_path": "/tmp/agentready-scan/kubeflow",
+    "timestamp": "2026-03-06T17:59:35.594121",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 15,
+        "evidence": [
+          "Issue templates exist (1) but no dedicated bug template"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "Good logging coverage (22/50 sampled files)",
+          "Error wrapping patterns (15 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 50,
+        "evidence": [
+          "Average file: 320 lines (50 source files, generated excluded)",
+          "Files >500 lines: 11 (22%)",
+          "Largest: notebook_controller_test.go (1971L), notebook_webhook.go (894L), notebook_dspa_secret_test.go (888L)"
+        ],
+        "recommendation": "Break large files (>500 lines) into smaller, focused modules. Exclude generated files from linting."
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "3/53 files are generated (6%)",
+          "Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 85,
+        "evidence": [
+          "20 test files / 30 source files (ratio: 0.67)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 90,
+        "evidence": [
+          "Makefile targets: components/odh-notebook-controller/test, components/odh-notebook-controller/e2e-test, components/notebook-controller/test",
+          "Multiple test types available"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 60,
+        "evidence": [
+          "Coverage in CI workflow: notebook_controller_unit_test.yaml"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 2 CI workflow(s): notebook_controller_unit_test.yaml, odh_notebook_controller_unit_test.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No PR template found"
+        ],
+        "recommendation": "Add .github/PULL_REQUEST_TEMPLATE.md with a testing checklist."
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: code-quality.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 50,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "0/6 development keywords"
+        ],
+        "recommendation": "Add CONTRIBUTING.md with build, test, and debug instructions."
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "~69% unit tests, ~31% infra-dependent (11/16 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go"
+    ],
+    "verify_gate": null,
+    "overall_score": 64.8,
+    "verify_avg": 81.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "kuberay",
+    "repo_path": "/tmp/agentready-scan/kuberay",
+    "timestamp": "2026-03-06T17:59:35.677000",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 95,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug-report.yml",
+          "Has reproduction steps",
+          "Has expected/actual behavior fields",
+          "Has log/error output fields",
+          "YAML template with required fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Go structured logging (zerolog) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Some logging (10/50 sampled files)",
+          "Error wrapping patterns (9 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 227 lines (346 source files, generated excluded)",
+          "Files >500 lines: 38 (11%)",
+          "Largest: raycluster_controller_unit_test.go (3811L), raycluster_controller.go (2053L), pod_test.go (1954L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 60,
+        "evidence": [
+          "78/425 files are generated (18%)",
+          "Examples: config_grpc.pb.go, job_submission.pb.gw.go, serve.pb.gw.go, config.pb.gw.go, cluster.pb.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "CODEOWNERS found (.github/CODEOWNERS) with 1 rules (sparse)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 85,
+        "evidence": [
+          "154 test files / 193 source files (ratio: 0.80)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 90,
+        "evidence": [
+          "Makefile targets: ray-operator/test, ray-operator/test, ray-operator/test, apiserver/test, apiserver/e2e-test, apiserversdk/test, apiserversdk/test, apiserversdk/test",
+          "Multiple test types available"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No coverage configuration found"
+        ],
+        "recommendation": "Configure coverage reporting (e.g., -coverprofile for Go, pytest-cov for Python) and add a Codecov or Coveralls integration."
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 5 CI workflow(s): odh-release.yml, image-release.yaml, e2e-tests.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: helm.yaml, test-job.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "2/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 50,
+        "evidence": [
+          "~41% unit tests, ~59% infra-dependent (11/27 sampled)"
+        ],
+        "recommendation": "Separate unit tests (no external deps) from integration/e2e tests using build tags or directory structure."
+      }
+    },
+    "languages": [
+      "Go",
+      "Python",
+      "TypeScript"
+    ],
+    "verify_gate": null,
+    "overall_score": 74.5,
+    "verify_avg": 65.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "llama-stack-k8s-operator",
+    "repo_path": "/tmp/agentready-scan/llama-stack-k8s-operator",
+    "timestamp": "2026-03-06T17:59:35.939053",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 15,
+        "evidence": [
+          "Issue templates exist (4) but no dedicated bug template"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Good logging coverage (19/44 sampled files)",
+          "Error wrapping patterns (17 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 50,
+        "evidence": [
+          "Average file: 284 lines (44 source files, generated excluded)",
+          "Files >500 lines: 10 (23%)",
+          "Largest: llamastackdistribution_controller.go (1927L), resource_helper_test.go (1056L), llamastackdistribution_controller_test.go (990L)"
+        ],
+        "recommendation": "Break large files (>500 lines) into smaller, focused modules. Exclude generated files from linting."
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "1/45 files are generated (2%)",
+          "Examples: zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "CODEOWNERS found (.github/CODEOWNERS) with 1 rules (sparse)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 100,
+        "evidence": [
+          "23 test files / 21 source files (ratio: 1.10)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile",
+          "Coverage in CI workflow: code-coverage.yml"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 3 CI workflow(s): run-e2e-test.yml, generate-release.yml, code-coverage.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No PR template found"
+        ],
+        "recommendation": "Add .github/PULL_REQUEST_TEMPLATE.md with a testing checklist."
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: pre-commit.yml, generate-release.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "5/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 50,
+        "evidence": [
+          "~45% unit tests, ~55% infra-dependent (9/20 sampled)"
+        ],
+        "recommendation": "Separate unit tests (no external deps) from integration/e2e tests using build tags or directory structure."
+      }
+    },
+    "languages": [
+      "Go"
+    ],
+    "verify_gate": null,
+    "overall_score": 68.0,
+    "verify_avg": 78.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "maas-billing",
+    "repo_path": "/tmp/agentready-scan/maas-billing",
+    "timestamp": "2026-03-06T17:59:36.000252",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 0,
+        "evidence": [
+          "No .github/ISSUE_TEMPLATE/ directory"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Some logging (15/50 sampled files)",
+          "Error wrapping patterns (16 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 90,
+        "evidence": [
+          "Average file: 183 lines (83 source files, generated excluded)",
+          "Files >500 lines: 9 (11%)",
+          "Largest: handler_test.go (1149L), test_subscription.py (697L), maasauthpolicy_controller.go (680L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "2/85 files are generated (2%)",
+          "Examples: zz_generated.deepcopy.go, store_mock.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 85,
+        "evidence": [
+          "32 test files / 51 source files (ratio: 0.63)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 80,
+        "evidence": [
+          "Makefile targets: maas-controller/test, maas-api/test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 60,
+        "evidence": [
+          "Coverage in CI workflow: maas-api-ci.yml"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 1 CI workflow(s): maas-api-ci.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No PR template found"
+        ],
+        "recommendation": "Add .github/PULL_REQUEST_TEMPLATE.md with a testing checklist."
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: maas-api-ci.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "5/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~96% unit tests, ~4% infra-dependent (25/26 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go",
+      "Python"
+    ],
+    "verify_gate": null,
+    "overall_score": 68.0,
+    "verify_avg": 83.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "mlflow-operator",
+    "repo_path": "/tmp/agentready-scan/mlflow-operator",
+    "timestamp": "2026-03-06T17:59:36.110242",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "AGENTS.md found (5/7 quality keywords)",
+          "Agents.md found (5/7 quality keywords)",
+          "agents.md found (5/7 quality keywords)"
+        ],
+        "recommendation": null
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 0,
+        "evidence": [
+          "No .github/ISSUE_TEMPLATE/ directory"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Some logging (6/50 sampled files)",
+          "Error wrapping patterns (16 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 197 lines (50 source files, generated excluded)",
+          "Files >500 lines: 5 (10%)",
+          "Largest: helm_test.go (1735L), deploy.py (1010L), mlflow_controller.go (532L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "2/52 files are generated (4%)",
+          "Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 85,
+        "evidence": [
+          "24 test files / 26 source files (ratio: 0.92)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 3 CI workflow(s): test.yml, integration-tests.yml, test-e2e.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No PR template found"
+        ],
+        "recommendation": "Add .github/PULL_REQUEST_TEMPLATE.md with a testing checklist."
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: lint.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 40,
+        "evidence": [
+          "README has development sections: Getting Started"
+        ],
+        "recommendation": "Add CONTRIBUTING.md with build, test, and debug instructions."
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~89% unit tests, ~11% infra-dependent (8/9 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Python",
+      "Go"
+    ],
+    "verify_gate": null,
+    "overall_score": 68.8,
+    "verify_avg": 83.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "model-registry-operator",
+    "repo_path": "/tmp/agentready-scan/model-registry-operator",
+    "timestamp": "2026-03-06T17:59:36.179100",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 85,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.md",
+          "Has reproduction steps",
+          "Has expected/actual behavior fields",
+          "Has log/error output fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Good logging coverage (16/38 sampled files)",
+          "Error wrapping patterns (14 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 308 lines (38 source files, generated excluded)",
+          "Files >500 lines: 6 (16%)",
+          "Largest: modelcatalog_controller_test.go (1379L), modelregistry_controller_test.go (1236L), modelcatalog_controller.go (1159L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "3/41 files are generated (7%)",
+          "Examples: zz_generated.deepcopy.go, zz_generated.conversion.go, zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No CODEOWNERS or OWNERS file"
+        ],
+        "recommendation": "Create a .github/CODEOWNERS file mapping directories to team members for automated PR review assignment."
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 70,
+        "evidence": [
+          "13 test files / 25 source files (ratio: 0.52)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 1 CI workflow(s): build.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 85,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 40,
+        "evidence": [
+          "Lint targets in Makefile (but not confirmed in CI)"
+        ],
+        "recommendation": "Add a linting step (golangci-lint, eslint, ruff) to your CI pipeline."
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 40,
+        "evidence": [
+          "README has development sections: Getting Started, Build, Contribut"
+        ],
+        "recommendation": "Add CONTRIBUTING.md with build, test, and debug instructions."
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "~54% unit tests, ~46% infra-dependent (7/13 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go"
+    ],
+    "verify_gate": null,
+    "overall_score": 68.7,
+    "verify_avg": 76.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "notebooks",
+    "repo_path": "/tmp/agentready-scan/notebooks",
+    "timestamp": "2026-03-06T17:59:36.247488",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "AGENTS.md found (6/7 quality keywords)",
+          "Agents.md found (6/7 quality keywords)",
+          "agents.md found (6/7 quality keywords)"
+        ],
+        "recommendation": null
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 80,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.md",
+          "Has reproduction steps",
+          "Has environment/version fields",
+          "Has log/error output fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No structured logging detected"
+        ],
+        "recommendation": "Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python) and wrap errors with context."
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 197 lines (15 source files, generated excluded)",
+          "Files >500 lines: 1 (7%)",
+          "Largest: konflux_generate_component_build_pipelines.py (866L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "0/17 files are generated (0%)"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 50,
+        "evidence": [
+          "3 test files / 14 source files (ratio: 0.21)"
+        ],
+        "recommendation": "Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files."
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No coverage configuration found"
+        ],
+        "recommendation": "Configure coverage reporting (e.g., -coverprofile for Go, pytest-cov for Python) and add a Codecov or Coveralls integration."
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 2 CI workflow(s): build-notebooks-TEMPLATE.yaml, code-quality.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: software-versions.yaml, notebooks-digest-updater.yaml, pr-merge-image-delete.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "4/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~100% unit tests, ~0% infra-dependent (2/2 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Python"
+    ],
+    "verify_gate": null,
+    "overall_score": 69.9,
+    "verify_avg": 62.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "odh-dashboard",
+    "repo_path": "/tmp/agentready-scan/odh-dashboard",
+    "timestamp": "2026-03-06T17:59:36.341185",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "CLAUDE.md found (4/7 quality keywords)",
+          "claude.md found (4/7 quality keywords)",
+          "AGENTS.md found (4/7 quality keywords)",
+          "Agents.md found (4/7 quality keywords)",
+          "agents.md found (4/7 quality keywords)"
+        ],
+        "recommendation": null
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 100,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.yaml",
+          "Has reproduction steps",
+          "Has expected/actual behavior fields",
+          "Has environment/version fields",
+          "Has log/error output fields",
+          "YAML template with required fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Some logging (7/50 sampled files)",
+          "Error wrapping patterns (7 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 90,
+        "evidence": [
+          "Average file: 117 lines (5474 source files, generated excluded)",
+          "Files >500 lines: 166 (3%)",
+          "Largest: mockPipelineSpec.ts (5220L), modelServingDeploy.cy.ts (2747L), workbench.cy.ts (2568L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "46/5529 files are generated (1%)",
+          "Examples: maas_models_mock.go, http_mock.go, token_k8s_client_mock.go, internal_k8s_client_mock.go, mock_factory.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 50,
+        "evidence": [
+          "1076 test files / 4407 source files (ratio: 0.24)"
+        ],
+        "recommendation": "Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files."
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: packages/maas/test",
+          "npm test script defined"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 60,
+        "evidence": [
+          "Codecov configured",
+          "Coverage in CI workflow: test.yml"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 3 CI workflow(s): test.yml, gen-ai-frontend-build.yml, maas-bff-tests.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: gen-ai-bff-build.yml, maas-bff-tests.yml, modular-arch-quality-gates.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "4/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~89% unit tests, ~11% infra-dependent (24/27 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "TypeScript",
+      "Go",
+      "JavaScript"
+    ],
+    "verify_gate": null,
+    "overall_score": 80.4,
+    "verify_avg": 74.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "odh-gitops",
+    "repo_path": "/tmp/agentready-scan/odh-gitops",
+    "timestamp": "2026-03-06T17:59:38.666243",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 0,
+        "evidence": [
+          "No .github/ISSUE_TEMPLATE/ directory"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No structured logging detected"
+        ],
+        "recommendation": "Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python) and wrap errors with context."
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 0,
+        "evidence": [
+          "No source files found (config-only repo?)"
+        ],
+        "recommendation": "Break large files (>500 lines) into smaller, focused modules. Exclude generated files from linting."
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "No source files (not applicable)"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No CODEOWNERS or OWNERS file"
+        ],
+        "recommendation": "Create a .github/CODEOWNERS file mapping directories to team members for automated PR review assignment."
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 0,
+        "evidence": [
+          "No source files found (config-only repo?)"
+        ],
+        "recommendation": "Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files."
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 0,
+        "evidence": [
+          "No obvious one-command test execution found"
+        ],
+        "recommendation": "Add a 'make test' or 'make unittest' target that runs unit tests without external dependencies."
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No coverage configuration found"
+        ],
+        "recommendation": "Configure coverage reporting (e.g., -coverprofile for Go, pytest-cov for Python) and add a Codecov or Coveralls integration."
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 30,
+        "evidence": [
+          "CI triggers on PRs but no test step found"
+        ],
+        "recommendation": "Ensure CI workflows triggered by pull_request events include a step that runs tests."
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: helm.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "4/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No test files found"
+        ],
+        "recommendation": "Separate unit tests (no external deps) from integration/e2e tests using build tags or directory structure."
+      }
+    },
+    "languages": [
+      "Unknown"
+    ],
+    "verify_gate": "severe (x0.47) - verify avg 6/100",
+    "overall_score": 9.2,
+    "verify_avg": 6.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "odh-model-controller",
+    "repo_path": "/tmp/agentready-scan/odh-model-controller",
+    "timestamp": "2026-03-06T17:59:38.714464",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 0,
+        "evidence": [
+          "No .github/ISSUE_TEMPLATE/ directory"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Good logging coverage (24/50 sampled files)",
+          "Error wrapping patterns (14 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 209 lines (138 source files, generated excluded)",
+          "Files >500 lines: 12 (9%)",
+          "Largest: llm_inferenceservice_controller_test.go (1526L), configmap_handler_test.go (999L), inferenceservice_controller_test.go (947L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "1/139 files are generated (1%)",
+          "Examples: zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 70,
+        "evidence": [
+          "45 test files / 93 source files (ratio: 0.48)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 2 CI workflow(s): test.yml, test-e2e.yml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 85,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: lint.yml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 40,
+        "evidence": [
+          "README has development sections: Getting Started, Develop, Contribut"
+        ],
+        "recommendation": "Add CONTRIBUTING.md with build, test, and debug instructions."
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~70% unit tests, ~30% infra-dependent (21/30 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go"
+    ],
+    "verify_gate": null,
+    "overall_score": 64.2,
+    "verify_avg": 80.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "opendatahub-operator",
+    "repo_path": "/tmp/agentready-scan/opendatahub-operator",
+    "timestamp": "2026-03-06T17:59:38.814092",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 45,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.md",
+          "Has environment/version fields"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Some logging (9/50 sampled files)",
+          "Error wrapping patterns (14 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 201 lines (526 source files, generated excluded)",
+          "Files >500 lines: 50 (10%)",
+          "Largest: mutating_test.go (2768L), monitoring_test.go (2278L), test_context_test.go (2099L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "15/541 files are generated (3%)",
+          "Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 70,
+        "evidence": [
+          "186 test files / 340 source files (ratio: 0.55)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 90,
+        "evidence": [
+          "Makefile targets: test, unit-test, e2e-test, e2e-test",
+          "Multiple test types available"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Codecov configured",
+          "Go coverage flags in Makefile",
+          "Coverage in CI workflow: security-full-scan.yml"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 4 CI workflow(s): test-gateway-integration.yaml, test-unit.yaml, test-unit-cli.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: security-full-scan.yml, test-linter.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "3/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 50,
+        "evidence": [
+          "~48% unit tests, ~52% infra-dependent (12/25 sampled)"
+        ],
+        "recommendation": "Separate unit tests (no external deps) from integration/e2e tests using build tags or directory structure."
+      }
+    },
+    "languages": [
+      "Go",
+      "JavaScript",
+      "Python"
+    ],
+    "verify_gate": null,
+    "overall_score": 72.0,
+    "verify_avg": 76.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "spark-operator",
+    "repo_path": "/tmp/agentready-scan/spark-operator",
+    "timestamp": "2026-03-06T17:59:39.140531",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 100,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.yaml",
+          "Has reproduction steps",
+          "Has expected/actual behavior fields",
+          "Has environment/version fields",
+          "YAML template with required fields"
+        ],
+        "recommendation": null
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Some logging (13/50 sampled files)",
+          "Error wrapping patterns (15 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 215 lines (128 source files, generated excluded)",
+          "Files >500 lines: 10 (8%)",
+          "Largest: sparkpod_defaulter_test.go (2351L), controller.go (1472L), controller_test.go (1440L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 60,
+        "evidence": [
+          "27/155 files are generated (17%)",
+          "Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go, factory.go, generic.go, factory_interfaces.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 70,
+        "evidence": [
+          "37 test files / 91 source files (ratio: 0.41)"
+        ],
+        "recommendation": null
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 80,
+        "evidence": [
+          "Makefile targets: unit-test, e2e-test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 2 CI workflow(s): openshift-docling-e2e.yaml, integration.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 100,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Mentions testing",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: integration.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 50,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "0/6 development keywords"
+        ],
+        "recommendation": "Add CONTRIBUTING.md with build, test, and debug instructions."
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~90% unit tests, ~10% infra-dependent (26/29 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go",
+      "Python"
+    ],
+    "verify_gate": null,
+    "overall_score": 75.9,
+    "verify_avg": 82.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "trainer",
+    "repo_path": "/tmp/agentready-scan/trainer",
+    "timestamp": "2026-03-06T17:59:39.274027",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 55,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.yaml",
+          "Has environment/version fields",
+          "YAML template with required fields"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Error wrapping patterns (8 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 90,
+        "evidence": [
+          "Average file: 142 lines (528 source files, generated excluded)",
+          "Files >500 lines: 16 (3%)",
+          "Largest: framework_test.go (2625L), trainingruntime_test.go (1865L), progression_test.go (1764L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "34/566 files are generated (6%)",
+          "Examples: zz_generated.defaults.go, zz_generated.deepcopy.go, zz_generated.openapi.go, zz_generated.defaults.go, zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 25,
+        "evidence": [
+          "66 test files / 466 source files (ratio: 0.14)"
+        ],
+        "recommendation": "Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files."
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 100,
+        "evidence": [
+          "CI runs tests on pull requests",
+          "Tests found in 5 CI workflow(s): test-rust.yaml, test-go.yaml, test-e2e.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 70,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: test-go.yaml, test-python.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "4/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "~96% unit tests, ~4% infra-dependent (26/27 sampled)",
+          "Makefile separates unit and integration test targets"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Python",
+      "Go",
+      "Rust"
+    ],
+    "verify_gate": null,
+    "overall_score": 65.8,
+    "verify_avg": 73.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "training-operator",
+    "repo_path": "/tmp/agentready-scan/training-operator",
+    "timestamp": "2026-03-06T17:59:39.540103",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 55,
+        "evidence": [
+          "Found: .github/ISSUE_TEMPLATE/bug_report.yaml",
+          "Has environment/version fields",
+          "YAML template with required fields"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Error wrapping patterns (12 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 90,
+        "evidence": [
+          "Average file: 187 lines (254 source files, generated excluded)",
+          "Files >500 lines: 18 (7%)",
+          "Largest: training_client_test.py (1995L), training_client.py (1558L), mpijob_controller.go (1400L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 60,
+        "evidence": [
+          "69/326 files are generated (21%)",
+          "Examples: zz_generated.defaults.go, openapi_generated.go, zz_generated.deepcopy.go, factory.go, generic.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 60,
+        "evidence": [
+          "OWNERS file found (Kubernetes-style)"
+        ],
+        "recommendation": null
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 50,
+        "evidence": [
+          "67 test files / 190 source files (ratio: 0.35)"
+        ],
+        "recommendation": "Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files."
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 70,
+        "evidence": [
+          "Makefile targets: test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 70,
+        "evidence": [
+          "CI has PR triggers and test steps, but in separate workflows",
+          "Tests found in 4 CI workflow(s): unittests.yaml, test-python.yaml, integration-tests.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 70,
+        "evidence": [
+          "PR template found: .github/PULL_REQUEST_TEMPLATE.md",
+          "Has checklist items",
+          "Mentions review"
+        ],
+        "recommendation": null
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: test-go.yaml, pre-commit.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "4/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~87% unit tests, ~13% infra-dependent (26/30 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go",
+      "Python"
+    ],
+    "verify_gate": null,
+    "overall_score": 65.6,
+    "verify_avg": 70.0,
+    "agentready_score": null,
+    "agentready_level": null
+  },
+  {
+    "repo": "trustyai-service-operator",
+    "repo_path": "/tmp/agentready-scan/trustyai-service-operator",
+    "timestamp": "2026-03-06T17:59:39.737156",
+    "checks": {
+      "agent_context": {
+        "name": "AI Context Files",
+        "category": "Understand",
+        "weight": 5,
+        "score": 0,
+        "evidence": [
+          "No AI context files found (CLAUDE.md, AGENTS.md, etc.)"
+        ],
+        "recommendation": "Create a CLAUDE.md or AGENTS.md at the repo root describing architecture, how to build, test, and debug."
+      },
+      "bug_template": {
+        "name": "Bug Report Template Quality",
+        "category": "Understand",
+        "weight": 12,
+        "score": 0,
+        "evidence": [
+          "No .github/ISSUE_TEMPLATE/ directory"
+        ],
+        "recommendation": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs."
+      },
+      "structured_logging": {
+        "name": "Structured Logging / Errors",
+        "category": "Understand",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "Go structured logging (zap) found in go.mod",
+          "Go structured logging (logr) found in go.mod",
+          "Kubernetes-style logging (klog) found in go.mod",
+          "Some logging (15/50 sampled files)",
+          "Error wrapping patterns (5 files)"
+        ],
+        "recommendation": null
+      },
+      "code_navigability": {
+        "name": "Code Navigability",
+        "category": "Navigate",
+        "weight": 8,
+        "score": 70,
+        "evidence": [
+          "Average file: 242 lines (131 source files, generated excluded)",
+          "Files >500 lines: 15 (11%)",
+          "Largest: lmevaljob_controller_test.go (4373L), lmevaljob_controller_validation_test.go (1798L), unit_test.go (1680L)"
+        ],
+        "recommendation": null
+      },
+      "generated_code": {
+        "name": "Generated Code Ratio",
+        "category": "Navigate",
+        "weight": 5,
+        "score": 100,
+        "evidence": [
+          "6/137 files are generated (4%)",
+          "Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go"
+        ],
+        "recommendation": null
+      },
+      "codeowners": {
+        "name": "Code Ownership (CODEOWNERS)",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No CODEOWNERS or OWNERS file"
+        ],
+        "recommendation": "Create a .github/CODEOWNERS file mapping directories to team members for automated PR review assignment."
+      },
+      "test_ratio": {
+        "name": "Test-to-Source Ratio",
+        "category": "Verify",
+        "weight": 17,
+        "score": 50,
+        "evidence": [
+          "33 test files / 98 source files (ratio: 0.34)"
+        ],
+        "recommendation": "Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files."
+      },
+      "test_execution": {
+        "name": "One-Command Test Execution",
+        "category": "Verify",
+        "weight": 12,
+        "score": 80,
+        "evidence": [
+          "Makefile targets: test, tests/test"
+        ],
+        "recommendation": null
+      },
+      "coverage_config": {
+        "name": "Coverage Configuration",
+        "category": "Verify",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Go coverage flags in Makefile"
+        ],
+        "recommendation": null
+      },
+      "ci_runs_tests": {
+        "name": "CI Runs Tests on PRs",
+        "category": "Verify",
+        "weight": 10,
+        "score": 70,
+        "evidence": [
+          "CI has PR triggers and test steps, but in separate workflows",
+          "Tests found in 1 CI workflow(s): controller-tests.yaml"
+        ],
+        "recommendation": null
+      },
+      "pr_template": {
+        "name": "PR Template",
+        "category": "Submit",
+        "weight": 3,
+        "score": 0,
+        "evidence": [
+          "No PR template found"
+        ],
+        "recommendation": "Add .github/PULL_REQUEST_TEMPLATE.md with a testing checklist."
+      },
+      "linting_in_ci": {
+        "name": "Linting / Formatting in CI",
+        "category": "Submit",
+        "weight": 5,
+        "score": 80,
+        "evidence": [
+          "Linting in CI: lint-yaml.yaml"
+        ],
+        "recommendation": null
+      },
+      "contributing_guide": {
+        "name": "Contributing / Dev Guide",
+        "category": "Submit",
+        "weight": 5,
+        "score": 70,
+        "evidence": [
+          "Found: CONTRIBUTING.md",
+          "2/6 development keywords"
+        ],
+        "recommendation": null
+      },
+      "test_isolation": {
+        "name": "Test Isolation (unit vs e2e)",
+        "category": "Verify",
+        "weight": 5,
+        "score": 90,
+        "evidence": [
+          "~70% unit tests, ~30% infra-dependent (21/30 sampled)"
+        ],
+        "recommendation": null
+      }
+    },
+    "languages": [
+      "Go"
+    ],
+    "verify_gate": null,
+    "overall_score": 55.7,
+    "verify_avg": 72.0,
+    "agentready_score": null,
+    "agentready_level": null
+  }
+]
