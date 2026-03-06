@@ -1,16 +1,131 @@
 repo,overall_score,level,verify_avg,verify_gate,languages,AI Context Files,Bug Report Template Quality,Structured Logging / Errors,Code Navigability,Generated Code Ratio,Code Ownership (CODEOWNERS),Test-to-Source Ratio,One-Command Test Execution,Coverage Configuration,CI Runs Tests on PRs,PR Template,Linting / Formatting in CI,Contributing / Dev Guide,Test Isolation (unit vs e2e)
 data-science-pipelines-operator,80,Ready,86.0,,Go;Python,0,100,100,90,100,60,85,90,70,100,85,80,0,85
+odh-dashboard,80,Ready,74.0,,TypeScript;Go;JavaScript,100,100,70,90,100,60,50,70,60,100,100,80,90,90
+feast,79,Partially Ready,78.0,,Python;TypeScript;Go;Java;JavaScript,100,90,90,70,100,100,50,80,70,100,70,80,50,90
 kube-auth-proxy,78,Partially Ready,74.0,,Go;JavaScript,0,100,90,90,100,100,100,80,70,30,85,80,50,90
-odh-dashboard,75,Partially Ready,78.0,,TypeScript;JavaScript;Go,0,100,20,90,100,60,50,90,60,100,100,80,90,90
+modelmesh-serving,78,Partially Ready,84.0,,Go;Python,0,100,100,70,80,60,70,90,70,100,85,80,50,90
+eval-hub,78,Partially Ready,66.0,,Go;Python,100,90,100,90,100,60,70,70,70,30,85,80,100,90
+kserve,77,Partially Ready,87.0,,Python;Go,0,80,90,70,80,60,85,90,70,100,100,40,60,90
+spark-operator,76,Partially Ready,82.0,,Go;Python,0,100,90,70,60,60,70,80,70,100,100,80,50,90
 kuberay,74,Partially Ready,65.0,,Go;Python;TypeScript,0,95,90,70,60,60,85,90,0,100,100,80,70,50
-agentready-audit,72,Partially Ready,74.0,,Python,100,75,90,70,100,0,50,70,60,100,85,80,40,90
-opendatahub-operator,72,Partially Ready,76.0,,Go;Python;JavaScript,0,45,90,70,100,60,70,90,70,100,100,80,80,50
+model-registry,74,Partially Ready,80.0,,TypeScript;Go;Python;JavaScript,0,85,90,70,60,60,50,90,70,100,100,80,100,90
+argo-workflows,74,Partially Ready,78.0,,Go;Python;TypeScript;JavaScript,0,90,90,90,80,60,50,90,60,100,85,80,50,90
+litellm,74,Partially Ready,71.0,,Python;TypeScript;JavaScript,100,65,20,70,100,0,85,70,0,100,100,80,100,100
+llm-d-inference-scheduler,74,Partially Ready,69.0,,Go,0,70,100,90,100,60,85,70,0,100,0,80,100,90
+NeMo-Guardrails,74,Partially Ready,75.0,,Python;JavaScript,0,100,90,70,100,0,85,70,60,70,0,80,100,90
+data-science-pipelines,73,Partially Ready,62.0,,Python;TypeScript;Go;JavaScript,100,100,90,70,60,60,50,70,0,100,85,80,70,90
+workload-variant-autoscaler,72,Partially Ready,83.0,,Go,100,0,100,70,100,60,85,70,70,100,0,80,100,90
+opendatahub-operator,72,Partially Ready,76.0,,Go;JavaScript;Python,0,45,90,70,100,60,70,90,70,100,100,80,80,50
+opendatahub-tests,71,Partially Ready,70.0,,Python,100,65,20,70,100,100,100,60,0,100,85,0,50,90
+model-registry-bf4-kf,70,Partially Ready,80.0,,Go;Python,0,85,70,70,20,60,70,70,70,100,85,40,100,90
+notebooks,70,Partially Ready,62.0,,Python,100,80,0,70,100,60,50,70,0,100,100,80,90,90
+models-as-a-service,70,Partially Ready,83.0,,Go;Python,0,0,100,90,100,60,85,80,60,100,0,80,100,90
+mlflow-operator,69,Partially Ready,83.0,,Python;Go,100,0,90,70,100,60,85,70,70,100,0,80,40,90
+model-registry-operator,69,Partially Ready,76.0,,Go,0,85,100,70,80,0,70,70,70,100,85,40,40,70
+llama-stack-k8s-operator,68,Partially Ready,78.0,,Go,0,15,100,50,100,60,100,70,70,100,0,80,100,50
+trainer,66,Partially Ready,73.0,,Python;Go;Rust,0,55,90,90,80,60,25,70,70,100,70,80,90,100
+training-operator,66,Partially Ready,70.0,,Go;Python,0,55,90,90,60,60,50,70,70,70,70,80,90,90
+kubeflow,65,Partially Ready,81.0,,Go,0,15,100,50,80,60,85,90,60,100,0,80,50,70
 odh-model-controller,64,Partially Ready,80.0,,Go,0,0,100,70,100,60,70,70,70,100,85,80,40,90
-odh-platform-chaos,60,Partially Ready,69.0,,Go,0,0,100,90,100,0,85,70,0,100,0,80,40,90
-trustyai-service-operator,55,Needs Work,68.0,,Go,0,0,100,70,100,0,50,80,70,70,0,80,70,70
-operator-security-runtime,41,Needs Work,48.0,mild (x0.98) - verify avg 48/100,Go,0,0,100,70,100,0,70,80,0,0,0,0,0,90
-ai-code-analyst,39,Not Ready,52.0,,Python;TypeScript,0,0,20,50,100,0,10,60,0,100,0,80,40,90
+training-notebooks,64,Partially Ready,64.0,,Python;TypeScript;Go,0,80,20,50,100,60,70,60,0,100,0,80,90,90
+rhoai-mcp,63,Partially Ready,78.0,,Python,100,0,20,70,100,0,70,70,60,100,0,80,100,90
+odh-cli,63,Partially Ready,66.0,,Go,64,0,90,90,100,0,70,70,0,100,0,80,90,90
+modelmesh-runtime-adapter,62,Partially Ready,70.0,,Go,0,0,100,90,60,60,70,90,0,100,40,80,50,90
+trainer-sdk,62,Partially Ready,63.0,,Python;Go,0,55,90,90,80,60,25,70,70,60,70,80,100,90
+caikit-nlp-client,62,Partially Ready,82.0,,Python,0,0,70,70,100,0,100,60,60,100,0,80,40,90
+mlflow,61,Partially Ready,64.0,,Python;TypeScript;JavaScript;Java,100,15,20,50,100,60,70,60,0,100,0,80,100,90
+mcp-server-operator,61,Partially Ready,83.0,,Go,0,0,90,70,80,0,85,70,70,100,0,80,40,90
+kube-authkit,61,Partially Ready,78.0,,Python,0,0,20,70,100,0,100,60,60,100,0,80,90,70
+llm-d-kv-cache,60,Partially Ready,66.0,,Go;Python;C++,0,0,100,90,100,100,50,90,0,100,0,80,50,90
+MLServer,60,Partially Ready,69.0,,Python;JavaScript,0,0,20,90,100,60,85,70,0,100,0,80,80,90
+model-metadata-collection,60,Partially Ready,80.0,,Go,100,0,70,50,100,0,70,70,70,100,0,40,40,90
+llama-stack,60,Partially Ready,72.0,,Python;TypeScript;JavaScript,0,15,20,70,100,60,50,60,60,100,70,80,100,90
+rest-proxy,59,Needs Work,80.0,,Go,0,0,100,70,40,60,70,70,70,100,0,80,50,90
+caikit-nlp,59,Needs Work,52.0,,Python,0,100,70,70,100,60,70,0,0,100,0,0,90,90
+base-containers,59,Needs Work,58.0,,Python,100,0,20,90,100,0,100,0,0,100,0,80,100,90
+codeflare-operator,58,Needs Work,60.0,,Go,0,0,90,70,100,60,100,0,70,100,0,80,100,30
+elyra,57,Needs Work,74.0,,Python;TypeScript;JavaScript,0,15,70,70,100,0,50,70,60,100,0,80,50,90
+codeflare-operator-poc,56,Needs Work,60.0,,Go,0,0,90,50,100,60,100,0,70,100,0,80,100,30
+mod-arch-library,56,Needs Work,69.0,,TypeScript;Go;JavaScript,100,0,20,90,100,0,25,70,60,100,100,0,90,90
+trustyai-service-operator,56,Needs Work,72.0,,Go,0,0,90,70,100,0,50,80,70,70,0,80,70,90
+kubeflow-sdk,55,Needs Work,62.0,,Python,100,55,20,30,100,60,50,0,70,100,100,0,80,90
+trustyai-explainability,54,Needs Work,42.0,mild (x0.90) - verify avg 42/100,Java;Python,0,100,0,90,100,60,70,70,0,70,55,0,100,0
+vllm-tgis-adapter,54,Needs Work,72.0,,Python,0,0,20,90,100,60,50,60,60,100,0,80,40,90
+openvino_model_server,54,Needs Work,65.0,,C++;Python;Go;Java;C,0,15,20,70,100,60,85,0,50,100,85,0,90,90
+kueue,51,Needs Work,43.0,mild (x0.92) - verify avg 43/100,Go;JavaScript;Python,0,70,90,70,80,60,85,0,0,60,85,40,50,70
+batch-gateway,50,Needs Work,62.0,,Go,0,0,100,90,80,60,50,70,70,30,0,80,0,90
+vllm-gaudi,50,Needs Work,50.0,,Python;C++,0,15,20,70,100,60,70,60,0,30,40,80,50,90
+llama-stack-provider-ragas,48,Needs Work,58.0,,Python,0,0,20,90,100,0,50,60,60,30,0,80,90,90
+elyra-examples,47,Needs Work,47.0,mild (x0.96) - verify avg 47/100,Python,0,0,100,90,100,0,25,90,0,30,85,80,50,90
+openvino_contrib,47,Needs Work,48.0,mild (x0.98) - verify avg 48/100,C++;TypeScript;Python;Java;JavaScript,0,15,20,90,100,100,50,0,0,100,0,80,60,90
+elyra-pipeline-editor,46,Needs Work,66.0,,TypeScript;JavaScript,0,0,20,70,100,0,50,70,60,60,0,40,50,90
+odh-ide-extensions,46,Needs Work,56.0,,Python;TypeScript;JavaScript,0,0,0,90,100,60,50,70,0,70,0,40,40,90
+llama-stack-provider-trustyai-garak,45,Needs Work,72.0,,Python,0,0,20,70,100,0,50,60,60,100,0,0,0,90
+mlflow-go,44,Needs Work,52.0,,Go,0,0,100,50,60,0,70,0,0,100,0,80,40,90
+lm-evaluation-harness,44,Needs Work,55.0,,Python,0,0,20,70,100,60,25,0,60,100,0,80,90,90
+modelcar-base-image,44,Needs Work,55.0,,Python,0,0,20,90,100,0,85,70,0,30,0,0,0,90
+data-processing,43,Needs Work,55.0,,Python,0,0,20,70,100,60,25,60,0,100,0,80,0,90
+guardrails-detectors,42,Needs Work,55.0,,Python,0,0,20,70,100,0,85,0,0,100,0,0,40,90
+distributed-workloads,42,Needs Work,44.0,mild (x0.93) - verify avg 44/100,Go;Python,0,0,90,90,100,60,100,0,0,70,0,0,0,50
+llama-stack-client-python,38,Not Ready,41.0,mild (x0.89) - verify avg 41/100,Python,0,0,20,90,100,60,25,60,0,30,0,80,100,90
+openvino_tokenizers,38,Not Ready,48.0,mild (x0.98) - verify avg 48/100,C++;Python;JavaScript,0,15,20,70,100,0,50,0,0,100,0,0,40,90
+perf_analyzer,35,Not Ready,43.0,mild (x0.92) - verify avg 43/100,Python,0,0,20,90,100,0,25,0,0,100,0,80,40,90
+fips-compliance-checker-claude-code-plugin,34,Not Ready,38.0,mild (x0.86) - verify avg 38/100,Python,88,0,0,90,100,0,100,0,0,0,0,0,40,90
+fms-guardrails-orchestrator,33,Not Ready,30.0,mild (x0.76) - verify avg 30/100,Rust,0,100,0,30,100,60,50,0,0,100,0,0,70,0
+llama-stack-provider-kfp-trainer,29,Not Ready,43.0,mild (x0.92) - verify avg 43/100,Python,0,0,20,90,100,0,25,0,0,100,0,0,0,90
+caikit-tgis-serving,28,Not Ready,26.0,moderate (x0.71) - verify avg 26/100,Unknown,0,0,20,90,100,60,100,0,0,30,0,0,100,0
+rag,25,Not Ready,29.0,moderate (x0.75) - verify avg 29/100,Python;Go,0,0,20,70,100,60,25,0,0,30,0,80,90,90
+openvino.genai,22,Not Ready,20.0,moderate (x0.64) - verify avg 20/100,C,0,0,20,90,100,100,0,0,0,100,100,80,40,0
+client,22,Not Ready,29.0,moderate (x0.75) - verify avg 29/100,Python;Java,0,0,20,70,100,0,25,0,0,30,0,80,40,90
+ml-metadata,22,Not Ready,34.0,mild (x0.81) - verify avg 34/100,Python;Go,0,0,20,30,100,0,50,0,0,30,0,0,50,90
+modelmesh,22,Not Ready,23.0,moderate (x0.68) - verify avg 23/100,Java,0,0,0,50,100,60,85,0,0,30,40,0,50,0
+openvino,21,Not Ready,23.0,moderate (x0.68) - verify avg 23/100,Python;JavaScript,0,15,70,90,100,100,25,0,0,0,40,0,0,90
+llama-stack-distribution,20,Not Ready,20.0,moderate (x0.64) - verify avg 20/100,Unknown,0,0,0,70,100,100,0,0,0,100,70,80,40,0
+rhaii-on-xks,20,Not Ready,24.0,moderate (x0.69) - verify avg 24/100,Unknown,0,0,0,50,100,60,0,90,0,30,0,80,0,0
+odh-s2i-project-cookiecutter,18,Not Ready,28.0,moderate (x0.74) - verify avg 28/100,Python,0,0,0,90,100,0,50,0,0,0,0,0,0,90
+llama-stack-demos,17,Not Ready,16.0,moderate (x0.59) - verify avg 16/100,Python,0,0,20,90,100,0,50,0,0,30,0,80,0,0
+odh-s2i-project-cds,16,Not Ready,23.0,moderate (x0.68) - verify avg 23/100,Python,0,0,20,90,100,0,25,0,0,0,0,0,40,90
+ai-helpers,14,Not Ready,6.0,severe (x0.47) - verify avg 6/100,Python,100,15,20,50,100,0,0,0,0,30,100,80,40,0
+vllm-orchestrator-gateway,13,Not Ready,20.0,moderate (x0.64) - verify avg 20/100,Rust,0,0,0,50,100,0,0,0,0,100,0,0,40,0
+agents,11,Not Ready,11.0,severe (x0.53) - verify avg 11/100,Python;Go,0,0,70,90,100,0,25,0,0,0,0,0,0,30
+llama-stack-provider-instructlab-train,10,Not Ready,6.0,severe (x0.47) - verify avg 6/100,Python,0,0,20,90,100,0,0,0,0,30,0,80,0,0
+llama-stack-provider-kft,10,Not Ready,6.0,severe (x0.47) - verify avg 6/100,Python,0,0,20,90,100,0,0,0,0,30,0,80,0,0
+odh-gitops,9,Not Ready,6.0,severe (x0.47) - verify avg 6/100,Unknown,0,0,0,0,100,0,0,0,0,30,100,80,90,0
 opendatahub-community,8,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,100,0,0,100,0,0,0,0,0,0,0,80,0
-ai-bug-automation-readiness,4,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Python,0,0,0,70,100,0,0,0,0,0,0,0,0,0
+opendatahub.io,6,Not Ready,0.0,severe (x0.40) - verify avg 0/100,TypeScript,0,0,0,90,100,0,0,0,0,0,0,0,70,0
+odh-konflux-central,6,Not Ready,6.0,severe (x0.47) - verify avg 6/100,Unknown,0,0,0,0,100,0,0,0,0,30,0,80,0,0
+odh-s2i-project-simple,6,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Python,0,0,0,90,100,0,0,0,0,0,0,0,40,0
+model-runtimes-agent,5,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Python,0,0,20,70,100,0,0,0,0,0,0,0,40,0
+dsp-dev-tools,5,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Python,0,0,0,90,100,0,0,0,0,0,0,0,0,0
+guardrails-regex-detector,5,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,90,100,0,0,0,0,0,0,0,0,0
+odh-build-metadata,5,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Python,0,0,0,90,100,0,0,0,0,0,0,0,0,0
+ODH-Build-Config,5,Not Ready,6.0,severe (x0.47) - verify avg 6/100,Unknown,0,0,0,0,100,60,0,0,0,30,0,0,0,0
+opendatahub-documentation,4,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,100,0,0,0,100,0,0,0,0,0,0,0,0,0
 architecture-decision-records,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,100,0,0,0,0,0,0,0,0
+community-operators-prod,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,40,0
+opendatahub.io-redirects,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,40,0
+openvino-repo-syncher,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,40,0
+kserve-raw-migration,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,60,0,0,0,0,0,0,0,0
+odh-template-sig,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,60,0,0,0,0,0,0,0,0
+runbooks,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,60,0,0,0,0,0,0,0,0
+sig-ml-developer-experience,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,60,0,0,0,0,0,0,0,0
+sig-platform,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,60,0,0,0,0,0,0,0,0
+workload-orchestration,3,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,60,0,0,0,0,0,0,0,0
+.github,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+aaet-devtools,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+ai-engineering-process-docs,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+coderabbit,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+feast-demo,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+feast-labs,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+guides-vllm-llm-d,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+kc-rep,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+kserve-migration,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+llm-d-playbooks,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+odh-automation-serving,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+odh-doc-examples,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+odh-observability,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+sample-gam-trigger-workflow,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+sdg-hub,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+security-config,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
+test-repo,2,Not Ready,0.0,severe (x0.40) - verify avg 0/100,Unknown,0,0,0,0,100,0,0,0,0,0,0,0,0,0
 
