@@ -11,4 +11,11 @@ __all__ = [
     "generate_html",
     "generate_markdown",
     "generate_csv",
+    "generate_docx",
 ]
+
+
+def generate_docx(*args, **kwargs):
+    """Lazy import — requires python-docx: pip install python-docx."""
+    from .reports.docx_report import generate_docx as _generate_docx
+    return _generate_docx(*args, **kwargs)

@@ -24,7 +24,7 @@ def main():
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("repo", nargs="?", help="Path to repository")
     source.add_argument("--batch", help="Path to directory containing multiple repos")
-    parser.add_argument("--format", choices=["text", "json", "html", "markdown", "csv"], default="text")
+    parser.add_argument("--format", choices=["text", "json", "html", "markdown", "csv", "docx"], default="text")
     parser.add_argument("--output", "-o", help="Output file path")
     parser.add_argument("--org", help="GitHub org for report links")
     parser.add_argument("--agentready-results", help="Path to AgentReady results for comparison")
@@ -67,6 +67,18 @@ def main():
         output = generate_markdown(all_results, title=args.title, org=args.org)
     elif args.format == "csv":
         output = generate_csv(all_results)
+    elif args.format == "docx":
+        try:
+            from .reports.docx_report import generate_docx
+        except ImportError:
+            print("Error: DOCX format requires python-docx. Install with: pip install python-docx",
+                  file=sys.stderr)
+            sys.exit(1)
+        docx_doc = generate_docx(all_results, title=args.title, org=args.org)
+        out_path = args.output or "report.docx"
+        docx_doc.save(out_path)
+        print(f"\nDOCX report written to: {out_path}", file=sys.stderr)
+        output = None
     else:
         # Text summary
         lines = [f"\nAI Bug Automation Readiness Assessment", f"{'=' * 50}"]
@@ -94,14 +106,13 @@ def main():
             lines.append(f"\n  {'Average':45s} {round(avg):3d}/100")
         output = "\n".join(lines)
 
-    if args.output:
-        with open(args.output, "w") as f:
-            f.write(output)
-        print(f"\nReport written to: {args.output}", file=sys.stderr)
-    elif args.format != "text":
-        print(output)
-    else:
-        print(output)
+    if output is not None:
+        if args.output:
+            with open(args.output, "w") as f:
+                f.write(output)
+            print(f"\nReport written to: {args.output}", file=sys.stderr)
+        else:
+            print(output)
 
     # Exit codes for CI gating
     if args.fail_under is not None:
