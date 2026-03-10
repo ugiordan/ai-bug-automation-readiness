@@ -167,7 +167,17 @@ A repo without test infrastructure cannot support autonomous bug fixing, regardl
 
 ## Related Tools
 
-- **[AgentReady](https://github.com/ambient-code/agentready)** assesses general AI coding readiness across 25 broad attributes (type annotations, lock files, naming conventions, etc.). This tool focuses narrowly on bug-fixing workflow readiness with deeper checks on test infrastructure. They measure different things and serve different purposes.
+**[AgentReady](https://github.com/ambient-code/agentready)** and this tool solve different problems:
+
+| | This tool | AgentReady |
+|---|---|---|
+| **Focus** | Can AI agents fix bugs in this repo? | Is this repo AI-coding-friendly? |
+| **Checks** | 14 — test infra, CI, bug templates, test isolation | 25 — type annotations, lock files, naming conventions |
+| **Scoring emphasis** | Testing = 49% of score | Evenly distributed |
+| **Key question** | Can an agent run tests to verify a fix? | Is the code well-structured for AI to read? |
+| **Use when** | Planning an AI bug bash | Assessing overall AI-friendliness |
+
+They're complementary — a repo can score well on AgentReady (clean code, good types) but poorly here (no tests, no CI). Use both if you want the full picture.
 
 ## Examples
 
