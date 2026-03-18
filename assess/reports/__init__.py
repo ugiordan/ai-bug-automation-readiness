@@ -7,11 +7,15 @@ from ..engine import readiness_level
 def prepare_report_data(all_results, org=None):
     """Compute shared metrics used by all report generators.
 
-    Returns a dict with: sorted_results, avg, tier_counts, cat_avgs, cat_weights,
-    worst_checks, quick_wins, ready_repos, partially_ready, needs_work, not_ready,
-    ready_count, biggest_gap, org_prefix.
+    Returns a dict with: sorted_results, excluded_repos, avg, tier_counts, cat_avgs,
+    cat_weights, worst_checks, quick_wins, ready_repos, partially_ready, needs_work,
+    not_ready, ready_count, biggest_gap, org_prefix, total_code, total_noncode.
     """
-    sorted_results = sorted(all_results, key=lambda r: r["overall_score"], reverse=True)
+    # Separate code repos (scored) from non-code repos (not applicable)
+    code_results = [r for r in all_results if r.get("is_code_repo", True)]
+    excluded_repos = [r for r in all_results if not r.get("is_code_repo", True)]
+
+    sorted_results = sorted(code_results, key=lambda r: r["overall_score"] or 0, reverse=True)
     avg = sum(r["overall_score"] for r in sorted_results) / len(sorted_results) if sorted_results else 0
 
     org_prefix = f"{org}/" if org else ""
@@ -21,7 +25,7 @@ def prepare_report_data(all_results, org=None):
         level, _ = readiness_level(r["overall_score"])
         tier_counts[level] += 1
 
-    # Phase averages
+    # Phase averages (code repos only)
     cat_scores = {}
     for r in sorted_results:
         for c in r["checks"].values():
@@ -32,7 +36,7 @@ def prepare_report_data(all_results, org=None):
     for c in CHECKS.values():
         cat_weights[c["category"]] = cat_weights.get(c["category"], 0) + c["weight"]
 
-    # Check averages
+    # Check averages (code repos only)
     check_avgs = {}
     for r in sorted_results:
         for cid, c in r["checks"].items():
@@ -65,6 +69,7 @@ def prepare_report_data(all_results, org=None):
 
     return {
         "sorted_results": sorted_results,
+        "excluded_repos": sorted(excluded_repos, key=lambda r: r["repo"]),
         "avg": avg,
         "tier_counts": tier_counts,
         "cat_avgs": cat_avgs,
@@ -79,4 +84,6 @@ def prepare_report_data(all_results, org=None):
         "ready_count": ready_count,
         "biggest_gap": biggest_gap,
         "org_prefix": org_prefix,
+        "total_code": len(code_results),
+        "total_noncode": len(excluded_repos),
     }

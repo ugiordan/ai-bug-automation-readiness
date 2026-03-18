@@ -51,8 +51,9 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
         elif s >= 20: score_bins[1] += 1
         else: score_bins[0] += 1
 
+    noncode_note = f" ({d['total_noncode']} non-code repos excluded.)" if d.get('total_noncode') else ""
     exec_summary = (
-        f"{d['ready_count']} of {len(d['sorted_results'])} repositories are partially ready or above for AI-assisted bug fixing. "
+        f"{d['ready_count']} of {d['total_code']} code repositories are partially ready or above for AI-assisted bug fixing.{noncode_note} "
         f"The ecosystem averages {d['avg']:.0f}/100. "
         f"The biggest gap is \"{d['biggest_gap'][1]}\" (avg {d['biggest_gap'][2]:.0f}/100) "
         f"which affects most repos and has high impact on AI agent success."
@@ -141,10 +142,15 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
     <li><a href="#all-checks">All Checks Ranked</a></li>
     <li><a href="#heatmap">Detailed Heatmap</a></li>
     <li><a href="#per-repo">Per-Repository Details</a></li>
+    <li><a href="#excluded">Non-Code Repos Excluded</a></li>
   </ul>
 </nav>
 
 <div class="cards" role="region" aria-label="Score summary">
+  <div class="card">
+    <div class="value">{d['total_code']}<span style="font-size:1rem;color:#6B7280">/{d['total_code'] + d['total_noncode']}</span></div>
+    <div class="label">Code Repos Assessed</div>
+  </div>
   <div class="card">
     <div class="value">{d['avg']:.0f}<span style="font-size:1rem;color:#6B7280">/100</span></div>
     <div class="label">Average Score</div>
@@ -395,6 +401,17 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
             html += f"<td style='color:{sc};font-weight:600'>{c['score']:.0f}</td><td>{ev}{rec_html}</td></tr>\n"
         html += "</tbody></table></details>\n"
     html += "</details>\n"
+
+    # Excluded non-code repos
+    if d["excluded_repos"]:
+        html += f"""<details id="excluded">
+<summary style="cursor:pointer;font-weight:600;font-size:1.3rem;padding:0.5rem 0;color:#374151;border-bottom:2px solid #E5E7EB;margin-top:2.5rem">Non-Code Repos Excluded ({len(d['excluded_repos'])}) <a class="anchor" href="#excluded">#</a></summary>
+<p style="color:#6B7280;font-size:0.9rem;margin:1rem 0">These repos contain no source code (docs, config, governance, etc.) and are excluded from scoring. AI bug-fix readiness assessment is not applicable to non-code repos.</p>
+<ul style="column-count:3;column-gap:2rem;font-size:0.9rem;margin:1rem 0">
+"""
+        for r in d["excluded_repos"]:
+            html += f'<li><a href="https://github.com/{org_prefix}{esc(r["repo"])}" target="_blank">{esc(r["repo"])}</a></li>\n'
+        html += "</ul>\n</details>\n"
 
     # Chart.js data and scripts
     gaps_labels = json_mod.dumps([name for _, name, _, _ in d["worst_checks"][:7]])

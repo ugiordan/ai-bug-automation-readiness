@@ -29,27 +29,33 @@ EXCLUDE_DIRS = frozenset({
 # ---------------------------------------------------------------------------
 SOURCE_EXTS = frozenset({
     ".go", ".py", ".js", ".ts", ".tsx", ".jsx", ".java", ".rs",
-    ".rb", ".cpp", ".c", ".h",
+    ".rb", ".cpp", ".c", ".h", ".kt", ".scala", ".sh",
 })
 
 # ---------------------------------------------------------------------------
 # Weights (must sum to 100)
 # ---------------------------------------------------------------------------
 CHECKS = {
-    "agent_context":      {"name": "AI Context Files",              "weight":  5, "category": "Understand"},
-    "bug_template":       {"name": "Bug Report Template Quality",   "weight": 12, "category": "Understand"},
-    "structured_logging": {"name": "Structured Logging / Errors",   "weight":  5, "category": "Understand"},
-    "code_navigability":  {"name": "Code Navigability",             "weight":  8, "category": "Navigate"},
-    "generated_code":     {"name": "Generated Code Ratio",          "weight":  5, "category": "Navigate"},
-    "codeowners":         {"name": "Code Ownership (CODEOWNERS)",   "weight":  3, "category": "Submit"},
-    "test_ratio":         {"name": "Test-to-Source Ratio",          "weight": 17, "category": "Verify"},
-    "test_execution":     {"name": "One-Command Test Execution",    "weight": 12, "category": "Verify"},
-    "coverage_config":    {"name": "Coverage Configuration",        "weight":  5, "category": "Verify"},
+    "agent_context":      {"name": "AI Context Files",              "weight":  8, "category": "Understand"},
+    "bug_template":       {"name": "Bug Report Template Quality",   "weight":  8, "category": "Understand"},
+    "structured_logging": {"name": "Structured Logging / Errors",   "weight":  3, "category": "Understand"},
+    "architecture_docs":  {"name": "Architecture Documentation",    "weight":  3, "category": "Understand"},
+    "fixture_data":       {"name": "Test Fixtures / Sample Data",   "weight":  2, "category": "Understand"},
+    "code_navigability":  {"name": "Code Navigability",             "weight":  5, "category": "Navigate"},
+    "generated_code":     {"name": "Generated Code Ratio",          "weight":  2, "category": "Navigate"},
+    "build_setup":        {"name": "Build / Dependency Setup",      "weight":  5, "category": "Navigate"},
+    "type_safety":        {"name": "Type Safety / Static Analysis", "weight":  3, "category": "Navigate"},
+    "dependency_complexity": {"name": "Dependency Complexity",      "weight":  2, "category": "Navigate"},
+    "codeowners":         {"name": "Code Ownership (CODEOWNERS)",   "weight":  1, "category": "Submit"},
+    "test_ratio":         {"name": "Test-to-Source Ratio",          "weight": 15, "category": "Verify"},
+    "test_execution":     {"name": "One-Command Test Execution",    "weight": 11, "category": "Verify"},
+    "coverage_config":    {"name": "Coverage Configuration",        "weight":  3, "category": "Verify"},
     "ci_runs_tests":      {"name": "CI Runs Tests on PRs",         "weight": 10, "category": "Verify"},
-    "pr_template":        {"name": "PR Template",                   "weight":  3, "category": "Submit"},
+    "pr_template":        {"name": "PR Template",                   "weight":  2, "category": "Submit"},
     "linting_in_ci":      {"name": "Linting / Formatting in CI",   "weight":  5, "category": "Submit"},
     "contributing_guide": {"name": "Contributing / Dev Guide",      "weight":  5, "category": "Submit"},
-    "test_isolation":     {"name": "Test Isolation (unit vs e2e)",  "weight":  5, "category": "Verify"},
+    "test_isolation":     {"name": "Test Isolation (unit vs e2e)",  "weight":  4, "category": "Verify"},
+    "precommit_hooks":    {"name": "Pre-commit / Local Hooks",     "weight":  3, "category": "Verify"},
 }
 
 # ---------------------------------------------------------------------------
@@ -58,7 +64,7 @@ CHECKS = {
 RECOMMENDATIONS = {
     "agent_context": "Create an AGENTS.md at the repo root describing architecture, how to build, test, and debug. For Claude users, a CLAUDE.md is also supported. Other recognized files: COPILOT.md, .cursorrules, CONTEXT.md.",
     "bug_template": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs.",
-    "structured_logging": "Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python) and wrap errors with context.",
+    "structured_logging": "Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python, Sentry for frontend) and wrap errors with context.",
     "code_navigability": "Break large files (>500 lines) into smaller, focused modules. Exclude generated files from linting.",
     "generated_code": "Add '// Code generated' headers to generated files and document which files are auto-generated in CLAUDE.md.",
     "codeowners": "Create a .github/CODEOWNERS file mapping directories to team members for automated PR review assignment.",
@@ -70,4 +76,10 @@ RECOMMENDATIONS = {
     "linting_in_ci": "Add a linting step (golangci-lint, eslint, ruff) to your CI pipeline.",
     "contributing_guide": "Add CONTRIBUTING.md with build, test, and debug instructions.",
     "test_isolation": "Separate unit tests (no external deps) from integration/e2e tests using build tags or directory structure.",
+    "architecture_docs": "Add architecture documentation (ARCHITECTURE.md, docs/design/, or module-level READMEs) to help AI agents understand codebase structure.",
+    "fixture_data": "Add test fixtures or sample data directories (testdata/, fixtures/, examples/) to help AI agents understand expected inputs and reproduce bugs.",
+    "build_setup": "Add dependency lockfiles (go.sum, package-lock.json, poetry.lock) and a documented build setup to ensure reproducible builds.",
+    "type_safety": "Enable type checking (mypy for Python, tsconfig strict for TypeScript) or add type annotations to help AI agents understand function contracts.",
+    "dependency_complexity": "Consider reducing direct dependencies or documenting key dependencies to help AI agents understand the project's dependency surface.",
+    "precommit_hooks": "Add pre-commit hooks (.pre-commit-config.yaml, husky, lefthook) for fast local feedback on formatting and linting.",
 }

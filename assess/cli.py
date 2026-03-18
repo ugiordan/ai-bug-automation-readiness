@@ -105,8 +105,11 @@ def main():
         result = assess_repo(repo_path)
         all_results.append(result)
         if not args.quiet:
-            level, _ = readiness_level(result["overall_score"])
-            print(f" {round(result['overall_score'])}/100 ({level})", file=sys.stderr)
+            if result["overall_score"] is not None:
+                level, _ = readiness_level(result["overall_score"])
+                print(f" {round(result['overall_score'])}/100 ({level})", file=sys.stderr)
+            else:
+                print(f" N/A (non-code repo)", file=sys.stderr)
 
     if not all_results:
         print("No repositories found to assess.", file=sys.stderr)
@@ -130,8 +133,10 @@ def main():
         output = None
     else:
         # Text summary
+        code_results = [r for r in all_results if r["overall_score"] is not None]
+        noncode_results = [r for r in all_results if r["overall_score"] is None]
         lines = [f"\nAI Bug Automation Readiness Assessment", f"{'=' * 50}"]
-        for r in sorted(all_results, key=lambda x: x["overall_score"], reverse=True):
+        for r in sorted(code_results, key=lambda x: x["overall_score"], reverse=True):
             level, _ = readiness_level(r["overall_score"])
             lines.append(f"  {r['repo']:45s} {round(r['overall_score']):3d}/100  {level}")
             if r.get("verify_gate"):
@@ -150,9 +155,14 @@ def main():
                         if c.get("recommendation"):
                             lines.append(f"        -> {c['recommendation']}")
                     lines.append("")
-        if len(all_results) > 1:
-            avg = sum(r["overall_score"] for r in all_results) / len(all_results)
+        if noncode_results:
+            lines.append(f"\n  Non-code repos (excluded from scoring):")
+            for r in sorted(noncode_results, key=lambda x: x["repo"]):
+                lines.append(f"    {r['repo']}")
+        if len(code_results) > 1:
+            avg = sum(r["overall_score"] for r in code_results) / len(code_results)
             lines.append(f"\n  {'Average':45s} {round(avg):3d}/100")
+            lines.append(f"  {len(code_results)} code repos assessed, {len(noncode_results)} non-code repos excluded")
         output = "\n".join(lines)
 
     if output is not None:
@@ -164,8 +174,9 @@ def main():
         else:
             print(output)
 
-    # Exit codes for CI gating
+    # Exit codes for CI gating (only check code repos)
     if args.fail_under is not None:
-        min_score = min(r["overall_score"] for r in all_results)
+        scored = [r["overall_score"] for r in all_results if r["overall_score"] is not None]
+        min_score = min(scored) if scored else 0
         if min_score < args.fail_under:
             sys.exit(1)

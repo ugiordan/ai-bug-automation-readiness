@@ -70,6 +70,7 @@ def detect_languages(repo_path, all_files=None):
         ".go": "Go", ".py": "Python", ".js": "JavaScript", ".ts": "TypeScript",
         ".tsx": "TypeScript", ".jsx": "JavaScript",
         ".java": "Java", ".rs": "Rust", ".rb": "Ruby", ".cpp": "C++", ".c": "C",
+        ".kt": "Kotlin", ".scala": "Scala", ".sh": "Shell",
     }
     langs = [(name, exts.get(ext, 0)) for ext, name in lang_map.items() if exts.get(ext, 0) > 2]
     merged = {}

@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .checks import CHECK_FUNCTIONS
-from .config import CHECKS, RECOMMENDATIONS
+from .config import CHECKS, RECOMMENDATIONS, SOURCE_EXTS
 from .utils import detect_languages, find_all_files_cached, is_generated_file
 
 
@@ -28,6 +28,10 @@ def assess_repo(repo_path):
         "checks": {},
         "languages": detect_languages(repo_path, all_files),
     }
+
+    # Detect if this is a non-code repo (docs, config, etc.)
+    source_files = [f for f in all_files if f.is_file() and f.suffix.lower() in SOURCE_EXTS]
+    is_code_repo = len(source_files) > 2
 
     total_weighted = 0
     total_weight = 0
@@ -70,7 +74,13 @@ def assess_repo(repo_path):
         severity = "severe" if verify_avg < 15 else "moderate" if verify_avg < 30 else "mild"
         results["verify_gate"] = f"{severity} (x{gate_multiplier:.2f}) - verify avg {verify_avg:.0f}/100"
 
-    results["overall_score"] = round(final_score, 1)
+    results["is_code_repo"] = is_code_repo
+    if is_code_repo:
+        results["overall_score"] = round(final_score, 1)
+        results["status"] = None
+    else:
+        results["overall_score"] = None
+        results["status"] = "not_applicable"
     results["verify_avg"] = round(verify_avg, 1)
 
     # Clear is_generated_file cache between repos to avoid unbounded memory growth

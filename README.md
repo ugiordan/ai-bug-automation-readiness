@@ -81,49 +81,59 @@ python assess.py --list-checks
 
 ## What It Checks
 
-The tool evaluates 14 checks across 4 phases of an AI bug-fixing workflow:
+The tool evaluates 20 checks across 4 phases of an AI bug-fixing workflow:
 
-### Understand (22%)
+### Understand (24%)
 Can the agent understand the bug from the report and codebase context?
 
 | Check | Weight | What it measures |
 |---|---|---|
-| AI Context Files | 5% | CLAUDE.md, AGENTS.md with quality keywords (test, debug, build) |
-| Bug Report Template Quality | 12% | Reproduction steps, expected/actual behavior, environment, logs. Validates frontmatter name/about fields to avoid false positives. |
-| Structured Logging | 5% | Logging frameworks, error wrapping patterns |
+| AI Context Files | 8% | AGENTS.md, CLAUDE.md with quality keywords (test, debug, build) |
+| Bug Report Template Quality | 8% | Reproduction steps, expected/actual behavior, environment, logs |
+| Structured Logging | 3% | Logging frameworks (zap, logr, SLF4J, structlog, Sentry), error wrapping |
+| Architecture Documentation | 3% | ARCHITECTURE.md, ADRs, module-level READMEs |
+| Test Fixtures / Sample Data | 2% | testdata/, fixtures/, examples/ directories |
 
-### Navigate (13%)
+### Navigate (17%)
 Can the agent find the relevant code efficiently?
 
 | Check | Weight | What it measures |
 |---|---|---|
-| Code Navigability | 8% | Average file size (excluding generated files), language-aware thresholds |
-| Generated Code Ratio | 5% | Percentage of auto-generated files (zz_generated, .pb.go, etc.) |
+| Code Navigability | 5% | Average file size (excluding generated files), language-aware thresholds |
+| Generated Code Ratio | 2% | Percentage of auto-generated files (zz_generated, .pb.go, etc.) |
+| Build / Dependency Setup | 5% | Lockfiles, build targets, reproducible environment |
+| Type Safety / Static Analysis | 3% | mypy, tsconfig strict, typed languages (Go, Java, Rust) |
+| Dependency Complexity | 2% | Direct dependency count relative to codebase size |
 
-### Verify (49%)
+### Verify (46%)
 Can the agent run tests to verify the fix works?
 
 | Check | Weight | What it measures |
 |---|---|---|
-| Test-to-Source Ratio | 17% | Ratio of test files to source files (excluding test helpers) |
-| One-Command Test Execution | 12% | Makefile targets, npm scripts, pytest/tox/nox config, Gradle/Maven |
-| CI Runs Tests on PRs | 10% | CI workflows triggered by pull_request (both expanded and shorthand syntax) |
-| Coverage Configuration | 5% | Coverage flags (-coverprofile), codecov integration |
-| Test Isolation | 5% | Unit vs integration test separation using mock/fake patterns, build tags, directory structure |
+| Test-to-Source Ratio | 15% | Ratio of test files to source files (excluding test helpers), frontend-aware thresholds |
+| One-Command Test Execution | 11% | Makefile targets, npm scripts, pytest/tox/nox config, Gradle/Maven |
+| CI Runs Tests on PRs | 10% | CI workflows triggered by pull_request with test steps |
+| Coverage Configuration | 3% | Coverage flags (-coverprofile), codecov integration |
+| Test Isolation | 4% | Unit vs integration test separation using mock/fake patterns, build tags |
+| Pre-commit / Local Hooks | 3% | .pre-commit-config.yaml, husky, lefthook for fast local feedback |
 
-### Submit (16%)
+### Submit (13%)
 Can the agent submit the fix following project conventions?
 
 | Check | Weight | What it measures |
 |---|---|---|
 | Linting in CI | 5% | Lint/format steps in CI workflows |
 | Contributing Guide | 5% | CONTRIBUTING.md with build/test/debug instructions |
-| Code Ownership | 3% | CODEOWNERS or OWNERS file for review assignment |
-| PR Template | 3% | Pull request template with testing checklist |
+| Code Ownership | 1% | CODEOWNERS or OWNERS/OWNERS_ALIASES file for review assignment |
+| PR Template | 2% | Pull request template with testing checklist |
+
+### Non-Code Repos
+
+Repos with fewer than 3 source files (docs, config, governance repos) are automatically classified as "Not Applicable" and excluded from scoring. They appear in a separate section of the report.
 
 ## Scoring
 
-**Overall score** = weighted average of 14 checks, each scored 0-100. Weights are fixed to ensure consistent, comparable scores across repositories.
+**Overall score** = weighted average of 20 checks, each scored 0-100. Weights are fixed to ensure consistent, comparable scores across repositories.
 
 **Readiness levels:**
 
@@ -140,18 +150,21 @@ A repo without test infrastructure cannot support autonomous bug fixing, regardl
 
 ## Key Design Decisions
 
+- **Non-code repos excluded** — repos with <3 source files (docs, config) are marked "Not Applicable" and excluded from scoring
 - **Generated files are excluded** from navigability and test ratio analysis (zz_generated, .pb.go, openapi_generated, etc.)
 - **Single filesystem traversal** per repo — all checks share the same file list for 3-5x faster scanning
-- **Word-boundary matching** prevents false positives (e.g., "log" no longer matches "blog" or "catalog")
-- **Only direct dependencies** are scanned for logging libraries (go.mod, not go.sum)
-- **CI checks correlate PR trigger and test step** within the same workflow file to avoid false positives
-- **Bug template frontmatter validation** checks name/about fields specifically, not just any occurrence of "bug" in labels
-- **Subdirectory Makefile scanning** detects test targets in monorepo subdirectories (e.g., `ray-operator/Makefile`)
-- **Test isolation uses mock/fake patterns** instead of generic framework markers (testing.T, testify) that appear in all Go tests
+- **Java test naming** supported — `FooTest.java` and `FooTests.java` patterns detected alongside `_test.go`, `test_*.py`
+- **CI checks exclude pull_request_target** — only `pull_request` triggers count for PR test validation
+- **Build tool validation** — Gradle/Maven only score high if test files actually exist (not just `pom.xml` presence)
+- **package.json scoped** — test detection limited to `"scripts"` block to avoid matching config keys
+- **Typed language detection** — Go, Java, Rust, C++ automatically score high on type safety; Python/JS scored on tooling
+- **Subdirectory Makefile scanning** detects test targets in monorepo subdirectories
 - **Test helper exclusion** avoids inflating test counts with infrastructure files (matchers, mocks, schemes, utils)
 - **Deterministic results** via per-repo seeded local RNG ensures reproducible, thread-safe scores
-- **Language-aware thresholds** for file size (Go/Java files are typically longer than Python/JS)
 - **Per-check recommendations** tell you exactly what to fix, not just what's wrong
+- **OWNERS/OWNERS_ALIASES** treated as equivalent to CODEOWNERS (common in OpenShift/Kubernetes projects)
+- **Frontend-aware test ratio** — TS/JS-heavy repos (>60% of source) use relaxed thresholds since component files inflate source counts
+- **Frontend logging detection** — recognizes Sentry, console.error/warn patterns, ErrorBoundary alongside backend logging frameworks
 - **HTML output is XSS-safe** with all user-derived values escaped, Chart.js loaded with SRI integrity
 
 ## Output Formats
