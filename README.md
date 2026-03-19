@@ -185,8 +185,8 @@ A repo without test infrastructure cannot support autonomous bug fixing, regardl
 | | This tool | AgentReady |
 |---|---|---|
 | **Focus** | Can AI agents fix bugs in this repo? | Is this repo AI-coding-friendly? |
-| **Checks** | 14 — test infra, CI, bug templates, test isolation | 25 — type annotations, lock files, naming conventions |
-| **Scoring emphasis** | Testing = 49% of score | Evenly distributed |
+| **Checks** | 20 — test infra, CI, bug templates, build setup, type safety | 25 — type annotations, lock files, naming conventions |
+| **Scoring emphasis** | Testing = 46% of score | Evenly distributed |
 | **Key question** | Can an agent run tests to verify a fix? | Is the code well-structured for AI to read? |
 | **Use when** | Planning an AI bug bash | Assessing overall AI-friendliness |
 
@@ -194,7 +194,9 @@ They're complementary — a repo can score well on AgentReady (clean code, good 
 
 ## Examples
 
-See the [`docs/`](docs/) folder for sample reports generated from an OpenDataHub ecosystem scan (128 repos): HTML, markdown, JSON, CSV, and DOCX.
+See the [`docs/`](docs/) folder for sample reports generated from an OpenDataHub ecosystem scan (135 repos): HTML, markdown, JSON, CSV, and DOCX.
+
+For actionable steps to improve your repo's score, see the [Team Action Guide](docs/TEAM_ACTION_GUIDE.md).
 
 The HTML report is also available via [GitHub Pages](https://ugiordan.github.io/ai-bug-automation-readiness/report.html).
 

@@ -13,6 +13,48 @@ This tool scores repositories on how ready they are for AI agents to autonomousl
 
 Non-code repos (docs, config, governance) with fewer than 3 source files are automatically excluded from scoring.
 
+## Summary of All 20 Checks
+
+Checks scoring below 60 show a **blue recommendation** in the report — these are the items teams should focus on.
+
+| # | Check | Phase | Weight | What it measures | Recommendation when below 60 |
+|---|---|---|---|---|---|
+| 1 | AI Context Files | Understand | 8% | AGENTS.md / CLAUDE.md / COPILOT.md / .cursorrules | Create AGENTS.md with architecture, build, test, debug info |
+| 2 | Bug Report Template Quality | Understand | 8% | Repro steps, expected/actual, environment, logs | Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields |
+| 3 | Structured Logging / Errors | Understand | 3% | Logging frameworks (zap, logr, SLF4J, Sentry), error wrapping | Adopt structured logging library |
+| 4 | Architecture Documentation | Understand | 3% | ARCHITECTURE.md, ADRs, module-level READMEs | Add architecture documentation |
+| 5 | Test Fixtures / Sample Data | Understand | 2% | testdata/, fixtures/, examples/ directories | Add test fixtures or sample data |
+| 6 | Code Navigability | Navigate | 5% | Average file size (excl. generated), language-aware thresholds | Break files >500 lines into smaller modules |
+| 7 | Generated Code Ratio | Navigate | 2% | Percentage of auto-generated files | Add "// Code generated" headers |
+| 8 | Build / Dependency Setup | Navigate | 5% | Lockfiles, build targets, reproducible environment | Add lockfiles and build targets |
+| 9 | Type Safety / Static Analysis | Navigate | 3% | mypy, pyright, tsconfig strict, typed languages | Enable type checking |
+| 10 | Dependency Complexity | Navigate | 2% | Dependency count relative to codebase size | Reduce or document dependencies |
+| 11 | Test-to-Source Ratio | Verify | 15% | Test files vs source files (frontend-aware thresholds) | Add unit tests, aim for 1 test per 2 source files |
+| 12 | One-Command Test Execution | Verify | 11% | Makefile targets, npm scripts, pytest, tox, Gradle, Maven | Add `make test` or `make unittest` target |
+| 13 | CI Runs Tests on PRs | Verify | 10% | CI triggered by pull_request with test steps | Ensure CI runs tests on PRs |
+| 14 | Coverage Configuration | Verify | 3% | Coverage flags, codecov integration | Configure coverage reporting |
+| 15 | Test Isolation (unit vs e2e) | Verify | 4% | Unit vs e2e separation, mocks, build tags | Separate unit from integration tests |
+| 16 | Pre-commit / Local Hooks | Verify | 3% | .pre-commit-config.yaml, husky, lefthook | Add pre-commit hooks |
+| 17 | Linting / Formatting in CI | Submit | 5% | Lint/format steps in CI workflows | Add linting step to CI |
+| 18 | Contributing / Dev Guide | Submit | 5% | CONTRIBUTING.md with build/test/debug instructions | Add CONTRIBUTING.md |
+| 19 | Code Ownership (CODEOWNERS) | Submit | 1% | CODEOWNERS or OWNERS/OWNERS_ALIASES | Create CODEOWNERS or OWNERS file |
+| 20 | PR Template | Submit | 2% | PR template with testing checklist | Add PR template |
+
+## Quick Start: Biggest Impact Actions
+
+If your repo scores low, focus on these first (ordered by score impact):
+
+1. **Add unit tests** — 15% of score, and the verify gate penalizes repos with low Verify-phase averages
+2. **Add `make test` target** — 11%, easy win
+3. **Ensure CI runs tests on PRs** — 10%, check your workflow triggers
+4. **Add a bug report template** — 8%, copy a YAML template
+5. **Create AGENTS.md** — 8%, takes 15 minutes
+6. **Add linting to CI** — 5%, add golangci-lint/eslint/ruff to a workflow
+7. **Add CONTRIBUTING.md** — 5%, document what you already know
+8. **Add lockfiles and build targets** — 5%, commit your lockfiles
+
+For full check definitions and scoring details, see the [README](../README.md).
+
 ---
 
 ## The 4 Phases and What Teams Need To Do
@@ -277,18 +319,6 @@ Both must be in the **same workflow file** to score 100.
 **What to do:** Create `.github/PULL_REQUEST_TEMPLATE.md` with a testing checklist.
 
 ---
-
-## Quick Start: Biggest Impact Actions
-
-If your repo scores low, focus on these first (ordered by score impact):
-
-1. **Add unit tests** — 15% of score, and triggers the verify gate penalty if too low
-2. **Add `make test` target** — 11%, easy win
-3. **Ensure CI runs tests on PRs** — 10%, check your workflow triggers
-4. **Add a bug report template** — 8%, copy a YAML template
-5. **Create AGENTS.md** — 8%, takes 15 minutes
-6. **Add CONTRIBUTING.md** — 5%, document what you already know
-7. **Add lockfiles and build targets** — 5%, commit your lockfiles
 
 ## Running the Tool
 
