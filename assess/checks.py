@@ -834,6 +834,8 @@ def check_fixture_data(repo_path, *, all_files=None, rng=None):
         "fixtures", "test/fixtures", "tests/fixtures",
         "__fixtures__", "test/data", "tests/data",
         "samples", "examples",
+        "config/samples", "config/examples",
+        "test/resources", "tests/resources",
     ]
 
     found_dirs = []
