@@ -722,7 +722,7 @@ def check_linting_in_ci(repo_path, *, all_files=None, rng=None):
         r'make\s+precommit',
         r'\bblack\b', r'\bflake8\b', r'\bruff\b',
         r'\beslint\b', r'\bprettier\b',
-        r'\bgofmt\b', r'\bgoimports\b', r'\trustfmt\b',
+        r'\bgofmt\b', r'\bgoimports\b', r'\brustfmt\b',
         r'\bpre-commit\b', r'\bisort\b',
         r'\byamllint\b', r'\bkube-linter\b', r'\bhelm\s+lint\b',
     ]
@@ -1087,7 +1087,7 @@ def check_precommit_hooks(repo_path, *, all_files=None, rng=None):
         evidence.append(".pre-commit-config.yaml found")
         # Check for both linting and testing hooks
         has_lint = bool(re.search(r'\b(black|ruff|flake8|isort|prettier|eslint|gofmt|golangci)\b', content, re.IGNORECASE))
-        has_test = bool(re.search(r'\b(pytest|test|mypy|pyright)\b', content, re.IGNORECASE))
+        has_test = bool(re.search(r'\b(pytest|tests?|mypy|pyright)\b', content, re.IGNORECASE))
         if has_lint and has_test:
             score = 100
             evidence.append("Includes both linting and type/test hooks")
