@@ -1,0 +1,51 @@
+name: Update readiness report
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6:00 UTC
+  workflow_dispatch:       # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Clone all opendatahub-io repos
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/odh-repos
+          repos=$(gh repo list opendatahub-io --limit 300 --json name,isArchived \
+            -q '.[] | select(.isArchived == false) | .name')
+          total=$(echo "$repos" | wc -l | tr -d ' ')
+          echo "Found $total repos to clone"
+          echo "$repos" | xargs -P4 -I{} sh -c \
+            'gh repo clone opendatahub-io/{} /tmp/odh-repos/{} -- --depth 1 --single-branch 2>/dev/null && echo "  Cloned {}" || echo "  SKIP {}"'
+          count=$(ls -d /tmp/odh-repos/*/.git 2>/dev/null | wc -l)
+          echo "Successfully cloned $count repositories"
+
+      - name: Generate report
+        run: python assess.py --batch /tmp/odh-repos --format html --org opendatahub-io --title "OpenDataHub AI Bug Automation Readiness" -o docs/report.html
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/report.html
+          if git diff --cached --quiet; then
+            echo "No changes to report"
+          else
+            git commit -m "Update readiness report ($(date -u +%Y-%m-%d))"
+            git push
+          fi

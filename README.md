@@ -192,13 +192,11 @@ A repo without test infrastructure cannot support autonomous bug fixing, regardl
 
 They're complementary — a repo can score well on AgentReady (clean code, good types) but poorly here (no tests, no CI). Use both if you want the full picture.
 
-## Examples
+## Live Report
 
-See the [`docs/`](docs/) folder for sample reports generated from an OpenDataHub ecosystem scan (135 repos): HTML, markdown, JSON, CSV, and DOCX.
+The [OpenDataHub readiness report](https://ugiordan.github.io/ai-bug-automation-readiness/report.html) is regenerated automatically every Monday via GitHub Actions, scanning all non-archived repos in the `opendatahub-io` organization.
 
 For actionable steps to improve your repo's score, see the [Team Action Guide](docs/TEAM_ACTION_GUIDE.md).
-
-The HTML report is also available via [GitHub Pages](https://ugiordan.github.io/ai-bug-automation-readiness/report.html).
 
 ## Requirements
 
