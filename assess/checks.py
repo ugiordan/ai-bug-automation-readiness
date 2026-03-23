@@ -61,8 +61,8 @@ def check_agent_context(repo_path, *, all_files=None, rng=None):
     return min(score, 100), evidence
 
 
-def check_bug_template(repo_path, *, all_files=None, rng=None):
-    """Check if bug report template exists and has reproduction steps."""
+def _check_github_bug_template(repo_path):
+    """Check for GitHub issue bug report templates. Returns (score, evidence)."""
     score = 0
     evidence = []
 
@@ -75,7 +75,6 @@ def check_bug_template(repo_path, *, all_files=None, rng=None):
         ".github/ISSUE_TEMPLATE/bug-report.yaml",
     ]
 
-    found = False
     for tp in template_paths:
         full_path = Path(repo_path) / tp
         if full_path.exists():
@@ -97,11 +96,8 @@ def check_bug_template(repo_path, *, all_files=None, rng=None):
                         evidence.append(f"Found {tp} but name/about fields don't indicate a bug template")
 
             if not is_bug_template:
-                score = 15
-                found = True
-                break
+                return 15, evidence
 
-            found = True
             score = 30
 
             if re.search(r'\b(reproduc|repro\b|steps to|steps did)', content):
@@ -126,21 +122,128 @@ def check_bug_template(repo_path, *, all_files=None, rng=None):
                     evidence.append("YAML template with required fields")
 
             evidence.insert(0, f"Found: {tp}")
+            return min(score, 100), evidence
+
+    # No dedicated bug template found, check for other templates
+    template_dir = Path(repo_path) / ".github" / "ISSUE_TEMPLATE"
+    if template_dir.exists():
+        templates = [t for t in template_dir.iterdir() if t.is_file()]
+        if templates:
+            evidence.append(f"Issue templates exist ({len(templates)}) but no dedicated bug template")
+            return 15, evidence
+        evidence.append("Empty .github/ISSUE_TEMPLATE/ directory")
+    else:
+        evidence.append("No .github/ISSUE_TEMPLATE/ directory")
+
+    return 0, evidence
+
+
+# Jira URL patterns for detecting Jira-based bug tracking
+_JIRA_URL_RE = re.compile(
+    r'https?://[^\s)\]]*(?:jira|issues\.redhat\.com|atlassian\.net)[^\s)\]]*',
+    re.IGNORECASE,
+)
+
+# Bug-related keywords near Jira mentions
+_JIRA_BUG_INSTRUCTION_RE = re.compile(
+    r'(?:bug|issue|defect|problem|report).{0,200}(?:jira|issues\.redhat\.com|atlassian\.net)'
+    r'|(?:jira|issues\.redhat\.com|atlassian\.net).{0,200}(?:bug|issue|track|report)',
+    re.IGNORECASE,
+)
+
+# Jira project key references (e.g., RHOAIENG-1234)
+# Common abbreviation prefixes that look like Jira keys but aren't
+_NON_JIRA_PREFIXES = frozenset({
+    "UTF", "SHA", "ISO", "HTTP", "TLS", "RFC", "TCP", "UDP", "SSL",
+    "AES", "RSA", "DSA", "ARM", "AMD", "PCI", "USB", "API", "SDK",
+})
+
+_JIRA_PROJECT_KEY_RE = re.compile(r'\b([A-Z][A-Z0-9]{1,9})-\d+\b')
+
+
+def _has_jira_project_keys(text):
+    """Check if text contains Jira project key references, filtering out
+    common abbreviations like UTF-8, SHA-256, HTTP-200, etc."""
+    for m in _JIRA_PROJECT_KEY_RE.finditer(text):
+        if m.group(1) not in _NON_JIRA_PREFIXES:
+            return True
+    return False
+
+
+def _check_jira_bug_tracking(repo_path):
+    """Check for Jira-based bug tracking references. Returns (score, evidence)."""
+    score = 0
+    evidence = []
+
+    # Check config.yml/config.yaml for Jira redirect
+    for config_name in ("config.yml", "config.yaml"):
+        config_path = Path(repo_path) / ".github" / "ISSUE_TEMPLATE" / config_name
+        if not config_path.exists():
+            continue
+        config_content = read_file_safe(config_path)
+        if _JIRA_URL_RE.search(config_content):
+            score = 30
+            evidence.append(f"GitHub issue {config_name} redirects to Jira")
+            if re.search(r'blank_issues_enabled\s*:\s*false', config_content, re.IGNORECASE):
+                score += 10
+                evidence.append("GitHub blank issues disabled (Jira-only)")
+        break
+
+    # Check CONTRIBUTING.md and README.md for Jira references.
+    # Stop after the first file with explicit bug instructions to avoid
+    # double-counting bonuses across multiple documents.
+    doc_files = ["CONTRIBUTING.md", "README.md"]
+    for doc in doc_files:
+        doc_path = Path(repo_path) / doc
+        if not doc_path.exists():
+            continue
+        content = read_file_safe(doc_path)
+        if not _JIRA_URL_RE.search(content):
+            continue
+
+        evidence.append(f"Jira link found in {doc}")
+
+        # Explicit bug reporting instructions mentioning Jira
+        if _JIRA_BUG_INSTRUCTION_RE.search(content):
+            score = max(score, 50)
+            evidence.append(f"Explicit bug/issue reporting via Jira in {doc}")
+
+            # Bonus for structured instructions (mentions fields like
+            # reproduction steps, environment, etc.)
+            if re.search(r'\b(reproduc|repro\b|steps to)', content, re.IGNORECASE):
+                score += 10
+                evidence.append("Jira instructions mention reproduction steps")
+
+            # Bonus for Jira project key references
+            if _has_jira_project_keys(content):
+                score += 10
+                evidence.append("References specific Jira project keys")
+
+            # Found explicit instructions — stop checking further docs
             break
 
-    if not found:
-        template_dir = Path(repo_path) / ".github" / "ISSUE_TEMPLATE"
-        if template_dir.exists():
-            templates = [t for t in template_dir.iterdir() if t.is_file()]
-            if templates:
-                evidence.append(f"Issue templates exist ({len(templates)}) but no dedicated bug template")
-                score = 15
-            else:
-                evidence.append("Empty .github/ISSUE_TEMPLATE/ directory")
-        else:
-            evidence.append("No .github/ISSUE_TEMPLATE/ directory")
+        # Casual Jira mention without explicit bug instructions
+        score = max(score, 20)
+        evidence.append(f"Jira mentioned in {doc} without explicit bug reporting instructions")
 
-    return min(score, 100), evidence
+        if _has_jira_project_keys(content):
+            score += 5
+            evidence.append("References specific Jira project keys")
+
+    return min(score, 70), evidence
+
+
+def check_bug_template(repo_path, *, all_files=None, rng=None):
+    """Check if bug report template or Jira-based tracking exists."""
+    github_score, github_evidence = _check_github_bug_template(repo_path)
+    jira_score, jira_evidence = _check_jira_bug_tracking(repo_path)
+
+    # Take the best channel; merge evidence when both score 0
+    if github_score == 0 and jira_score == 0:
+        return 0, github_evidence + jira_evidence
+    if github_score >= jira_score:
+        return github_score, github_evidence
+    return jira_score, jira_evidence
 
 
 def check_structured_logging(repo_path, *, all_files=None, rng=None):

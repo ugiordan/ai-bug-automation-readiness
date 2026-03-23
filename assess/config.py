@@ -63,7 +63,7 @@ CHECKS = {
 # ---------------------------------------------------------------------------
 RECOMMENDATIONS = {
     "agent_context": "Create an AGENTS.md at the repo root describing architecture, how to build, test, and debug. For Claude users, a CLAUDE.md is also supported. Other recognized files: COPILOT.md, .cursorrules, CONTEXT.md.",
-    "bug_template": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs.",
+    "bug_template": "Add .github/ISSUE_TEMPLATE/bug_report.yml with required fields: reproduction steps, expected/actual behavior, environment, and error logs. Alternatively, if using Jira for bug tracking, document the process in CONTRIBUTING.md with a Jira link and bug reporting instructions.",
     "structured_logging": "Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python, Sentry for frontend) and wrap errors with context.",
     "code_navigability": "Break large files (>500 lines) into smaller, focused modules. Exclude generated files from linting.",
     "generated_code": "Add '// Code generated' headers to generated files and document which files are auto-generated in CLAUDE.md.",
