@@ -170,7 +170,7 @@ def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=N
             text = f"{name} ({round(r['overall_score'])})"
             if show_gap:
                 checks_sorted = sorted(
-                    r["checks"].items(),
+                    [(k, v) for k, v in r["checks"].items() if not v.get("excluded")],
                     key=lambda x: (100 - x[1]["score"]) * x[1]["weight"],
                     reverse=True,
                 )
@@ -218,22 +218,36 @@ def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=N
     check_ids = list(CHECKS.keys())
     for r in d["sorted_results"]:
         level, _ = readiness_level(r["overall_score"])
+        profile_suffix = ""
+        if r.get("profile", {}).get("name", "default") != "default":
+            p = r["profile"]
+            profile_suffix = f" [profile: {p['name']}]"
         doc.add_heading(
-            f"{r['repo']} -- {round(r['overall_score'])}/100 ({level})", level=2
+            f"{r['repo']} -- {round(r['overall_score'])}/100 ({level}){profile_suffix}", level=2
         )
         detail_rows = []
         for cid in check_ids:
             c = r["checks"][cid]
-            ev_text = "; ".join(c["evidence"])
-            if c.get("recommendation"):
-                ev_text += f" Rec: {c['recommendation']}"
-            detail_rows.append([
-                c["name"],
-                c["category"],
-                f"{c['weight']}%",
-                (f"{c['score']:.0f}", _score_color(c["score"])),
-                ev_text,
-            ])
+            if c.get("excluded"):
+                grey = RGBColor(0x9C, 0xA3, 0xAF)
+                detail_rows.append([
+                    c["name"],
+                    c["category"],
+                    f"{c['weight']}%",
+                    ("N/A", grey),
+                    "Excluded by profile",
+                ])
+            else:
+                ev_text = "; ".join(c["evidence"])
+                if c.get("recommendation"):
+                    ev_text += f" Rec: {c['recommendation']}"
+                detail_rows.append([
+                    c["name"],
+                    c["category"],
+                    f"{c['weight']}%",
+                    (f"{c['score']:.0f}", _score_color(c["score"])),
+                    ev_text,
+                ])
         _add_table(doc, ["Check", "Phase", "Weight", "Score", "Evidence"], detail_rows,
                    col_widths=[1.5, 0.8, 0.6, 0.6, 3.0])
 
