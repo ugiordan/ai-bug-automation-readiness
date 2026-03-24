@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from .engine import assess_repo, readiness_level
+from .profiles import resolve_profile, load_central_profiles
 from .reports.html import generate_html
 from .reports.markdown import generate_markdown
 from .reports.csv_report import generate_csv
@@ -40,6 +41,12 @@ def main():
                         help="Suppress progress output")
     parser.add_argument("--list-checks", action="store_true",
                         help="List all checks and their weights, then exit")
+    parser.add_argument("--profile", metavar="NAME",
+                        help="Named profile (e.g., test-repo). Overrides profiles.json for all repos.")
+    parser.add_argument("--exclude-checks", nargs="*", default=[], metavar="CHECK",
+                        help="Check IDs to skip (e.g., coverage_config test_ratio)")
+    parser.add_argument("--list-profiles", action="store_true",
+                        help="List available profiles, then exit")
     args = parser.parse_args()
 
     # List checks mode
@@ -49,6 +56,15 @@ def main():
         print("-" * 65)
         for cid, info in CHECKS.items():
             print(f"{info['name']:<40s} {info['weight']:>5d}%  {info['category']}")
+        return
+
+    if args.list_profiles:
+        data = load_central_profiles()
+        for name, pdef in data.get("profiles", {}).items():
+            desc = pdef.get("description", "")
+            excl = ", ".join(pdef.get("exclude", [])) or "(none)"
+            print(f"  {name:20s} {desc}")
+            print(f"  {'':20s} excludes: {excl}\n")
         return
 
     # Require repo or --batch unless --list-checks
@@ -102,7 +118,14 @@ def main():
         if not args.quiet:
             prefix = f"  [{i}/{total}] " if total > 1 else "  "
             print(f"{prefix}Assessing {repo_name}...", end="", flush=True, file=sys.stderr)
-        result = assess_repo(repo_path)
+        profile_info = resolve_profile(
+            repo_path,
+            cli_profile=args.profile,
+            cli_exclude_checks=args.exclude_checks or None,
+        )
+        result = assess_repo(repo_path,
+                             excluded_checks=profile_info.excluded_checks,
+                             profile_info=profile_info)
         all_results.append(result)
         if not args.quiet:
             if result["overall_score"] is not None:
@@ -138,7 +161,11 @@ def main():
         lines = [f"\nAI Bug Automation Readiness Assessment", f"{'=' * 50}"]
         for r in sorted(code_results, key=lambda x: x["overall_score"], reverse=True):
             level, _ = readiness_level(r["overall_score"])
-            lines.append(f"  {r['repo']:45s} {round(r['overall_score']):3d}/100  {level}")
+            profile_suffix = ""
+            if r.get("profile", {}).get("name", "default") != "default":
+                p = r["profile"]
+                profile_suffix = f" (profile: {p['name']}, {len(p['excluded_checks'])} excluded)"
+            lines.append(f"  {r['repo']:45s} {round(r['overall_score']):3d}/100  {level}{profile_suffix}")
             if r.get("verify_gate"):
                 lines.append(f"    {'':45s} (verify gate: {r['verify_gate']})")
             # Show per-check details for single-repo assessments
@@ -150,10 +177,13 @@ def main():
                 for phase in ["Understand", "Navigate", "Verify", "Submit"]:
                     lines.append(f"  {phase}")
                     for c in checks_by_cat.get(phase, []):
-                        icon = "+" if c["score"] >= 60 else "-"
-                        lines.append(f"    [{icon}] {c['name']:40s} {c['score']:3.0f}/100 (weight: {c['weight']}%)")
-                        if c.get("recommendation"):
-                            lines.append(f"        -> {c['recommendation']}")
+                        if c.get("excluded"):
+                            lines.append(f"    [N/A] {c['name']:40s}  --     (excluded by profile)")
+                        else:
+                            icon = "+" if c["score"] >= 60 else "-"
+                            lines.append(f"    [{icon}] {c['name']:40s} {c['score']:3.0f}/100 (weight: {c['weight']}%)")
+                            if c.get("recommendation"):
+                                lines.append(f"        -> {c['recommendation']}")
                     lines.append("")
         if noncode_results:
             lines.append(f"\n  Non-code repos (excluded from scoring):")
