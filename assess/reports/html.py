@@ -323,7 +323,7 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
         html += "</tbody></table>\n"
 
     # How Scoring Works (collapsed)
-    html += """<details id="how-scoring-works">
+    html += f"""<details id="how-scoring-works">
 <summary style="cursor:pointer;font-weight:600;font-size:1.3rem;padding:0.5rem 0;color:#374151;border-bottom:2px solid #E5E7EB;margin-top:2.5rem">How Scoring Works <a class="anchor" href="#how-scoring-works">#</a></summary>
 <div style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#4B5563">
 <p>The overall score is a weighted average of {len(CHECKS)} checks, each scored 0-100. Checks are grouped into 4 phases of an AI bug-fixing workflow:</p>
