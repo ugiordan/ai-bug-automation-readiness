@@ -13,6 +13,10 @@ This tool scores repositories on how ready they are for AI agents to autonomousl
 
 Non-code repos (docs, config, governance) with fewer than 3 source files are automatically excluded from scoring.
 
+### Profiles
+
+If your repo is assessed with checks that don't apply (e.g., coverage_config for a test repo that tests external products), you can request a profile change by opening a PR to the [ai-bug-automation-readiness repo](https://github.com/ugiordan/ai-bug-automation-readiness) to modify `assess/profiles.json`. Include a reason explaining why each check is inapplicable.
+
 ## Summary of All 20 Checks
 
 Checks scoring below 60 show a **blue recommendation** in the report — these are the items teams should focus on.

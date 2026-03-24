@@ -69,6 +69,9 @@ python assess.py --list-checks
 | `--exclude REPO...` | Skip specific repos in batch mode |
 | `--quiet / -q` | Suppress progress output |
 | `--list-checks` | List all checks and weights, then exit |
+| `--profile NAME` | Named profile for check exclusions (e.g., `test-repo`) |
+| `--exclude-checks CHECK...` | Skip specific checks (e.g., `coverage_config test_ratio`) |
+| `--list-profiles` | List available profiles and their exclusions |
 | `--version` | Show version number |
 
 ### Exit Codes
@@ -166,6 +169,31 @@ A repo without test infrastructure cannot support autonomous bug fixing, regardl
 - **Frontend-aware test ratio** — TS/JS-heavy repos (>60% of source) use relaxed thresholds since component files inflate source counts
 - **Frontend logging detection** — recognizes Sentry, console.error/warn patterns, ErrorBoundary alongside backend logging frameworks
 - **HTML output is XSS-safe** with all user-derived values escaped, Chart.js loaded with SRI integrity
+
+## Profiles
+
+Some repo types have checks that are structurally inapplicable. For example, E2E test repos that test external products don't need internal code coverage. Profiles let you exclude these checks without inflating scores unfairly.
+
+### Available Profiles
+
+| Profile | Excludes | Use case |
+|---|---|---|
+| `default` | (none) | All product repos |
+| `test-repo` | coverage_config, test_ratio, test_isolation | E2E/integration test repos |
+
+### How It Works
+
+- All profile configuration lives in `assess/profiles.json` (centrally controlled)
+- Repos not listed in profiles.json get the `default` profile (all 20 checks)
+- To request a profile change, open a PR to modify `assess/profiles.json`
+- Excluded checks appear as "N/A" in reports (not hidden)
+- A raw score (all 20 checks) is shown alongside the adjusted score for fair comparison
+- Maximum 5 checks can be excluded per repo
+- Cannot exclude all checks in any single category
+
+### Anti-Gaming
+
+Weights cannot be overridden. Only checks that are structurally inapplicable can be excluded, and all exclusion changes require a PR with a mandatory reason field.
 
 ## Output Formats
 
