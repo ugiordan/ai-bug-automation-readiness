@@ -13,7 +13,7 @@ def generate_csv(all_results):
     results = sorted(code_results, key=lambda r: r["overall_score"], reverse=True)
     buf = io.StringIO()
     check_ids = list(CHECKS.keys())
-    headers = ["repo", "overall_score", "level", "verify_avg", "verify_gate", "languages"] + [CHECKS[cid]["name"] for cid in check_ids]
+    headers = ["repo", "overall_score", "level", "verify_avg", "verify_gate", "languages", "profile", "excluded_checks"] + [CHECKS[cid]["name"] for cid in check_ids]
     writer = csv.writer(buf)
     writer.writerow(headers)
     for r in results:
@@ -22,12 +22,18 @@ def generate_csv(all_results):
             r["repo"],
             round(r["overall_score"]),
             level,
-            r.get("verify_avg", ""),
+            r.get("verify_avg") if r.get("verify_avg") is not None else "",
             r.get("verify_gate") or "",
             ";".join(r["languages"]),
+            r.get("profile", {}).get("name", "default"),
+            ";".join(r.get("profile", {}).get("excluded_checks", [])),
         ]
         for cid in check_ids:
-            row.append(round(r["checks"][cid]["score"]))
+            c = r["checks"][cid]
+            if c.get("excluded"):
+                row.append("N/A")
+            else:
+                row.append(round(c["score"]))
         writer.writerow(row)
     for r in sorted(noncode_results, key=lambda x: x["repo"]):
         row = [r["repo"], "N/A", "Not Applicable", "", "", ";".join(r["languages"])]

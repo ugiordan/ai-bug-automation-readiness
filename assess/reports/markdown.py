@@ -78,7 +78,7 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
     if d["partially_ready"]:
         for r in d["partially_ready"]:
             link = f"[{r['repo']}](https://github.com/{org_prefix}{r['repo']})" if org else r["repo"]
-            checks_sorted = sorted(r["checks"].items(), key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+            checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
             top_gap = checks_sorted[0][1]["name"] if checks_sorted else ""
             lines.append(f"- {link} ({round(r['overall_score'])}) -- top gap: {top_gap}")
     else:
@@ -89,7 +89,7 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
     if d["needs_work"]:
         for r in d["needs_work"]:
             link = f"[{r['repo']}](https://github.com/{org_prefix}{r['repo']})" if org else r["repo"]
-            checks_sorted = sorted(r["checks"].items(), key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+            checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
             top_gap = checks_sorted[0][1]["name"] if checks_sorted else ""
             lines.append(f"- {link} ({round(r['overall_score'])}) -- top gap: {top_gap}")
     else:
@@ -144,10 +144,13 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
         lines.append("|---|---|---|---|---|")
         for cid in check_ids:
             c = r["checks"][cid]
-            ev_text = "; ".join(c["evidence"])
-            if c.get("recommendation"):
-                ev_text += f" *Rec: {c['recommendation']}*"
-            lines.append(f"| {_escape_pipe(c['name'])} | {c['category']} | {c['weight']}% | {c['score']:.0f} | {_escape_pipe(ev_text)} |")
+            if c.get("excluded"):
+                lines.append(f"| {_escape_pipe(c['name'])} | {c['category']} | {c['weight']}% | N/A | *Excluded by profile* |")
+            else:
+                ev_text = "; ".join(c["evidence"])
+                if c.get("recommendation"):
+                    ev_text += f" *Rec: {c['recommendation']}*"
+                lines.append(f"| {_escape_pipe(c['name'])} | {c['category']} | {c['weight']}% | {c['score']:.0f} | {_escape_pipe(ev_text)} |")
         lines.append("")
 
     lines.append(f"---\n*AI Bug Automation Readiness Report -- Generated {now}*\n")
