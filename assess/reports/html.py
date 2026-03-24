@@ -35,6 +35,8 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
     for r in d["sorted_results"]:
         phase_avgs = {}
         for c in r["checks"].values():
+            if c.get("excluded"):
+                continue
             phase_avgs.setdefault(c["category"], []).append(c["score"])
         phase_avgs = {p: sum(s)/len(s) for p, s in phase_avgs.items()}
         if phase_avgs:
@@ -190,7 +192,7 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
   <ul>
 """
     for r in d["partially_ready"]:
-        checks_sorted = sorted(r["checks"].items(), key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+        checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
         top_action = esc(checks_sorted[0][1]["name"]) if checks_sorted else ""
         html += f'    <li><a href="https://github.com/{org_prefix}{esc(r["repo"])}" target="_blank">{esc(r["repo"])}</a> ({round(r["overall_score"])}) - top gap: {top_action}</li>\n'
     if not d["partially_ready"]:
@@ -203,7 +205,7 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
   <ul>
 """
     for r in d["needs_work"]:
-        checks_sorted = sorted(r["checks"].items(), key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+        checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
         top_action = esc(checks_sorted[0][1]["name"]) if checks_sorted else ""
         html += f'    <li><a href="https://github.com/{org_prefix}{esc(r["repo"])}" target="_blank">{esc(r["repo"])}</a> ({round(r["overall_score"])}) - top gap: {top_action}</li>\n'
     if not d["needs_work"]:
@@ -324,7 +326,7 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
     html += """<details id="how-scoring-works">
 <summary style="cursor:pointer;font-weight:600;font-size:1.3rem;padding:0.5rem 0;color:#374151;border-bottom:2px solid #E5E7EB;margin-top:2.5rem">How Scoring Works <a class="anchor" href="#how-scoring-works">#</a></summary>
 <div style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#4B5563">
-<p>The overall score is a weighted average of 14 checks, each scored 0-100. Checks are grouped into 4 phases of an AI bug-fixing workflow:</p>
+<p>The overall score is a weighted average of {len(CHECKS)} checks, each scored 0-100. Checks are grouped into 4 phases of an AI bug-fixing workflow:</p>
 <table style="margin:1rem 0;font-size:0.85rem">
 <thead><tr><th>Phase</th><th>Weight</th><th>What it measures</th></tr></thead>
 <tbody>
@@ -374,9 +376,12 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
         html += f'<tr><td class="repo-col">{esc(r["repo"])}</td><td><strong>{round(r["overall_score"])}</strong></td>\n'
         for cid in check_ids:
             c = r["checks"].get(cid, {})
-            s = c.get("score", 0)
-            bg = "#D1FAE5" if s >= 80 else "#FEF3C7" if s >= 40 else "#FEE2E2"
-            html += f'<td style="background:{bg}">{s:.0f}</td>\n'
+            if c.get("excluded"):
+                html += '<td style="background:#E5E7EB;color:#9CA3AF;text-align:center;font-size:0.7rem">N/A</td>\n'
+            else:
+                s = c.get("score", 0)
+                bg = "#D1FAE5" if s >= 80 else "#FEF3C7" if s >= 40 else "#FEE2E2"
+                html += f'<td style="background:{bg}">{s:.0f}</td>\n'
         html += "</tr>\n"
     html += "</tbody></table></div>\n</details>\n"
 
@@ -386,19 +391,27 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
 """
     for r in d["sorted_results"]:
         level, level_color = readiness_level(r["overall_score"])
+        profile_badge = ""
+        if r.get("profile", {}).get("name", "default") != "default":
+            p = r["profile"]
+            profile_badge = f' <span class="badge" style="background:#6B7280;margin-left:4px">{esc(p["name"])}</span>'
         html += f"""<details id="{esc(r['repo'])}">
-<summary>{esc(r['repo'])} <span class="badge" style="background:{level_color}">{round(r['overall_score'])}/100 - {level}</span></summary>
+<summary>{esc(r['repo'])} <span class="badge" style="background:{level_color}">{round(r['overall_score'])}/100 - {level}</span>{profile_badge}</summary>
 <table style="font-size:0.85rem">
 <thead><tr><th>Check</th><th>Phase</th><th>Weight</th><th>Score</th><th>Evidence & Recommendation</th></tr></thead>
 <tbody>
 """
         for cid in check_ids:
             c = r["checks"][cid]
-            sc = _score_color(c["score"])
-            ev = "<ul class='evidence'>" + "".join(f"<li>{esc(e)}</li>" for e in c["evidence"]) + "</ul>"
-            rec_html = f"<div class='rec'>{esc(c['recommendation'])}</div>" if c.get("recommendation") else ""
-            html += f"<tr><td>{c['name']}</td><td>{c['category']}</td><td>{c['weight']}%</td>"
-            html += f"<td style='color:{sc};font-weight:600'>{c['score']:.0f}</td><td>{ev}{rec_html}</td></tr>\n"
+            if c.get("excluded"):
+                html += f"<tr style='color:#9CA3AF'><td>{c['name']}</td><td>{c['category']}</td><td>{c['weight']}%</td>"
+                html += "<td>N/A</td><td><em>Excluded by profile</em></td></tr>\n"
+            else:
+                sc = _score_color(c["score"])
+                ev = "<ul class='evidence'>" + "".join(f"<li>{esc(e)}</li>" for e in c["evidence"]) + "</ul>"
+                rec_html = f"<div class='rec'>{esc(c['recommendation'])}</div>" if c.get("recommendation") else ""
+                html += f"<tr><td>{c['name']}</td><td>{c['category']}</td><td>{c['weight']}%</td>"
+                html += f"<td style='color:{sc};font-weight:600'>{c['score']:.0f}</td><td>{ev}{rec_html}</td></tr>\n"
         html += "</tbody></table></details>\n"
     html += "</details>\n"
 
