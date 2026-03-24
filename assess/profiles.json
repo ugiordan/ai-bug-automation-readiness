@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "default": {
+      "description": "Standard product component. All 20 checks enabled.",
+      "exclude": []
+    },
+    "test-repo": {
+      "description": "E2E/integration test repos that test external products.",
+      "exclude": ["coverage_config", "test_ratio", "test_isolation"]
+    }
+  },
+  "repos": {}
+}
