@@ -29,6 +29,8 @@ def prepare_report_data(all_results, org=None):
     cat_scores = {}
     for r in sorted_results:
         for c in r["checks"].values():
+            if c.get("excluded"):
+                continue
             cat_scores.setdefault(c["category"], []).append(c["score"])
     cat_avgs = {cat: sum(s) / len(s) for cat, s in cat_scores.items()}
 
@@ -40,6 +42,8 @@ def prepare_report_data(all_results, org=None):
     check_avgs = {}
     for r in sorted_results:
         for cid, c in r["checks"].items():
+            if c.get("excluded"):
+                continue
             check_avgs.setdefault(cid, {"name": c["name"], "scores": [], "weight": c["weight"]})
             check_avgs[cid]["scores"].append(c["score"])
     worst_checks = sorted(
