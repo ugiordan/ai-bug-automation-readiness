@@ -817,8 +817,6 @@ def check_pr_template(repo_path, *, all_files=None, rng=None):
 def check_linting_in_ci(repo_path, *, all_files=None, rng=None):
     """Check if linting/formatting runs in CI."""
     ci_dir = Path(repo_path) / ".github" / "workflows"
-    if not ci_dir.exists():
-        return 0, ["No CI workflows"]
 
     lint_patterns = [
         r'golangci-lint', r'make\s+lint', r'make\s+fmt', r'make\s+vet',
@@ -831,12 +829,13 @@ def check_linting_in_ci(repo_path, *, all_files=None, rng=None):
     ]
 
     found_in = []
-    for cf in list(ci_dir.glob("*.yml")) + list(ci_dir.glob("*.yaml")):
-        content = read_file_safe(cf)
-        for lp in lint_patterns:
-            if re.search(lp, content):
-                found_in.append(cf.name)
-                break
+    if ci_dir.exists():
+        for cf in list(ci_dir.glob("*.yml")) + list(ci_dir.glob("*.yaml")):
+            content = read_file_safe(cf)
+            for lp in lint_patterns:
+                if re.search(lp, content):
+                    found_in.append(cf.name)
+                    break
 
     if found_in:
         score = 80
@@ -844,11 +843,28 @@ def check_linting_in_ci(repo_path, *, all_files=None, rng=None):
             score = 100
         return score, [f"Linting in CI: {', '.join(found_in[:3])}"]
 
+    # Check .pre-commit-config.yaml for lint tools (covers pre-commit.ci)
+    precommit_cfg = Path(repo_path) / ".pre-commit-config.yaml"
+    if precommit_cfg.exists():
+        content = read_file_safe(precommit_cfg)
+        precommit_lint_patterns = [
+            r'\b(black|ruff|flake8|isort|prettier|eslint|gofmt|golangci|autopep8|pylint|mypy|pyright)\b',
+        ]
+        has_lint = any(re.search(p, content, re.IGNORECASE) for p in precommit_lint_patterns)
+        if has_lint:
+            has_ci_key = bool(re.search(r'^ci\s*:', content, re.MULTILINE))
+            if has_ci_key:
+                return 100, ["Linting via pre-commit.ci (ci: key in .pre-commit-config.yaml)"]
+            return 80, ["Linting via .pre-commit-config.yaml (lint hooks configured)"]
+
     makefile = Path(repo_path) / "Makefile"
     if makefile.exists():
         content = read_file_safe(makefile)
         if re.search(r'^(lint|fmt|format|vet)\s*:', content, re.MULTILINE):
             return 40, ["Lint targets in Makefile (but not confirmed in CI)"]
+
+    if not ci_dir.exists():
+        return 0, ["No CI workflows"]
 
     return 0, ["No linting in CI detected"]
 

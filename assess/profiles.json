@@ -9,5 +9,9 @@
       "exclude": ["coverage_config", "test_ratio", "test_isolation"]
     }
   },
-  "repos": {}
+  "repos": {
+    "opendatahub-tests": {
+      "profile": "test-repo"
+    }
+  }
 }
