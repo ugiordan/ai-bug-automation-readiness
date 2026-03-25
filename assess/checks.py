@@ -294,7 +294,7 @@ def check_structured_logging(repo_path, *, all_files=None, rng=None):
     for sf in sample:
         content = read_file_safe(sf)
         if (re.search(r'\.(Info|Warn|Error|Debug)\(', content)
-                or re.search(r'log\.(info|warn|error|debug)\(', content)
+                or re.search(r'(?:log|logger|logging|_log|_logger)\.(info|warn(?:ing)?|error|debug)\(', content, re.IGNORECASE)
                 or re.search(r'console\.(error|warn|info|debug)\(', content)
                 or re.search(r'Sentry\.(captureException|captureMessage)', content)):
             log_patterns += 1
@@ -872,10 +872,17 @@ def check_linting_in_ci(repo_path, *, all_files=None, rng=None):
 def check_contributing_guide(repo_path, *, all_files=None, rng=None):
     """Check for contributing guide or development documentation."""
     guide_files = [
-        "CONTRIBUTING.md", "docs/CONTRIBUTING.md", "DEVELOPMENT.md",
-        "docs/development.md", "docs/DEVELOPMENT.md", "HACKING.md",
-        "docs/developer-guide.md",
+        "CONTRIBUTING.md", "CONTRIBUTING.rst", "CONTRIBUTING.txt",
+        "docs/CONTRIBUTING.md", ".github/CONTRIBUTING.md",
+        "DEVELOPMENT.md", "docs/development.md", "docs/DEVELOPMENT.md",
+        "HACKING.md", "docs/HACKING.md",
+        "docs/developer-guide.md", "docs/DEVELOPER_GUIDE.md",
+        "docs/developer_guide.md",
     ]
+
+    dev_keywords = ["test", "build", "run", "setup", "install", "debug"]
+    best_score = 0
+    best_evidence = []
 
     for gf in guide_files:
         if (Path(repo_path) / gf).exists():
@@ -883,11 +890,16 @@ def check_contributing_guide(repo_path, *, all_files=None, rng=None):
             score = 50
             evidence = [f"Found: {gf}"]
 
-            dev_keywords = ["test", "build", "run", "setup", "install", "debug"]
             matches = sum(1 for kw in dev_keywords if re.search(rf'\b{kw}\b', content, re.IGNORECASE))
             score += min(matches * 10, 50)
             evidence.append(f"{matches}/{len(dev_keywords)} development keywords")
-            return min(score, 100), evidence
+            score = min(score, 100)
+            if score > best_score:
+                best_score = score
+                best_evidence = evidence
+
+    if best_score > 0:
+        return best_score, best_evidence
 
     readme = Path(repo_path) / "README.md"
     if readme.exists():
@@ -930,7 +942,10 @@ def check_architecture_docs(repo_path, *, all_files=None, rng=None):
     for f in (all_files or []):
         if f.name.lower() == "readme.md" and f.parent != Path(repo_path):
             module_readmes += 1
-    if module_readmes >= 3:
+    if module_readmes >= 5:
+        score += 40
+        evidence.append(f"{module_readmes} module-level READMEs")
+    elif module_readmes >= 3:
         score += 30
         evidence.append(f"{module_readmes} module-level READMEs")
     elif module_readmes >= 1:
@@ -955,6 +970,7 @@ def check_fixture_data(repo_path, *, all_files=None, rng=None):
         "samples", "examples",
         "config/samples", "config/examples",
         "test/resources", "tests/resources",
+        "manifests/testdata", "manifests/test", "config/testdata",
     ]
 
     found_dirs = []
@@ -975,22 +991,38 @@ def check_fixture_data(repo_path, *, all_files=None, rng=None):
             score = 80
         evidence.append(f"Fixture directories: {', '.join(found_dirs[:3])} ({total_files} files)")
     else:
-        # Check for factory/fixture patterns in test files
-        test_files = [f for f in (all_files or [])
-                      if f.is_file() and f.suffix.lower() in SOURCE_EXTS and _is_test_file(f)]
-        sample = (rng.sample(test_files, min(20, len(test_files))) if rng and test_files
-                  else test_files[:20])
-        factory_count = 0
-        for tf in sample:
-            content = read_file_safe(tf, max_bytes=5000)
-            if re.search(r'\b(factory|fixture|mock_data|sample_data|test_data)\b', content, re.IGNORECASE):
-                factory_count += 1
-        if factory_count >= 3:
-            score = 60
-            evidence.append(f"Factory/fixture patterns in {factory_count}/{len(sample)} sampled test files")
-        elif factory_count >= 1:
-            score = 40
-            evidence.append(f"Some fixture patterns in {factory_count}/{len(sample)} sampled test files")
+        # Check for test manifests in kustomize/config overlay directories
+        manifest_parents = {"manifests", "kustomize", "config", "deploy"}
+        test_parents = {"e2e", "test", "testdata", "testing"}
+        manifest_test_files = [
+            f for f in (all_files or [])
+            if f.is_file()
+            and f.suffix.lower() in (".yaml", ".yml", ".json")
+            and manifest_parents.intersection(p.lower() for p in f.parts)
+            and test_parents.intersection(p.lower() for p in f.parts)
+        ]
+        if manifest_test_files:
+            score = 50
+            if len(manifest_test_files) >= 5:
+                score = 70
+            evidence.append(f"Test manifests in overlay/config dirs ({len(manifest_test_files)} files)")
+        else:
+            # Check for factory/fixture patterns in test files
+            test_files = [f for f in (all_files or [])
+                          if f.is_file() and f.suffix.lower() in SOURCE_EXTS and _is_test_file(f)]
+            sample = (rng.sample(test_files, min(20, len(test_files))) if rng and test_files
+                      else test_files[:20])
+            factory_count = 0
+            for tf in sample:
+                content = read_file_safe(tf, max_bytes=5000)
+                if re.search(r'\b(factory|fixture|mock_data|sample_data|test_data)\b', content, re.IGNORECASE):
+                    factory_count += 1
+            if factory_count >= 3:
+                score = 60
+                evidence.append(f"Factory/fixture patterns in {factory_count}/{len(sample)} sampled test files")
+            elif factory_count >= 1:
+                score = 40
+                evidence.append(f"Some fixture patterns in {factory_count}/{len(sample)} sampled test files")
 
     if not evidence:
         evidence.append("No test fixtures or sample data found")
