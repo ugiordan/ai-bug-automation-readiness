@@ -1,0 +1,14 @@
+{
+  "orgs": {
+    "opendatahub-io": {
+      "description": "Core OpenDataHub platform components",
+      "mode": "all",
+      "exclude": []
+    },
+    "project-codeflare": {
+      "description": "CodeFlare distributed computing stack",
+      "mode": "include",
+      "repos": ["codeflare-sdk"]
+    }
+  }
+}

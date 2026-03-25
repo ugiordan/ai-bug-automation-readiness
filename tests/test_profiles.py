@@ -152,5 +152,61 @@ class TestResolveProfile(unittest.TestCase):
         os.unlink(cfg_path)
 
 
+class TestOrgRepoLookup(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.repo_path = os.path.join(self.tmp, "codeflare-sdk")
+        os.makedirs(self.repo_path)
+
+    def _write_profiles(self, data):
+        path = os.path.join(self.tmp, "profiles.json")
+        with open(path, "w") as f:
+            json.dump(data, f)
+        return path
+
+    def test_qualified_name_takes_priority(self):
+        """org/repo key should take priority over bare repo key."""
+        path = self._write_profiles({
+            "profiles": {
+                "default": {"description": "All checks", "exclude": []},
+                "test-repo": {"description": "Test", "exclude": ["coverage_config", "test_ratio", "test_isolation"]}
+            },
+            "repos": {
+                "codeflare-sdk": {"profile": "default"},
+                "project-codeflare/codeflare-sdk": {"profile": "test-repo"}
+            }
+        })
+        result = resolve_profile(self.repo_path, central_path=path, org="project-codeflare")
+        self.assertEqual(result.name, "test-repo")
+
+    def test_bare_name_fallback_when_no_qualified(self):
+        """If no org/repo key, fall back to bare repo key."""
+        path = self._write_profiles({
+            "profiles": {
+                "default": {"description": "All checks", "exclude": []},
+                "test-repo": {"description": "Test", "exclude": ["coverage_config", "test_ratio", "test_isolation"]}
+            },
+            "repos": {
+                "codeflare-sdk": {"profile": "test-repo"}
+            }
+        })
+        result = resolve_profile(self.repo_path, central_path=path, org="project-codeflare")
+        self.assertEqual(result.name, "test-repo")
+
+    def test_no_org_uses_bare_name(self):
+        """Without org param, only bare name lookup."""
+        path = self._write_profiles({
+            "profiles": {
+                "default": {"description": "All checks", "exclude": []},
+                "test-repo": {"description": "Test", "exclude": ["coverage_config", "test_ratio", "test_isolation"]}
+            },
+            "repos": {
+                "codeflare-sdk": {"profile": "test-repo"}
+            }
+        })
+        result = resolve_profile(self.repo_path, central_path=path)
+        self.assertEqual(result.name, "test-repo")
+
+
 if __name__ == "__main__":
     unittest.main()

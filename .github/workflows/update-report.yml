@@ -21,22 +21,15 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Clone all opendatahub-io repos
+      - name: Clone repos from scan config
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          mkdir -p /tmp/odh-repos
-          repos=$(gh repo list opendatahub-io --limit 300 --json name,isArchived \
-            -q '.[] | select(.isArchived == false) | .name')
-          total=$(echo "$repos" | wc -l | tr -d ' ')
-          echo "Found $total repos to clone"
-          echo "$repos" | xargs -P4 -I{} sh -c \
-            'gh repo clone opendatahub-io/{} /tmp/odh-repos/{} -- --depth 1 --single-branch 2>/dev/null && echo "  Cloned {}" || echo "  SKIP {}"'
-          count=$(ls -d /tmp/odh-repos/*/.git 2>/dev/null | wc -l)
-          echo "Successfully cloned $count repositories"
+        run: python scripts/clone-repos.py scan-config.json /tmp/repos
 
       - name: Generate report
-        run: python assess.py --batch /tmp/odh-repos --format html --org opendatahub-io --title "OpenDataHub AI Bug Automation Readiness" -o docs/report.html
+        run: |
+          python assess.py --batch /tmp/repos --format html \
+            --title "AI Bug Automation Readiness" -o docs/report.html
 
       - name: Commit and push if changed
         run: |

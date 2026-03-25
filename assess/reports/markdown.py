@@ -155,3 +155,39 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
 
     lines.append(f"---\n*AI Bug Automation Readiness Report -- Generated {now}*\n")
     return "\n".join(lines)
+
+
+def generate_markdown_multi(results_by_org, title="AI Bug Automation Readiness Report"):
+    """Generate multi-org markdown report with per-org sections."""
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    lines = [f"# {title}\n", f"*Generated {now}*\n"]
+
+    # Cross-org comparison table
+    lines.append("## Cross-Org Summary\n")
+    lines.append("| Org | Repos | Avg Score | Ready | Partially Ready | Needs Work | Not Ready |")
+    lines.append("|---|---|---|---|---|---|---|")
+    for org_name, org_results in results_by_org.items():
+        d = prepare_report_data(org_results, org=org_name)
+        lines.append(
+            f"| {org_name} | {d['total_code']} | {d['avg']:.0f} | "
+            f"{d['tier_counts']['Ready']} | {d['tier_counts']['Partially Ready']} | "
+            f"{d['tier_counts']['Needs Work']} | {d['tier_counts']['Not Ready']} |"
+        )
+    lines.append("")
+
+    # Per-org full analysis
+    for org_name, org_results in results_by_org.items():
+        lines.append(f"---\n\n## {org_name}\n")
+        # Reuse single-org generator, strip the title line
+        org_md = generate_markdown(org_results, title=org_name, org=org_name)
+        # Skip first two lines (title + date) since we have our own header
+        org_lines = org_md.split("\n")
+        # Find first line after the title block
+        start = 0
+        for i, line in enumerate(org_lines):
+            if line.startswith(">"):
+                start = i
+                break
+        lines.append("\n".join(org_lines[start:]))
+
+    return "\n".join(lines)

@@ -13,12 +13,13 @@ def generate_csv(all_results):
     results = sorted(code_results, key=lambda r: r["overall_score"], reverse=True)
     buf = io.StringIO()
     check_ids = list(CHECKS.keys())
-    headers = ["repo", "overall_score", "level", "verify_avg", "verify_gate", "languages", "profile", "excluded_checks"] + [CHECKS[cid]["name"] for cid in check_ids]
+    headers = ["org", "repo", "overall_score", "level", "verify_avg", "verify_gate", "languages", "profile", "excluded_checks"] + [CHECKS[cid]["name"] for cid in check_ids]
     writer = csv.writer(buf)
     writer.writerow(headers)
     for r in results:
         level, _ = readiness_level(r["overall_score"])
         row = [
+            r.get("org", ""),
             r["repo"],
             round(r["overall_score"]),
             level,
@@ -36,7 +37,7 @@ def generate_csv(all_results):
                 row.append(round(c["score"]))
         writer.writerow(row)
     for r in sorted(noncode_results, key=lambda x: x["repo"]):
-        row = [r["repo"], "N/A", "Not Applicable", "", "", ";".join(r["languages"])]
+        row = [r.get("org", ""), r["repo"], "N/A", "Not Applicable", "", "", ";".join(r["languages"]), "", ""]
         for cid in check_ids:
             row.append("")
         writer.writerow(row)

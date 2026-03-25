@@ -55,7 +55,7 @@ def _validate_max_exclusions(excluded, max_allowed=5):
         sys.exit(f"Error: {len(excluded)} checks excluded, maximum is {max_allowed}.")
 
 
-def resolve_profile(repo_path, cli_profile=None, cli_exclude_checks=None, central_path=None):
+def resolve_profile(repo_path, cli_profile=None, cli_exclude_checks=None, central_path=None, org=None):
     """Resolve the effective set of excluded checks for a repo."""
     central = load_central_profiles(central_path)
     repo_name = Path(repo_path).name
@@ -64,7 +64,12 @@ def resolve_profile(repo_path, cli_profile=None, cli_exclude_checks=None, centra
     profile_name = "default"
 
     # Layer 1: central profiles.json repo entry
-    repo_entry = central.get("repos", {}).get(repo_name)
+    # Try qualified org/repo key first, then bare repo name
+    repo_entry = None
+    if org:
+        repo_entry = central.get("repos", {}).get(f"{org}/{repo_name}")
+    if not repo_entry:
+        repo_entry = central.get("repos", {}).get(repo_name)
     if repo_entry:
         source = "profiles.json"
         entry_profile = repo_entry.get("profile", "default")

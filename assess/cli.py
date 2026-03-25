@@ -15,6 +15,34 @@ from .reports.csv_report import generate_csv
 __version__ = "1.0.0"
 
 
+def discover_repos(batch_dir, exclude_set):
+    """Discover repos in batch dir. Supports flat and nested (org/repo) layouts.
+
+    Returns list of (org, repo_name, repo_path) tuples.
+    org is None for flat layout entries.
+    """
+    results = []
+    for entry in sorted(os.listdir(batch_dir)):
+        entry_path = os.path.join(batch_dir, entry)
+        if not os.path.isdir(entry_path):
+            continue
+
+        # Flat layout: entry is a repo (has .git)
+        if os.path.isdir(os.path.join(entry_path, ".git")):
+            if entry not in exclude_set:
+                results.append((None, entry, entry_path))
+            continue
+
+        # Nested layout: entry is an org containing repos
+        for sub in sorted(os.listdir(entry_path)):
+            sub_path = os.path.join(entry_path, sub)
+            if os.path.isdir(os.path.join(sub_path, ".git")):
+                if sub not in exclude_set and f"{entry}/{sub}" not in exclude_set:
+                    results.append((entry, sub, sub_path))
+
+    return results
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="AI Bug Automation Readiness Assessment",
@@ -96,11 +124,7 @@ def main():
         repos_dir = args.batch
         if not os.path.isdir(repos_dir):
             parser.error(f"Batch directory does not exist: {repos_dir}")
-        repos = sorted([
-            os.path.join(repos_dir, d) for d in os.listdir(repos_dir)
-            if os.path.isdir(os.path.join(repos_dir, d, ".git"))
-            and d not in exclude_set
-        ])
+        repo_tuples = discover_repos(repos_dir, exclude_set)
     else:
         if not os.path.isdir(args.repo):
             if os.path.exists(args.repo):
@@ -109,12 +133,12 @@ def main():
         if not os.path.isdir(os.path.join(args.repo, ".git")):
             if not args.quiet:
                 print(f"  Warning: {args.repo} is not a git repository (no .git directory)", file=sys.stderr)
-        repos = [args.repo]
+        repo_tuples = [(args.org, Path(args.repo).name, args.repo)]
 
     all_results = []
-    total = len(repos)
-    for i, repo_path in enumerate(repos, 1):
-        repo_name = Path(repo_path).name
+    total = len(repo_tuples)
+    for i, (org, repo_name, repo_path) in enumerate(repo_tuples, 1):
+        effective_org = org or args.org
         if not args.quiet:
             prefix = f"  [{i}/{total}] " if total > 1 else "  "
             print(f"{prefix}Assessing {repo_name}...", end="", flush=True, file=sys.stderr)
@@ -122,10 +146,12 @@ def main():
             repo_path,
             cli_profile=args.profile,
             cli_exclude_checks=args.exclude_checks or None,
+            org=effective_org,
         )
         result = assess_repo(repo_path,
                              excluded_checks=profile_info.excluded_checks,
                              profile_info=profile_info)
+        result["org"] = effective_org
         all_results.append(result)
         if not args.quiet:
             if result["overall_score"] is not None:
@@ -138,17 +164,38 @@ def main():
         print("No repositories found to assess.", file=sys.stderr)
         sys.exit(2)
 
+    # Determine if multi-org (preserve None keys for single-repo without --org)
+    from collections import defaultdict
+    results_by_org = defaultdict(list)
+    for result in all_results:
+        results_by_org[result.get("org")].append(result)
+
+    # Multi-org detection: only count orgs with actual names (not None)
+    named_orgs = {k: v for k, v in results_by_org.items() if k is not None}
+    use_multi = len(named_orgs) > 1
+
     if args.format == "json":
         output = json.dumps(all_results if len(all_results) > 1 else all_results[0], indent=2)
     elif args.format == "html":
-        output = generate_html(all_results, title=args.title, org=args.org)
+        if use_multi:
+            from .reports.html import generate_html_tabbed
+            output = generate_html_tabbed(dict(named_orgs), title=args.title)
+        else:
+            effective_org = args.org or next((k for k in results_by_org if k is not None), None)
+            output = generate_html(all_results, title=args.title, org=effective_org)
     elif args.format == "markdown":
-        output = generate_markdown(all_results, title=args.title, org=args.org)
+        if use_multi:
+            from .reports.markdown import generate_markdown_multi
+            output = generate_markdown_multi(dict(named_orgs), title=args.title)
+        else:
+            effective_org = args.org or next((k for k in results_by_org if k is not None), None)
+            output = generate_markdown(all_results, title=args.title, org=effective_org)
     elif args.format == "csv":
         output = generate_csv(all_results)
     elif args.format == "docx":
         from .reports.docx_report import generate_docx
-        docx_doc = generate_docx(all_results, title=args.title, org=args.org)
+        effective_org = args.org or next((k for k in results_by_org if k is not None), None)
+        docx_doc = generate_docx(all_results, title=args.title, org=effective_org)
         out_path = args.output or "report.docx"
         docx_doc.save(out_path)
         if not args.quiet:

@@ -195,6 +195,44 @@ Some repo types have checks that are structurally inapplicable. For example, E2E
 
 Weights cannot be overridden. Only checks that are structurally inapplicable can be excluded, and all exclusion changes require a PR with a mandatory reason field.
 
+## Multi-Org Support
+
+Scan repos from multiple GitHub organizations by defining a `scan-config.json`:
+
+```json
+{
+  "orgs": {
+    "opendatahub-io": {
+      "description": "Core OpenDataHub platform components",
+      "mode": "all",
+      "exclude": []
+    },
+    "project-codeflare": {
+      "description": "CodeFlare distributed computing stack",
+      "mode": "include",
+      "repos": ["codeflare-sdk"]
+    }
+  }
+}
+```
+
+### Modes
+
+- `"all"` — scan all non-archived repos. Optional `exclude` list.
+- `"include"` — scan only the listed repos.
+
+### Usage
+
+```bash
+# Clone repos into nested layout
+python scripts/clone-repos.py scan-config.json /tmp/repos
+
+# Generate multi-org report (tabs auto-detected from nested dirs)
+python assess.py --batch /tmp/repos --format html -o report.html
+```
+
+The HTML report shows per-org tabs with independent analysis when multiple orgs are detected. Single-org scans produce the same report as before.
+
 ## Output Formats
 
 | Format | Dependencies | Description |
@@ -222,7 +260,7 @@ They're complementary — a repo can score well on AgentReady (clean code, good 
 
 ## Live Report
 
-The [OpenDataHub readiness report](https://ugiordan.github.io/ai-bug-automation-readiness/report.html) is regenerated automatically every Monday via GitHub Actions, scanning all non-archived repos in the `opendatahub-io` organization.
+The [OpenDataHub readiness report](https://ugiordan.github.io/ai-bug-automation-readiness/report.html) is regenerated automatically every Monday via GitHub Actions, scanning repos from multiple organizations as defined in `scan-config.json`.
 
 For actionable steps to improve your repo's score, see the [Team Action Guide](docs/TEAM_ACTION_GUIDE.md).
 
