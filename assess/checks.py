@@ -1191,7 +1191,7 @@ def check_dependency_complexity(repo_path, *, all_files=None, rng=None):
     pyproject = Path(repo_path) / "pyproject.toml"
     if pyproject.exists() and dep_count == 0:
         content = read_file_safe(pyproject)
-        deps_match = re.search(r'dependencies\s*=\s*\[(.*?)\]', content, re.DOTALL)
+        deps_match = re.search(r'dependencies\s*=\s*\[(.*?)\n\]', content, re.DOTALL)
         if deps_match:
             dep_count += sum(1 for l in deps_match.group(1).splitlines() if l.strip().strip('",'))
 
