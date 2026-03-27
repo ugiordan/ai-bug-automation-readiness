@@ -491,6 +491,38 @@ def check_test_ratio(repo_path, *, all_files=None, rng=None):
     evidence = [f"{total_tests} test files / {total_source} source files (ratio: {ratio:.2f})"]
     if is_frontend_heavy:
         evidence.append("Frontend-heavy repo (relaxed thresholds)")
+
+    # Quality validation: sample test files and check for real assertions
+    if test_files and score > 0:
+        sample = rng.sample(test_files, min(20, len(test_files))) if rng else test_files[:20]
+        assertion_re = re.compile(
+            r'(?:'
+            r'assert\b|self\.assert|assertEqual|assertTrue|assertRaises'  # Python
+            r'|expect\(|\.toBe|\.toEqual|\.toContain|\.toThrow'  # JS/TS Jest
+            r'|\.Should\(|Expect\(|It\('  # Go gomega / JS Jasmine
+            r'|t\.Run\(|t\.Error|t\.Fatal|t\.Log'  # Go testing
+            r'|@Test|assertEquals|assertThat|verify\('  # Java
+            r')',
+            re.IGNORECASE,
+        )
+        substantial = 0
+        for tf in sample:
+            content = read_file_safe(tf, max_bytes=5000)
+            lines = [l for l in content.splitlines() if l.strip() and not l.strip().startswith(('#', '//'))]
+            has_assertions = bool(assertion_re.search(content))
+            if has_assertions and len(lines) >= 5:
+                substantial += 1
+
+        quality_ratio = substantial / len(sample)
+        if quality_ratio < 0.5:
+            penalty = int(score * 0.5)
+            score = max(score - penalty, 10)
+            evidence.append(f"Low test quality: {substantial}/{len(sample)} sampled test files have assertions (stub penalty applied)")
+        elif quality_ratio < 0.8:
+            penalty = int(score * 0.25)
+            score = max(score - penalty, 10)
+            evidence.append(f"Mixed test quality: {substantial}/{len(sample)} sampled test files have assertions")
+
     return score, evidence
 
 

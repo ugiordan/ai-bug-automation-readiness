@@ -12,6 +12,7 @@ from assess.checks import (
     check_contributing_guide,
     check_structured_logging,
     check_fixture_data,
+    check_test_ratio,
 )
 
 
@@ -231,6 +232,157 @@ class TestCheckFixtureData(unittest.TestCase):
         rng = random.Random(42)
         score, evidence = check_fixture_data(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 50)
+
+
+class TestCheckTestRatioQuality(unittest.TestCase):
+    """Tests for test file quality validation in check_test_ratio - Issue #9."""
+
+    def _make_repo(self, source_content, test_content, num_source=10, num_tests=10,
+                   source_ext=".py", test_prefix="test_"):
+        """Create repo with source and test files. Returns (tmpdir, all_files)."""
+        tmpdir = tempfile.mkdtemp()
+        all_files = []
+        for i in range(num_source):
+            p = Path(tmpdir) / f"module_{i}{source_ext}"
+            p.write_text(source_content)
+            all_files.append(p)
+        for i in range(num_tests):
+            p = Path(tmpdir) / f"{test_prefix}{i}{source_ext}"
+            p.write_text(test_content)
+            all_files.append(p)
+        return tmpdir, all_files
+
+    def test_substantial_tests_keep_full_score(self):
+        """Test files with real assertions should not be penalized."""
+        tmpdir, all_files = self._make_repo(
+            source_content="def foo():\n    return 1\n",
+            test_content=(
+                "import unittest\n"
+                "class TestFoo(unittest.TestCase):\n"
+                "    def test_foo(self):\n"
+                "        self.assertEqual(foo(), 1)\n"
+                "    def test_bar(self):\n"
+                "        self.assertTrue(bar())\n"
+            ),
+        )
+        rng = random.Random(42)
+        score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
+        self.assertEqual(score, 100)
+        # Should NOT mention stub/quality issues
+        self.assertFalse(any("stub" in e.lower() for e in evidence))
+
+    def test_stub_tests_reduce_score(self):
+        """Test files with no assertions should reduce the score."""
+        tmpdir, all_files = self._make_repo(
+            source_content="def foo():\n    return 1\n",
+            test_content="# empty test\npass\n",
+        )
+        rng = random.Random(42)
+        score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
+        # 10:10 ratio would normally be 100, but stubs should reduce it
+        self.assertLess(score, 100)
+        self.assertTrue(any("stub" in e.lower() or "quality" in e.lower() for e in evidence))
+
+    def test_mixed_quality_partial_penalty(self):
+        """Mix of real and stub tests should get partial penalty."""
+        tmpdir = tempfile.mkdtemp()
+        all_files = []
+        # 10 source files
+        for i in range(10):
+            p = Path(tmpdir) / f"module_{i}.py"
+            p.write_text("def foo():\n    return 1\n")
+            all_files.append(p)
+        # 5 real test files
+        for i in range(5):
+            p = Path(tmpdir) / f"test_real_{i}.py"
+            p.write_text("def test_it():\n    assert foo() == 1\n")
+            all_files.append(p)
+        # 5 stub test files
+        for i in range(5):
+            p = Path(tmpdir) / f"test_stub_{i}.py"
+            p.write_text("# TODO: add tests\npass\n")
+            all_files.append(p)
+        rng = random.Random(42)
+        score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
+        # Should be between stub-only and full-quality scores
+        self.assertGreater(score, 0)
+        self.assertLess(score, 100)
+
+    def test_go_assertions_detected(self):
+        """Go test assertions (t.Run, t.Error, t.Fatal) should count."""
+        tmpdir, all_files = self._make_repo(
+            source_content="package main\nfunc Foo() int { return 1 }\n",
+            test_content=(
+                "package main\n"
+                "import \"testing\"\n"
+                "func TestFoo(t *testing.T) {\n"
+                "    t.Run(\"case\", func(t *testing.T) {\n"
+                "        if Foo() != 1 { t.Error(\"wrong\") }\n"
+                "    })\n"
+                "}\n"
+            ),
+            source_ext=".go",
+            test_prefix="",
+            num_tests=0,
+        )
+        # Add Go test files manually (they use _test.go suffix)
+        for i in range(10):
+            p = Path(tmpdir) / f"foo_{i}_test.go"
+            p.write_text(
+                "package main\n"
+                "import \"testing\"\n"
+                "func TestFoo(t *testing.T) {\n"
+                "    t.Run(\"case\", func(t *testing.T) {\n"
+                "        if Foo() != 1 { t.Error(\"wrong\") }\n"
+                "    })\n"
+                "}\n"
+            )
+            all_files.append(p)
+        rng = random.Random(42)
+        score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
+        self.assertEqual(score, 100)
+
+    def test_js_expect_assertions_detected(self):
+        """JS/TS test assertions (expect, it, describe) should count."""
+        tmpdir, all_files = self._make_repo(
+            source_content="export const foo = () => 1;\n",
+            test_content=(
+                "describe('foo', () => {\n"
+                "  it('returns 1', () => {\n"
+                "    expect(foo()).toBe(1);\n"
+                "  });\n"
+                "});\n"
+            ),
+            source_ext=".ts",
+            test_prefix="",
+            num_tests=0,
+        )
+        # Add TS test files with .test.ts suffix
+        for i in range(10):
+            p = Path(tmpdir) / f"foo_{i}.test.ts"
+            p.write_text(
+                "describe('foo', () => {\n"
+                "  it('returns 1', () => {\n"
+                "    expect(foo()).toBe(1);\n"
+                "  });\n"
+                "});\n"
+            )
+            all_files.append(p)
+        rng = random.Random(42)
+        score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
+        # Frontend-heavy with good ratio and real assertions
+        self.assertGreaterEqual(score, 85)
+
+    def test_no_tests_unaffected(self):
+        """Zero test files should still score 0 (quality check doesn't interfere)."""
+        tmpdir, all_files = self._make_repo(
+            source_content="def foo():\n    return 1\n",
+            test_content="",
+            num_tests=0,
+        )
+        rng = random.Random(42)
+        score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
+        self.assertEqual(score, 0)
 
 
 if __name__ == "__main__":
