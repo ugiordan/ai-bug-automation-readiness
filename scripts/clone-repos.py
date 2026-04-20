@@ -40,8 +40,7 @@ def main():
                 continue
             r = subprocess.run(
                 ["gh", "repo", "clone", f"{org}/{repo}", str(target),
-                 "--", "--depth", "1", "--single-branch",
-                 "--filter=blob:none"],
+                 "--", "--depth", "1", "--single-branch"],
                 capture_output=True
             )
             if r.returncode == 0:

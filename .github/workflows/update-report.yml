@@ -11,7 +11,7 @@ permissions:
 jobs:
   update-report:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - name: Free up disk space
         run: |
