@@ -15,7 +15,12 @@ jobs:
     steps:
       - name: Free up disk space
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache /usr/share/swift /usr/local/share/boost \
+            /usr/local/share/powershell /usr/local/lib/heroku \
+            /usr/share/az_* /opt/microsoft /usr/local/share/chromium \
+            /usr/local/lib/node_modules /usr/share/miniconda /usr/share/kotlinc \
+            /usr/share/gradle-* /usr/share/sbt
           sudo docker image prune --all --force
           df -h /
 

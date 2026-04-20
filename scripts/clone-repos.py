@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Read scan-config.json and clone repos into nested org/repo layout."""
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -39,10 +40,16 @@ def main():
                 continue
             r = subprocess.run(
                 ["gh", "repo", "clone", f"{org}/{repo}", str(target),
-                 "--", "--depth", "1", "--single-branch"],
+                 "--", "--depth", "1", "--single-branch",
+                 "--filter=blob:none"],
                 capture_output=True
             )
             if r.returncode == 0:
+                # Remove .git to save disk; we only need the working tree
+                git_dir = target / ".git"
+                if git_dir.exists():
+                    shutil.rmtree(git_dir)
+                    git_dir.touch()  # marker for repo detection
                 print(f"  Cloned {org}/{repo}")
             else:
                 print(f"  SKIP {org}/{repo} (clone failed)", file=sys.stderr)

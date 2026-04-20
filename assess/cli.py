@@ -27,8 +27,8 @@ def discover_repos(batch_dir, exclude_set):
         if not os.path.isdir(entry_path):
             continue
 
-        # Flat layout: entry is a repo (has .git)
-        if os.path.isdir(os.path.join(entry_path, ".git")):
+        # Flat layout: entry is a repo (has .git dir or .git marker file)
+        if os.path.exists(os.path.join(entry_path, ".git")):
             if entry not in exclude_set:
                 results.append((None, entry, entry_path))
             continue
@@ -36,7 +36,7 @@ def discover_repos(batch_dir, exclude_set):
         # Nested layout: entry is an org containing repos
         for sub in sorted(os.listdir(entry_path)):
             sub_path = os.path.join(entry_path, sub)
-            if os.path.isdir(os.path.join(sub_path, ".git")):
+            if os.path.exists(os.path.join(sub_path, ".git")):
                 if sub not in exclude_set and f"{entry}/{sub}" not in exclude_set:
                     results.append((entry, sub, sub_path))
 
@@ -130,7 +130,7 @@ def main():
             if os.path.exists(args.repo):
                 parser.error(f"Not a directory: {args.repo}")
             parser.error(f"Repository path does not exist: {args.repo}")
-        if not os.path.isdir(os.path.join(args.repo, ".git")):
+        if not os.path.exists(os.path.join(args.repo, ".git")):
             if not args.quiet:
                 print(f"  Warning: {args.repo} is not a git repository (no .git directory)", file=sys.stderr)
         repo_tuples = [(args.org, Path(args.repo).name, args.repo)]
