@@ -5,6 +5,7 @@ import json
 import sys
 from collections import namedtuple
 from pathlib import Path
+from typing import Any
 
 from .config import CHECKS
 
@@ -13,7 +14,7 @@ ResolvedProfile = namedtuple("ResolvedProfile", ["name", "excluded_checks", "sou
 _BUILTIN_PATH = Path(__file__).parent / "profiles.json"
 
 
-def load_central_profiles(path=None):
+def load_central_profiles(path: str | Path | None = None) -> dict[str, Any]:
     """Load profiles.json. Returns default structure if file is missing/invalid."""
     p = Path(path) if path else _BUILTIN_PATH
     if not p.exists():
@@ -21,13 +22,14 @@ def load_central_profiles(path=None):
         return {"profiles": {"default": {"description": "All checks", "exclude": []}}, "repos": {}}
     try:
         with open(p, "r", encoding="utf-8") as f:
-            return json.load(f)
+            result: dict[str, Any] = json.load(f)
+            return result
     except (json.JSONDecodeError, KeyError) as e:
         print(f"  Warning: invalid profiles config at {p}: {e}, using defaults", file=sys.stderr)
         return {"profiles": {"default": {"description": "All checks", "exclude": []}}, "repos": {}}
 
 
-def _validate_check_ids(check_ids, source_label):
+def _validate_check_ids(check_ids: list[str] | set[str], source_label: str) -> set[str]:
     """Return only valid check IDs. Warn on unknown ones."""
     valid = set()
     for cid in check_ids:
@@ -38,24 +40,26 @@ def _validate_check_ids(check_ids, source_label):
     return valid
 
 
-def _validate_category_coverage(excluded):
+def _validate_category_coverage(excluded: set[str]) -> None:
     """Rule 8: cannot exclude ALL checks in any single category."""
     from .config import CHECKS
-    categories = {}
+
+    categories: dict[str, set[str]] = {}
     for cid, info in CHECKS.items():
-        categories.setdefault(info["category"], set()).add(cid)
+        cat: str = info["category"]  # type: ignore[assignment]
+        categories.setdefault(cat, set()).add(cid)
     for cat, cat_checks in categories.items():
         if cat_checks <= excluded:
             sys.exit(f"Error: all {cat} checks would be excluded. At least one check per category must remain.")
 
 
-def _validate_max_exclusions(excluded, max_allowed=5):
+def _validate_max_exclusions(excluded: set[str], max_allowed: int = 5) -> None:
     """Rule 9: max N checks excludable per repo."""
     if len(excluded) > max_allowed:
         sys.exit(f"Error: {len(excluded)} checks excluded, maximum is {max_allowed}.")
 
 
-def resolve_profile(repo_path, cli_profile=None, cli_exclude_checks=None, central_path=None, org=None):
+def resolve_profile(repo_path: str | Path, cli_profile: str | None = None, cli_exclude_checks: list[str] | None = None, central_path: str | Path | None = None, org: str | None = None) -> ResolvedProfile:
     """Resolve the effective set of excluded checks for a repo."""
     central = load_central_profiles(central_path)
     repo_name = Path(repo_path).name
@@ -87,7 +91,10 @@ def resolve_profile(repo_path, cli_profile=None, cli_exclude_checks=None, centra
             also = _validate_check_ids(repo_entry["exclude_also"], f"exclude_also for {repo_name}")
             redundant = also & excluded
             if redundant:
-                print(f"  Warning: exclude_also {redundant} already excluded by profile '{entry_profile}' in {repo_name}", file=sys.stderr)
+                print(
+                    f"  Warning: exclude_also {redundant} already excluded by profile '{entry_profile}' in {repo_name}",
+                    file=sys.stderr,
+                )
             excluded |= also
 
         # include_back (subtractive) -- Rule 2: must exist in profile's exclude list, Rule 5: reason required
@@ -98,7 +105,10 @@ def resolve_profile(repo_path, cli_profile=None, cli_exclude_checks=None, centra
             profile_excludes = set(_validate_check_ids(profile_def.get("exclude", []), "")) if profile_def else set()
             invalid_back = include_back - profile_excludes
             if invalid_back:
-                print(f"  Warning: include_back {invalid_back} not in profile '{entry_profile}' exclude list for {repo_name}", file=sys.stderr)
+                print(
+                    f"  Warning: include_back {invalid_back} not in profile '{entry_profile}' exclude list for {repo_name}",
+                    file=sys.stderr,
+                )
             excluded -= include_back
 
     # Layer 2: CLI --profile override (replaces JSON profile, not additive)

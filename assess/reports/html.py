@@ -10,7 +10,7 @@ from . import prepare_report_data
 
 
 # Unified color thresholds: 80+ green, 60+ amber, 40+ orange, <40 red
-def _score_color(score):
+def _score_color(score: float) -> str:
     if score >= 80:
         return "#10B981"
     if score >= 60:
@@ -20,44 +20,44 @@ def _score_color(score):
     return "#EF4444"
 
 
-def _render_summary_cards(d, prefix):
+def _render_summary_cards(d: dict, prefix: str) -> str:
     """Render the summary cards section (Code Repos, Average Score, tiers)."""
     return f"""<div class="cards" role="region" aria-label="Score summary">
   <div class="card">
-    <div class="value">{d['total_code']}<span style="font-size:1rem;color:#6B7280">/{d['total_code'] + d['total_noncode']}</span></div>
+    <div class="value">{d["total_code"]}<span style="font-size:1rem;color:#6B7280">/{d["total_code"] + d["total_noncode"]}</span></div>
     <div class="label">Code Repos Assessed</div>
   </div>
   <div class="card">
-    <div class="value">{d['avg']:.0f}<span style="font-size:1rem;color:#6B7280">/100</span></div>
+    <div class="value">{d["avg"]:.0f}<span style="font-size:1rem;color:#6B7280">/100</span></div>
     <div class="label">Average Score</div>
   </div>
   <div class="card">
-    <div class="value" style="color:#10B981">{d['tier_counts']['Ready']}</div>
+    <div class="value" style="color:#10B981">{d["tier_counts"]["Ready"]}</div>
     <div class="label">Ready</div>
   </div>
   <div class="card">
-    <div class="value" style="color:#B45309">{d['tier_counts']['Partially Ready']}</div>
+    <div class="value" style="color:#B45309">{d["tier_counts"]["Partially Ready"]}</div>
     <div class="label">Partially Ready</div>
   </div>
   <div class="card">
-    <div class="value" style="color:#C2410C">{d['tier_counts']['Needs Work']}</div>
+    <div class="value" style="color:#C2410C">{d["tier_counts"]["Needs Work"]}</div>
     <div class="label">Needs Work</div>
   </div>
   <div class="card">
-    <div class="value" style="color:#EF4444">{d['tier_counts']['Not Ready']}</div>
+    <div class="value" style="color:#EF4444">{d["tier_counts"]["Not Ready"]}</div>
     <div class="label">Not Ready</div>
   </div>
 </div>
 """
 
 
-def _render_shortlist(d, prefix, org_prefix):
+def _render_shortlist(d: dict, prefix: str, org_prefix: str) -> str:
     """Render the Bug Bash Shortlist section (all 4 tiers)."""
     esc = html_mod.escape
 
     html = f"""<h2 id="{prefix}shortlist">Bug Bash Shortlist <a class="anchor" href="#{prefix}shortlist">#</a></h2>
 <div class="shortlist">
-  <h3 style="color:#10B981">Ready (score 80+) - {len(d['ready_repos'])} {'repo' if len(d['ready_repos']) == 1 else 'repos'}</h3>
+  <h3 style="color:#10B981">Ready (score 80+) - {len(d["ready_repos"])} {"repo" if len(d["ready_repos"]) == 1 else "repos"}</h3>
   <ul>
 """
     for r in d["ready_repos"]:
@@ -68,11 +68,15 @@ def _render_shortlist(d, prefix, org_prefix):
     html += f"""  </ul>
 </div>
 <div class="shortlist">
-  <h3 style="color:#F59E0B">Partially Ready (score 60-79) - can start with some gaps ({len(d['partially_ready'])} {'repo' if len(d['partially_ready']) == 1 else 'repos'})</h3>
+  <h3 style="color:#F59E0B">Partially Ready (score 60-79) - can start with some gaps ({len(d["partially_ready"])} {"repo" if len(d["partially_ready"]) == 1 else "repos"})</h3>
   <ul>
 """
     for r in d["partially_ready"]:
-        checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+        checks_sorted = sorted(
+            [(k, v) for k, v in r["checks"].items() if not v.get("excluded")],
+            key=lambda x: (100 - x[1]["score"]) * x[1]["weight"],
+            reverse=True,
+        )
         top_action = esc(checks_sorted[0][1]["name"]) if checks_sorted else ""
         html += f'    <li><a href="https://github.com/{org_prefix}{esc(r["repo"])}" target="_blank">{esc(r["repo"])}</a> ({round(r["overall_score"])}) - top gap: {top_action}</li>\n'
     if not d["partially_ready"]:
@@ -81,11 +85,15 @@ def _render_shortlist(d, prefix, org_prefix):
     html += f"""  </ul>
 </div>
 <div class="shortlist">
-  <h3 style="color:#F97316">Needs Work (score 40-59) - fix key gaps first ({len(d['needs_work'])} {'repo' if len(d['needs_work']) == 1 else 'repos'})</h3>
+  <h3 style="color:#F97316">Needs Work (score 40-59) - fix key gaps first ({len(d["needs_work"])} {"repo" if len(d["needs_work"]) == 1 else "repos"})</h3>
   <ul>
 """
     for r in d["needs_work"]:
-        checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+        checks_sorted = sorted(
+            [(k, v) for k, v in r["checks"].items() if not v.get("excluded")],
+            key=lambda x: (100 - x[1]["score"]) * x[1]["weight"],
+            reverse=True,
+        )
         top_action = esc(checks_sorted[0][1]["name"]) if checks_sorted else ""
         html += f'    <li><a href="https://github.com/{org_prefix}{esc(r["repo"])}" target="_blank">{esc(r["repo"])}</a> ({round(r["overall_score"])}) - top gap: {top_action}</li>\n'
     if not d["needs_work"]:
@@ -94,7 +102,7 @@ def _render_shortlist(d, prefix, org_prefix):
     html += f"""  </ul>
 </div>
 <div class="shortlist">
-  <h3 style="color:#EF4444">Not Ready (score &lt;40) - significant work needed ({len(d['not_ready'])} {'repo' if len(d['not_ready']) == 1 else 'repos'})</h3>
+  <h3 style="color:#EF4444">Not Ready (score &lt;40) - significant work needed ({len(d["not_ready"])} {"repo" if len(d["not_ready"]) == 1 else "repos"})</h3>
   <ul>
 """
     for r in d["not_ready"]:
@@ -108,7 +116,7 @@ def _render_shortlist(d, prefix, org_prefix):
     return html
 
 
-def _render_phases(d, prefix):
+def _render_phases(d: dict, prefix: str) -> str:
     """Render the Bug Fix Workflow Phases section."""
     phase_desc = {
         "Understand": "Can the agent understand the bug from the report and codebase context?",
@@ -129,7 +137,7 @@ def _render_phases(d, prefix):
         html += f"""  <div class="phase-card">
     <h3 style="color:{color}">{phase}</h3>
     <div class="phase-score" style="color:{color}">{pavg:.0f}/100</div>
-    <div style="font-size:0.75rem;color:#6B7280;margin-top:0.25rem">{phase_desc.get(phase, '')}</div>
+    <div style="font-size:0.75rem;color:#6B7280;margin-top:0.25rem">{phase_desc.get(phase, "")}</div>
   </div>
 """
 
@@ -138,7 +146,7 @@ def _render_phases(d, prefix):
     return html
 
 
-def _render_scores_table(d, prefix):
+def _render_scores_table(d: dict, prefix: str) -> str:
     """Render the Repository Scores table."""
     esc = html_mod.escape
 
@@ -162,11 +170,11 @@ def _render_scores_table(d, prefix):
         langs = ", ".join(r["languages"][:3])
         gate = ""
         if r.get("verify_gate"):
-            gate = f' <span style="font-size:0.7rem;color:#EF4444">(verify gate applied)</span>'
+            gate = ' <span style="font-size:0.7rem;color:#EF4444">(verify gate applied)</span>'
 
         html += f"""  <tr>
-    <td><a href="#{esc(r['repo'])}"><strong>{esc(r['repo'])}</strong></a>{gate}</td>
-    <td><strong>{round(r['overall_score'])}</strong></td>
+    <td><a href="#{esc(r["repo"])}"><strong>{esc(r["repo"])}</strong></a>{gate}</td>
+    <td><strong>{round(r["overall_score"])}</strong></td>
     <td><span class="bar-bg"><span class="bar" style="width:{bar_w}px;background:{level_color}"></span></span></td>
     <td><span class="badge" style="background:{level_color}">{level}</span></td>
     <td style="font-size:0.8rem;color:#6B7280">{esc(langs)}</td>
@@ -179,7 +187,7 @@ def _render_scores_table(d, prefix):
     return html
 
 
-def _render_quick_wins(d, prefix):
+def _render_quick_wins(d: dict, prefix: str) -> str:
     """Render the Quick Wins section."""
     esc = html_mod.escape
 
@@ -204,10 +212,8 @@ def _render_quick_wins(d, prefix):
     return html
 
 
-def _render_how_scoring(d, prefix):
+def _render_how_scoring(d: dict, prefix: str) -> str:
     """Render the How Scoring Works collapsible section."""
-    esc = html_mod.escape
-
     html = f"""<details id="{prefix}how-scoring-works">
 <summary style="cursor:pointer;font-weight:600;font-size:1.3rem;padding:0.5rem 0;color:#374151;border-bottom:2px solid #E5E7EB;margin-top:2.5rem">How Scoring Works <a class="anchor" href="#{prefix}how-scoring-works">#</a></summary>
 <div style="margin-top:1rem;font-size:0.9rem;line-height:1.6;color:#4B5563">
@@ -218,7 +224,7 @@ def _render_how_scoring(d, prefix):
 """
     for phase in ["Understand", "Navigate", "Verify", "Submit"]:
         w = d["cat_weights"].get(phase, 0)
-        checks_in_phase = [f'{c["name"]} ({c["weight"]}%)' for c in CHECKS.values() if c["category"] == phase]
+        checks_in_phase = [f"{c['name']} ({c['weight']}%)" for c in CHECKS.values() if c["category"] == phase]
         html += f"<tr><td><strong>{phase}</strong></td><td>{w}%</td><td>{', '.join(checks_in_phase)}</td></tr>\n"
     html += """</tbody></table>
 <p><strong>Verify Phase Gate:</strong> If a repo's average Verify score is below 50, the overall score receives a smooth penalty multiplier that scales linearly from x0.4 (verify avg = 0) to x1.0 (verify avg = 50). This reflects that without test infrastructure, autonomous bug fixing is not viable.</p>
@@ -229,7 +235,7 @@ def _render_how_scoring(d, prefix):
     return html
 
 
-def _render_all_checks(d, prefix):
+def _render_all_checks(d: dict, prefix: str) -> str:
     """Render the All Checks Ranked collapsible section."""
     esc = html_mod.escape
 
@@ -252,9 +258,10 @@ def _render_all_checks(d, prefix):
     return html
 
 
-def _render_heatmap(d, prefix):
+def _render_heatmap(d: dict, prefix: str) -> str:
     """Render the Detailed Heatmap collapsible section."""
-    esc = html_mod.escape
+    def esc(s: str) -> str:
+        return html_mod.escape(s)
 
     html = f"""<details id="{prefix}heatmap">
 <summary style="cursor:pointer;font-weight:600;font-size:1.3rem;padding:0.5rem 0;color:#374151;border-bottom:2px solid #E5E7EB;margin-top:2.5rem">Detailed Heatmap <a class="anchor" href="#{prefix}heatmap">#</a></summary>
@@ -263,7 +270,7 @@ def _render_heatmap(d, prefix):
 """
     check_ids = list(CHECKS.keys())
     for cid in check_ids:
-        name = CHECKS[cid]["name"]
+        name: str = CHECKS[cid]["name"]  # type: ignore[assignment]
         html += f'<th title="{esc(name)} ({CHECKS[cid]["weight"]}%)" style="writing-mode:vertical-lr;transform:rotate(180deg);height:140px;font-size:0.7rem;padding:4px 3px;">{esc(name)}</th>\n'
     html += "</tr></thead><tbody>\n"
 
@@ -282,7 +289,7 @@ def _render_heatmap(d, prefix):
     return html
 
 
-def _render_per_repo(d, prefix, org_prefix):
+def _render_per_repo(d: dict, prefix: str, org_prefix: str) -> str:
     """Render the Per-Repository Details collapsible section."""
     esc = html_mod.escape
     check_ids = list(CHECKS.keys())
@@ -296,8 +303,8 @@ def _render_per_repo(d, prefix, org_prefix):
         if r.get("profile", {}).get("name", "default") != "default":
             p = r["profile"]
             profile_badge = f' <span class="badge" style="background:#6B7280;margin-left:4px">{esc(p["name"])}</span>'
-        html += f"""<details id="{esc(r['repo'])}">
-<summary>{esc(r['repo'])} <span class="badge" style="background:{level_color}">{round(r['overall_score'])}/100 - {level}</span>{profile_badge}</summary>
+        html += f"""<details id="{esc(r["repo"])}">
+<summary>{esc(r["repo"])} <span class="badge" style="background:{level_color}">{round(r["overall_score"])}/100 - {level}</span>{profile_badge}</summary>
 <table style="font-size:0.85rem">
 <thead><tr><th>Check</th><th>Phase</th><th>Weight</th><th>Score</th><th>Evidence & Recommendation</th></tr></thead>
 <tbody>
@@ -318,7 +325,7 @@ def _render_per_repo(d, prefix, org_prefix):
     return html
 
 
-def _render_excluded(d, prefix, org_prefix):
+def _render_excluded(d: dict, prefix: str, org_prefix: str) -> str:
     """Render the Non-Code Repos Excluded section."""
     esc = html_mod.escape
 
@@ -326,17 +333,19 @@ def _render_excluded(d, prefix, org_prefix):
         return ""
 
     html = f"""<details id="{prefix}excluded">
-<summary style="cursor:pointer;font-weight:600;font-size:1.3rem;padding:0.5rem 0;color:#374151;border-bottom:2px solid #E5E7EB;margin-top:2.5rem">Non-Code Repos Excluded ({len(d['excluded_repos'])}) <a class="anchor" href="#{prefix}excluded">#</a></summary>
+<summary style="cursor:pointer;font-weight:600;font-size:1.3rem;padding:0.5rem 0;color:#374151;border-bottom:2px solid #E5E7EB;margin-top:2.5rem">Non-Code Repos Excluded ({len(d["excluded_repos"])}) <a class="anchor" href="#{prefix}excluded">#</a></summary>
 <p style="color:#6B7280;font-size:0.9rem;margin:1rem 0">These repos contain no source code (docs, config, governance, etc.) and are excluded from scoring. AI bug-fix readiness assessment is not applicable to non-code repos.</p>
 <ul style="column-count:3;column-gap:2rem;font-size:0.9rem;margin:1rem 0">
 """
     for r in d["excluded_repos"]:
-        html += f'<li><a href="https://github.com/{org_prefix}{esc(r["repo"])}" target="_blank">{esc(r["repo"])}</a></li>\n'
+        html += (
+            f'<li><a href="https://github.com/{org_prefix}{esc(r["repo"])}" target="_blank">{esc(r["repo"])}</a></li>\n'
+        )
     html += "</ul>\n</details>\n"
     return html
 
 
-def _render_head(title, include_tabs=False):
+def _render_head(title: str, include_tabs: bool = False) -> str:
     """Render the <head> section with all CSS (and optional tab CSS)."""
     tab_css = ""
     if include_tabs:
@@ -417,96 +426,111 @@ def _render_head(title, include_tabs=False):
 """
 
 
-def _render_charts_lazy(d, prefix):
+def _render_charts_lazy(d: dict, prefix: str) -> str:
     """Render chart canvases with data-chart attributes for lazy initialization."""
     esc = html_mod.escape
 
     score_bins = [0, 0, 0, 0, 0]
     for r in d["sorted_results"]:
         s = round(r["overall_score"])
-        if s >= 80: score_bins[4] += 1
-        elif s >= 60: score_bins[3] += 1
-        elif s >= 40: score_bins[2] += 1
-        elif s >= 20: score_bins[1] += 1
-        else: score_bins[0] += 1
+        if s >= 80:
+            score_bins[4] += 1
+        elif s >= 60:
+            score_bins[3] += 1
+        elif s >= 40:
+            score_bins[2] += 1
+        elif s >= 20:
+            score_bins[1] += 1
+        else:
+            score_bins[0] += 1
 
     bottleneck_counts = {"Understand": 0, "Navigate": 0, "Verify": 0, "Submit": 0}
     for r in d["sorted_results"]:
-        phase_avgs = {}
+        phase_avgs: dict[str, float] = {}
+        phase_scores: dict[str, list[float]] = {}
         for c in r["checks"].values():
             if c.get("excluded"):
                 continue
-            phase_avgs.setdefault(c["category"], []).append(c["score"])
-        phase_avgs = {p: sum(s)/len(s) for p, s in phase_avgs.items()}
+            phase_scores.setdefault(c["category"], []).append(c["score"])
+        phase_avgs = {p: sum(s) / len(s) for p, s in phase_scores.items()}
         if phase_avgs:
-            weakest = min(phase_avgs, key=phase_avgs.get)
+            weakest = min(phase_avgs, key=lambda k: phase_avgs[k])
             bottleneck_counts[weakest] = bottleneck_counts.get(weakest, 0) + 1
 
     gaps_labels = [name for _, name, _, _ in d["worst_checks"][:7]]
     gaps_scores = [round(avg_s, 1) for _, _, avg_s, _ in d["worst_checks"][:7]]
     gaps_colors = [_score_color(s) for s in gaps_scores]
 
-    hist_config = json_mod.dumps({
-        "type": "bar",
-        "data": {
-            "labels": ["0-19", "20-39", "40-59", "60-79", "80-100"],
-            "datasets": [{
-                "label": "Repos",
-                "data": score_bins,
-                "backgroundColor": ["#EF4444", "#F97316", "#F59E0B", "#84CC16", "#10B981"],
-                "borderRadius": 4
-            }]
-        },
-        "options": {
-            "responsive": True,
-            "plugins": {"legend": {"display": False}},
-            "scales": {
-                "y": {"beginAtZero": True, "ticks": {"stepSize": 1}},
-                "x": {"title": {"display": True, "text": "Score Range"}}
-            }
+    hist_config = json_mod.dumps(
+        {
+            "type": "bar",
+            "data": {
+                "labels": ["0-19", "20-39", "40-59", "60-79", "80-100"],
+                "datasets": [
+                    {
+                        "label": "Repos",
+                        "data": score_bins,
+                        "backgroundColor": ["#EF4444", "#F97316", "#F59E0B", "#84CC16", "#10B981"],
+                        "borderRadius": 4,
+                    }
+                ],
+            },
+            "options": {
+                "responsive": True,
+                "plugins": {"legend": {"display": False}},
+                "scales": {
+                    "y": {"beginAtZero": True, "ticks": {"stepSize": 1}},
+                    "x": {"title": {"display": True, "text": "Score Range"}},
+                },
+            },
         }
-    })
+    )
 
-    gaps_config = json_mod.dumps({
-        "type": "bar",
-        "data": {
-            "labels": gaps_labels,
-            "datasets": [{
-                "label": "Avg Score",
-                "data": gaps_scores,
-                "backgroundColor": gaps_colors,
-                "borderRadius": 4
-            }]
-        },
-        "options": {
-            "indexAxis": "y",
-            "responsive": True,
-            "plugins": {"legend": {"display": False}},
-            "scales": {
-                "x": {"beginAtZero": True, "max": 100, "title": {"display": True, "text": "Average Score"}}
-            }
+    gaps_config = json_mod.dumps(
+        {
+            "type": "bar",
+            "data": {
+                "labels": gaps_labels,
+                "datasets": [
+                    {"label": "Avg Score", "data": gaps_scores, "backgroundColor": gaps_colors, "borderRadius": 4}
+                ],
+            },
+            "options": {
+                "indexAxis": "y",
+                "responsive": True,
+                "plugins": {"legend": {"display": False}},
+                "scales": {"x": {"beginAtZero": True, "max": 100, "title": {"display": True, "text": "Average Score"}}},
+            },
         }
-    })
+    )
 
-    bn_config = json_mod.dumps({
-        "type": "bar",
-        "data": {
-            "labels": list(bottleneck_counts.keys()),
-            "datasets": [{
-                "label": "Repos bottlenecked",
-                "data": list(bottleneck_counts.values()),
-                "backgroundColor": ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B"],
-                "borderRadius": 4
-            }]
-        },
-        "options": {
-            "responsive": True,
-            "plugins": {"legend": {"display": False}},
-            "scales": {
-                "y": {"beginAtZero": True, "ticks": {"stepSize": 1}, "title": {"display": True, "text": "Number of repos"}}
-            }
+    bn_config = json_mod.dumps(
+        {
+            "type": "bar",
+            "data": {
+                "labels": list(bottleneck_counts.keys()),
+                "datasets": [
+                    {
+                        "label": "Repos bottlenecked",
+                        "data": list(bottleneck_counts.values()),
+                        "backgroundColor": ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B"],
+                        "borderRadius": 4,
+                    }
+                ],
+            },
+            "options": {
+                "responsive": True,
+                "plugins": {"legend": {"display": False}},
+                "scales": {
+                    "y": {
+                        "beginAtZero": True,
+                        "ticks": {"stepSize": 1},
+                        "title": {"display": True, "text": "Number of repos"},
+                    }
+                },
+            },
         }
-    })
+    )
 
     return f"""<h2 id="{prefix}score-overview">Score Overview <a class="anchor" href="#{prefix}score-overview">#</a></h2>
 <div class="chart-grid">
@@ -530,7 +554,7 @@ def _render_charts_lazy(d, prefix):
 """
 
 
-def _render_tab_script():
+def _render_tab_script() -> str:
     """Return the tab-switching JavaScript for tabbed reports."""
     return """<script>
 (function() {
@@ -617,7 +641,7 @@ def _render_tab_script():
 """
 
 
-def generate_html_tabbed(results_by_org, title="AI Bug Automation Readiness Report"):
+def generate_html_tabbed(results_by_org: dict[str, list[dict]], title: str = "AI Bug Automation Readiness Report") -> str:
     """Generate multi-org tabbed HTML report."""
     esc = html_mod.escape
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -645,7 +669,7 @@ def generate_html_tabbed(results_by_org, title="AI Bug Automation Readiness Repo
         html += f'  <button class="tab{active}" data-tab="{esc(org_name)}" role="tab" aria-selected="{selected}">{esc(org_name)} ({d["total_code"]})</button>\n'
         first = False
     html += '  <button class="tab tab-all" data-tab="all" role="tab" aria-selected="false">All Orgs</button>\n'
-    html += '</nav>\n'
+    html += "</nav>\n"
 
     # Per-org panels (each is a full independent analysis)
     first = True
@@ -667,39 +691,46 @@ def generate_html_tabbed(results_by_org, title="AI Bug Automation Readiness Repo
         html += _render_heatmap(d, prefix)
         html += _render_per_repo(d, prefix, org_prefix)
         html += _render_excluded(d, prefix, org_prefix)
-        html += '</div>\n'
+        html += "</div>\n"
         first = False
 
     # "All" tab - cross-org comparison only
     html += '<div class="tab-panel" id="panel-all" role="tabpanel">\n'
-    html += '<h2>Cross-Org Comparison</h2>\n'
-    html += '<table>\n<thead><tr><th>Org</th><th>Repos</th><th>Avg Score</th><th>Ready</th><th>Partially Ready</th><th>Needs Work</th><th>Not Ready</th></tr></thead>\n<tbody>\n'
+    html += "<h2>Cross-Org Comparison</h2>\n"
+    html += "<table>\n<thead><tr><th>Org</th><th>Repos</th><th>Avg Score</th><th>Ready</th><th>Partially Ready</th><th>Needs Work</th><th>Not Ready</th></tr></thead>\n<tbody>\n"
     for org_name in results_by_org:
         d = org_data[org_name]
-        html += f'<tr><td><strong>{esc(org_name)}</strong></td><td>{d["total_code"]}</td><td>{d["avg"]:.0f}</td>'
-        html += f'<td>{d["tier_counts"]["Ready"]}</td><td>{d["tier_counts"]["Partially Ready"]}</td>'
-        html += f'<td>{d["tier_counts"]["Needs Work"]}</td><td>{d["tier_counts"]["Not Ready"]}</td></tr>\n'
-    html += '</tbody></table>\n'
+        html += f"<tr><td><strong>{esc(org_name)}</strong></td><td>{d['total_code']}</td><td>{d['avg']:.0f}</td>"
+        html += f"<td>{d['tier_counts']['Ready']}</td><td>{d['tier_counts']['Partially Ready']}</td>"
+        html += f"<td>{d['tier_counts']['Needs Work']}</td><td>{d['tier_counts']['Not Ready']}</td></tr>\n"
+    html += "</tbody></table>\n"
 
     # Cross-org bar chart (lazy init via data-chart)
-    chart_config = json_mod.dumps({
-        "type": "bar",
-        "data": {
-            "labels": list(results_by_org.keys()),
-            "datasets": [{
-                "label": "Average Score",
-                "data": [round(org_data[o]["avg"], 1) for o in results_by_org],
-                "backgroundColor": [_score_color(org_data[o]["avg"]) for o in results_by_org],
-                "borderRadius": 4
-            }]
-        },
-        "options": {"responsive": True, "plugins": {"legend": {"display": False}},
-                    "scales": {"y": {"beginAtZero": True, "max": 100}}}
-    })
-    html += f'<div class="chart-card" style="max-width:600px;margin:2rem 0">\n'
-    html += f'  <h3 style="font-size:0.95rem;margin-bottom:0.75rem;color:#374151">Average Score by Org</h3>\n'
-    html += f"  <canvas id=\"all--orgChart\" height=\"200\" data-chart='{esc(chart_config)}'></canvas>\n"
-    html += '</div>\n</div>\n'
+    chart_config = json_mod.dumps(
+        {
+            "type": "bar",
+            "data": {
+                "labels": list(results_by_org.keys()),
+                "datasets": [
+                    {
+                        "label": "Average Score",
+                        "data": [round(org_data[o]["avg"], 1) for o in results_by_org],
+                        "backgroundColor": [_score_color(org_data[o]["avg"]) for o in results_by_org],
+                        "borderRadius": 4,
+                    }
+                ],
+            },
+            "options": {
+                "responsive": True,
+                "plugins": {"legend": {"display": False}},
+                "scales": {"y": {"beginAtZero": True, "max": 100}},
+            },
+        }
+    )
+    html += '<div class="chart-card" style="max-width:600px;margin:2rem 0">\n'
+    html += '  <h3 style="font-size:0.95rem;margin-bottom:0.75rem;color:#374151">Average Score by Org</h3>\n'
+    html += f'  <canvas id="all--orgChart" height="200" data-chart=\'{esc(chart_config)}\'></canvas>\n'
+    html += "</div>\n</div>\n"
 
     html += _render_tab_script()
 
@@ -711,7 +742,7 @@ def generate_html_tabbed(results_by_org, title="AI Bug Automation Readiness Repo
     return html
 
 
-def generate_html(all_results, title="AI Bug Automation Readiness Report", org=None):
+def generate_html(all_results: list[dict], title: str = "AI Bug Automation Readiness Report", org: str | None = None) -> str:
     if not all_results:
         return "<html><body><h1>No repositories found to assess.</h1></body></html>"
     esc = html_mod.escape
@@ -725,31 +756,37 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
     # Bottleneck phase: which phase is the weakest for each repo
     bottleneck_counts = {"Understand": 0, "Navigate": 0, "Verify": 0, "Submit": 0}
     for r in d["sorted_results"]:
-        phase_avgs = {}
+        phase_avgs: dict[str, float] = {}
+        phase_scores: dict[str, list[float]] = {}
         for c in r["checks"].values():
             if c.get("excluded"):
                 continue
-            phase_avgs.setdefault(c["category"], []).append(c["score"])
-        phase_avgs = {p: sum(s)/len(s) for p, s in phase_avgs.items()}
+            phase_scores.setdefault(c["category"], []).append(c["score"])
+        phase_avgs = {p: sum(s) / len(s) for p, s in phase_scores.items()}
         if phase_avgs:
-            weakest = min(phase_avgs, key=phase_avgs.get)
+            weakest = min(phase_avgs, key=lambda k: phase_avgs[k])
             bottleneck_counts[weakest] = bottleneck_counts.get(weakest, 0) + 1
 
     # Score distribution for histogram
     score_bins = [0, 0, 0, 0, 0]  # 0-19, 20-39, 40-59, 60-79, 80-100
     for r in d["sorted_results"]:
         s = round(r["overall_score"])
-        if s >= 80: score_bins[4] += 1
-        elif s >= 60: score_bins[3] += 1
-        elif s >= 40: score_bins[2] += 1
-        elif s >= 20: score_bins[1] += 1
-        else: score_bins[0] += 1
+        if s >= 80:
+            score_bins[4] += 1
+        elif s >= 60:
+            score_bins[3] += 1
+        elif s >= 40:
+            score_bins[2] += 1
+        elif s >= 20:
+            score_bins[1] += 1
+        else:
+            score_bins[0] += 1
 
-    noncode_note = f" ({d['total_noncode']} non-code repos excluded.)" if d.get('total_noncode') else ""
+    noncode_note = f" ({d['total_noncode']} non-code repos excluded.)" if d.get("total_noncode") else ""
     exec_summary = (
         f"{d['ready_count']} of {d['total_code']} code repositories are partially ready or above for AI-assisted bug fixing.{noncode_note} "
         f"The ecosystem averages {d['avg']:.0f}/100. "
-        f"The biggest gap is \"{d['biggest_gap'][1]}\" (avg {d['biggest_gap'][2]:.0f}/100) "
+        f'The biggest gap is "{d["biggest_gap"][1]}" (avg {d["biggest_gap"][2]:.0f}/100) '
         f"which affects most repos and has high impact on AI agent success."
     )
 
@@ -758,7 +795,7 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
     html += f"""<body>
 
 <h1>{title}</h1>
-<p class="subtitle">{len(d['sorted_results'])} repositories assessed &middot; {now}</p>
+<p class="subtitle">{len(d["sorted_results"])} repositories assessed &middot; {now}</p>
 
 <div class="exec-summary" role="region" aria-label="Executive summary">{esc(exec_summary)}</div>
 
@@ -784,7 +821,7 @@ def generate_html(all_results, title="AI Bug Automation Readiness Report", org=N
     html += "\n"
     html += _render_shortlist(d, prefix, org_prefix)
     html += "\n"
-    html += f"""<h2 id="score-overview">Score Overview <a class="anchor" href="#score-overview">#</a></h2>
+    html += """<h2 id="score-overview">Score Overview <a class="anchor" href="#score-overview">#</a></h2>
 <div class="chart-grid">
   <div class="chart-card">
     <h3 style="font-size:0.95rem;margin-bottom:0.75rem;color:#374151">Score Distribution</h3>

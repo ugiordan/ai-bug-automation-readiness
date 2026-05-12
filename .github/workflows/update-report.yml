@@ -1,3 +1,5 @@
+# Weekly automated report generation
+# Clones repos from scan-config.json and regenerates the HTML report
 name: Update readiness report
 
 on:
@@ -12,6 +14,9 @@ jobs:
   update-report:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    strategy:
+      matrix:
+        python-version: ["3.12"]
     steps:
       - name: Free up disk space
         run: |
@@ -24,20 +29,21 @@ jobs:
           sudo docker image prune --all --force
           df -h /
 
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python-version }}
+          cache: pip
 
       - name: Clone repos from scan config
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/clone-repos.py scan-config.json /tmp/repos
 
-      - name: Generate report
+      - name: Generate HTML report
         run: |
           python assess.py --batch /tmp/repos --format html \
             --title "AI Bug Automation Readiness" -o docs/report.html

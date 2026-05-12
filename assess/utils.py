@@ -4,10 +4,10 @@ import sys
 from functools import lru_cache
 from pathlib import Path
 
-from .config import EXCLUDE_DIRS, GENERATED_FILE_PATTERNS, GENERATED_HEADER_MARKERS, SOURCE_EXTS
+from .config import EXCLUDE_DIRS, GENERATED_FILE_PATTERNS, GENERATED_HEADER_MARKERS
 
 
-def find_files(repo_path, pattern, exclude_dirs=None):
+def find_files(repo_path: str | Path, pattern: str, exclude_dirs: list[str] | None = None) -> list[Path]:
     exclude = exclude_dirs or EXCLUDE_DIRS
     results = []
     for p in Path(repo_path).rglob(pattern):
@@ -16,13 +16,13 @@ def find_files(repo_path, pattern, exclude_dirs=None):
     return results
 
 
-def find_all_files_cached(repo_path):
+def find_all_files_cached(repo_path: str | Path) -> list[Path]:
     """Single directory traversal per repo — returns all non-excluded files."""
     return find_files(repo_path, "*")
 
 
 @lru_cache(maxsize=8192)
-def is_generated_file(path):
+def is_generated_file(path: str | Path) -> bool:
     """Check if a file is auto-generated (cached)."""
     path = Path(path)
     if GENERATED_FILE_PATTERNS.search(str(path)):
@@ -38,7 +38,8 @@ def is_generated_file(path):
         return False
 
 
-def read_file_safe(path, max_bytes=50000):
+def read_file_safe(path: str | Path, max_bytes: int = 50000) -> str:
+    """Read file content safely, returning empty string on errors."""
     try:
         with open(path, "r", errors="ignore") as f:
             return f.read(max_bytes)
@@ -49,7 +50,7 @@ def read_file_safe(path, max_bytes=50000):
         return ""
 
 
-def count_lines_fast(path):
+def count_lines_fast(path: str | Path) -> int:
     """Count lines without reading full file into memory."""
     try:
         with open(path, "rb") as f:
@@ -58,22 +59,32 @@ def count_lines_fast(path):
         return 0
 
 
-def detect_languages(repo_path, all_files=None):
+def detect_languages(repo_path: str | Path, all_files: list[Path] | None = None) -> list[str]:
     """Detect languages sorted by file count (primary first)."""
     files = all_files if all_files is not None else find_all_files_cached(repo_path)
-    exts = {}
+    exts: dict[str, int] = {}
     for f in files:
         if f.is_file() and not is_generated_file(f):
             ext = f.suffix.lower()
             exts[ext] = exts.get(ext, 0) + 1
     lang_map = {
-        ".go": "Go", ".py": "Python", ".js": "JavaScript", ".ts": "TypeScript",
-        ".tsx": "TypeScript", ".jsx": "JavaScript",
-        ".java": "Java", ".rs": "Rust", ".rb": "Ruby", ".cpp": "C++", ".c": "C",
-        ".kt": "Kotlin", ".scala": "Scala", ".sh": "Shell",
+        ".go": "Go",
+        ".py": "Python",
+        ".js": "JavaScript",
+        ".ts": "TypeScript",
+        ".tsx": "TypeScript",
+        ".jsx": "JavaScript",
+        ".java": "Java",
+        ".rs": "Rust",
+        ".rb": "Ruby",
+        ".cpp": "C++",
+        ".c": "C",
+        ".kt": "Kotlin",
+        ".scala": "Scala",
+        ".sh": "Shell",
     }
     langs = [(name, exts.get(ext, 0)) for ext, name in lang_map.items() if exts.get(ext, 0) > 2]
-    merged = {}
+    merged: dict[str, int] = {}
     for name, count in langs:
         merged[name] = merged.get(name, 0) + count
     return [name for name, _ in sorted(merged.items(), key=lambda x: x[1], reverse=True)] or ["Unknown"]

@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from assess.scan_config import load_scan_config
 
 
-def main():
+def main() -> None:
     config_path = sys.argv[1] if len(sys.argv) > 1 else "scan-config.json"
     dest = Path(sys.argv[2] if len(sys.argv) > 2 else "/tmp/repos")
 
@@ -22,12 +22,23 @@ def main():
 
         if org_cfg["mode"] == "all":
             result = subprocess.run(
-                ["gh", "repo", "list", org, "--limit", "300",
-                 "--json", "name,isArchived",
-                 "-q", '.[] | select(.isArchived == false) | .name'],
-                capture_output=True, text=True, check=True
+                [
+                    "gh",
+                    "repo",
+                    "list",
+                    org,
+                    "--limit",
+                    "300",
+                    "--json",
+                    "name,isArchived",
+                    "-q",
+                    ".[] | select(.isArchived == false) | .name",
+                ],
+                capture_output=True,
+                text=True,
+                check=True,
             )
-            repos = [r for r in result.stdout.strip().split('\n') if r]
+            repos = [r for r in result.stdout.strip().split("\n") if r]
             exclude = set(org_cfg.get("exclude", []))
             repos = [r for r in repos if r not in exclude]
         else:
@@ -39,9 +50,8 @@ def main():
             if target.exists():
                 continue
             r = subprocess.run(
-                ["gh", "repo", "clone", f"{org}/{repo}", str(target),
-                 "--", "--depth", "1", "--single-branch"],
-                capture_output=True
+                ["gh", "repo", "clone", f"{org}/{repo}", str(target), "--", "--depth", "1", "--single-branch"],
+                capture_output=True,
             )
             if r.returncode == 0:
                 # Remove .git to save disk; we only need the working tree

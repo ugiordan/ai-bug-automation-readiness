@@ -1,10 +1,12 @@
 """Report generators — shared data preparation."""
 
+from typing import Any
+
 from ..config import CHECKS, RECOMMENDATIONS
 from ..engine import readiness_level
 
 
-def prepare_report_data(all_results, org=None):
+def prepare_report_data(all_results: list[dict], org: str | None = None) -> dict[str, Any]:
     """Compute shared metrics used by all report generators.
 
     Returns a dict with: sorted_results, excluded_repos, avg, tier_counts, cat_avgs,
@@ -26,7 +28,7 @@ def prepare_report_data(all_results, org=None):
         tier_counts[level] += 1
 
     # Phase averages (code repos only)
-    cat_scores = {}
+    cat_scores: dict[str, list[float]] = {}
     for r in sorted_results:
         for c in r["checks"].values():
             if c.get("excluded"):
@@ -34,12 +36,14 @@ def prepare_report_data(all_results, org=None):
             cat_scores.setdefault(c["category"], []).append(c["score"])
     cat_avgs = {cat: sum(s) / len(s) for cat, s in cat_scores.items()}
 
-    cat_weights = {}
+    cat_weights: dict[str, int] = {}
     for c in CHECKS.values():
-        cat_weights[c["category"]] = cat_weights.get(c["category"], 0) + c["weight"]
+        cat: str = c["category"]  # type: ignore[assignment]
+        weight: int = c["weight"]  # type: ignore[assignment]
+        cat_weights[cat] = cat_weights.get(cat, 0) + weight
 
     # Check averages (code repos only)
-    check_avgs = {}
+    check_avgs: dict[str, dict[str, Any]] = {}
     for r in sorted_results:
         for cid, c in r["checks"].items():
             if c.get("excluded"):
@@ -47,8 +51,10 @@ def prepare_report_data(all_results, org=None):
             check_avgs.setdefault(cid, {"name": c["name"], "scores": [], "weight": c["weight"]})
             check_avgs[cid]["scores"].append(c["score"])
     worst_checks = sorted(
-        [(cid, info["name"], sum(info["scores"]) / len(info["scores"]), info["weight"])
-         for cid, info in check_avgs.items()],
+        [
+            (cid, info["name"], sum(info["scores"]) / len(info["scores"]), info["weight"])
+            for cid, info in check_avgs.items()
+        ],
         key=lambda x: x[2],
     )
 
@@ -56,7 +62,7 @@ def prepare_report_data(all_results, org=None):
     quick_wins = []
     for cid, name, avg_score, weight in worst_checks:
         if avg_score < 50:
-            repos_below = sum(1 for s in check_avgs[cid]["scores"] if s < 40)
+            repos_below: int = sum(1 for s in check_avgs[cid]["scores"] if s < 40)
             est_lift = (60 - avg_score) * weight / 100
             rec = RECOMMENDATIONS.get(cid, "")
             quick_wins.append((name, repos_below, est_lift, rec, weight))

@@ -2,25 +2,25 @@
 
 import json
 import re
+from typing import Any
+
+_ORG_PATTERN = re.compile(r"^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$")
 
 
-_ORG_PATTERN = re.compile(r'^[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$')
-
-
-def load_scan_config(path="scan-config.json"):
+def load_scan_config(path: str = "scan-config.json") -> dict[str, Any]:
     """Load and validate scan-config.json. Returns config dict.
 
     Raises FileNotFoundError if path doesn't exist.
     Raises ValueError on validation failure.
     """
     with open(path, "r", encoding="utf-8") as f:
-        config = json.load(f)
+        config: dict[str, Any] = json.load(f)
 
     _validate(config)
     return config
 
 
-def _validate(config):
+def _validate(config: dict) -> None:
     """Validate scan config against rules 1-6 from spec."""
     if not isinstance(config.get("orgs"), dict) or not config["orgs"]:
         raise ValueError("'orgs' must be a non-empty dict")

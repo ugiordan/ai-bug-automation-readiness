@@ -7,12 +7,12 @@ from ..engine import readiness_level
 from . import prepare_report_data
 
 
-def _escape_pipe(text):
+def _escape_pipe(text: str) -> str:
     """Escape pipe characters for markdown table cells."""
     return text.replace("|", "\\|")
 
 
-def generate_markdown(all_results, title="AI Bug Automation Readiness Report", org=None):
+def generate_markdown(all_results: list[dict], title: str = "AI Bug Automation Readiness Report", org: str | None = None) -> str:
     if not all_results:
         return "# No repositories found to assess.\n"
 
@@ -25,17 +25,23 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
     lines.append(f"*{len(d['sorted_results'])} repositories assessed -- {now}*\n")
 
     # Executive summary
-    lines.append(f"> {d['ready_count']} of {len(d['sorted_results'])} repositories are partially ready or above for AI-assisted bug fixing. "
-                 f"The ecosystem averages {d['avg']:.0f}/100. "
-                 f"The biggest gap is \"{d['biggest_gap'][1]}\" (avg {d['biggest_gap'][2]:.0f}/100).\n")
+    lines.append(
+        f"> {d['ready_count']} of {len(d['sorted_results'])} repositories are partially ready or above for AI-assisted bug fixing. "
+        f"The ecosystem averages {d['avg']:.0f}/100. "
+        f'The biggest gap is "{d["biggest_gap"][1]}" (avg {d["biggest_gap"][2]:.0f}/100).\n'
+    )
 
     # How Scoring Works
     lines.append("## How Scoring Works\n")
     lines.append(f"**Overall score** = weighted average of {len(CHECKS)} checks, each scored 0-100.\n")
-    lines.append(f"**Phases**: Understand ({d['cat_weights'].get('Understand',0)}%), Navigate ({d['cat_weights'].get('Navigate',0)}%), "
-                 f"Verify ({d['cat_weights'].get('Verify',0)}%), Submit ({d['cat_weights'].get('Submit',0)}%).\n")
-    lines.append("**Verify phase gate:** If the average Verify score is below 50, the overall score receives a smooth "
-                 "penalty multiplier that scales linearly from x0.4 (verify avg = 0) to x1.0 (verify avg = 50).\n")
+    lines.append(
+        f"**Phases**: Understand ({d['cat_weights'].get('Understand', 0)}%), Navigate ({d['cat_weights'].get('Navigate', 0)}%), "
+        f"Verify ({d['cat_weights'].get('Verify', 0)}%), Submit ({d['cat_weights'].get('Submit', 0)}%).\n"
+    )
+    lines.append(
+        "**Verify phase gate:** If the average Verify score is below 50, the overall score receives a smooth "
+        "penalty multiplier that scales linearly from x0.4 (verify avg = 0) to x1.0 (verify avg = 50).\n"
+    )
     lines.append("| Level | Score | Meaning |")
     lines.append("|---|---|---|")
     lines.append("| Ready | 80+ | Strong test infrastructure, good context, CI validates fixes |")
@@ -78,7 +84,11 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
     if d["partially_ready"]:
         for r in d["partially_ready"]:
             link = f"[{r['repo']}](https://github.com/{org_prefix}{r['repo']})" if org else r["repo"]
-            checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+            checks_sorted = sorted(
+                [(k, v) for k, v in r["checks"].items() if not v.get("excluded")],
+                key=lambda x: (100 - x[1]["score"]) * x[1]["weight"],
+                reverse=True,
+            )
             top_gap = checks_sorted[0][1]["name"] if checks_sorted else ""
             lines.append(f"- {link} ({round(r['overall_score'])}) -- top gap: {top_gap}")
     else:
@@ -89,7 +99,11 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
     if d["needs_work"]:
         for r in d["needs_work"]:
             link = f"[{r['repo']}](https://github.com/{org_prefix}{r['repo']})" if org else r["repo"]
-            checks_sorted = sorted([(k, v) for k, v in r["checks"].items() if not v.get("excluded")], key=lambda x: (100 - x[1]["score"]) * x[1]["weight"], reverse=True)
+            checks_sorted = sorted(
+                [(k, v) for k, v in r["checks"].items() if not v.get("excluded")],
+                key=lambda x: (100 - x[1]["score"]) * x[1]["weight"],
+                reverse=True,
+            )
             top_gap = checks_sorted[0][1]["name"] if checks_sorted else ""
             lines.append(f"- {link} ({round(r['overall_score'])}) -- top gap: {top_gap}")
     else:
@@ -145,19 +159,23 @@ def generate_markdown(all_results, title="AI Bug Automation Readiness Report", o
         for cid in check_ids:
             c = r["checks"][cid]
             if c.get("excluded"):
-                lines.append(f"| {_escape_pipe(c['name'])} | {c['category']} | {c['weight']}% | N/A | *Excluded by profile* |")
+                lines.append(
+                    f"| {_escape_pipe(c['name'])} | {c['category']} | {c['weight']}% | N/A | *Excluded by profile* |"
+                )
             else:
                 ev_text = "; ".join(c["evidence"])
                 if c.get("recommendation"):
                     ev_text += f" *Rec: {c['recommendation']}*"
-                lines.append(f"| {_escape_pipe(c['name'])} | {c['category']} | {c['weight']}% | {c['score']:.0f} | {_escape_pipe(ev_text)} |")
+                lines.append(
+                    f"| {_escape_pipe(c['name'])} | {c['category']} | {c['weight']}% | {c['score']:.0f} | {_escape_pipe(ev_text)} |"
+                )
         lines.append("")
 
     lines.append(f"---\n*AI Bug Automation Readiness Report -- Generated {now}*\n")
     return "\n".join(lines)
 
 
-def generate_markdown_multi(results_by_org, title="AI Bug Automation Readiness Report"):
+def generate_markdown_multi(results_by_org: dict[str, list[dict]], title: str = "AI Bug Automation Readiness Report") -> str:
     """Generate multi-org markdown report with per-org sections."""
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     lines = [f"# {title}\n", f"*Generated {now}*\n"]

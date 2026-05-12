@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: AI Bug Automation Readiness Assessment
+  description: Schema for the JSON output produced by `python assess.py --format json`
+  version: 1.0.0
+
+paths: {}
+
+components:
+  schemas:
+    AssessmentResult:
+      type: object
+      required: [repo, repo_path, timestamp, checks, languages, is_code_repo, overall_score]
+      properties:
+        repo:
+          type: string
+          description: Repository name
+        repo_path:
+          type: string
+          description: Absolute path to the assessed repository
+        timestamp:
+          type: string
+          format: date-time
+        checks:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CheckResult'
+        languages:
+          type: array
+          items:
+            type: string
+          description: Detected languages sorted by file count
+        is_code_repo:
+          type: boolean
+          description: False for repos with fewer than 3 source files
+        overall_score:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 100
+          description: Weighted average score, null for non-code repos
+        raw_score:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 100
+          description: Score treating excluded checks as 0
+        status:
+          type: string
+          nullable: true
+          enum: [not_applicable]
+        verify_gate:
+          type: string
+          nullable: true
+          description: Verify phase gate penalty description if applied
+        verify_avg:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 100
+        org:
+          type: string
+          nullable: true
+          description: GitHub organization name
+        profile:
+          $ref: '#/components/schemas/ProfileInfo'
+
+    CheckResult:
+      type: object
+      required: [name, category, weight, score, evidence, excluded]
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+          enum: [Understand, Navigate, Verify, Submit]
+        weight:
+          type: integer
+          minimum: 1
+          maximum: 15
+        score:
+          type: number
+          nullable: true
+          minimum: 0
+          maximum: 100
+        evidence:
+          type: array
+          items:
+            type: string
+        recommendation:
+          type: string
+          nullable: true
+        excluded:
+          type: boolean
+
+    ProfileInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        excluded_checks:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+          enum: [default, profiles.json, cli]

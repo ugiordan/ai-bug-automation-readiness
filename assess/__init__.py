@@ -1,9 +1,11 @@
 """AI Bug Automation Readiness Assessment."""
 
+from typing import Any
+
 from .engine import assess_repo, readiness_level
+from .reports.csv_report import generate_csv
 from .reports.html import generate_html
 from .reports.markdown import generate_markdown
-from .reports.csv_report import generate_csv
 
 __all__ = [
     "assess_repo",
@@ -15,7 +17,8 @@ __all__ = [
 ]
 
 
-def generate_docx(*args, **kwargs):
+def generate_docx(*args: Any, **kwargs: Any) -> Any:
     """Lazy import -- requires python-docx: pip install python-docx."""
     from .reports.docx_report import generate_docx as _generate_docx
+
     return _generate_docx(*args, **kwargs)

@@ -1,18 +1,19 @@
 """DOCX report generation using python-docx."""
 
 from datetime import datetime
+from typing import Any
 
 from docx import Document
-from docx.shared import Inches, Pt, RGBColor
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.shared import Inches, Pt, RGBColor
 
-from ..config import CHECKS, RECOMMENDATIONS
+from ..config import CHECKS
 from ..engine import readiness_level
 from . import prepare_report_data
 
 
-def _level_color(level):
+def _level_color(level: str) -> RGBColor:
     return {
         "Ready": RGBColor(0x10, 0xB9, 0x81),
         "Partially Ready": RGBColor(0xF5, 0x9E, 0x0B),
@@ -21,7 +22,7 @@ def _level_color(level):
     }.get(level, RGBColor(0, 0, 0))
 
 
-def _score_color(score):
+def _score_color(score: float) -> RGBColor:
     if score >= 80:
         return RGBColor(0x10, 0xB9, 0x81)
     if score >= 60:
@@ -31,7 +32,7 @@ def _score_color(score):
     return RGBColor(0xEF, 0x44, 0x44)
 
 
-def _set_cell_text(cell, text, bold=False, color=None, size=None):
+def _set_cell_text(cell: Any, text: str, bold: bool = False, color: RGBColor | None = None, size: Any | None = None) -> None:
     cell.text = ""
     run = cell.paragraphs[0].add_run(str(text))
     run.bold = bold
@@ -41,7 +42,7 @@ def _set_cell_text(cell, text, bold=False, color=None, size=None):
         run.font.size = size
 
 
-def _add_table(doc, headers, rows, col_widths=None):
+def _add_table(doc: Any, headers: list[str], rows: list[list], col_widths: list[float] | None = None) -> Any:
     table = doc.add_table(rows=1 + len(rows), cols=len(headers))
     table.style = "Light Grid Accent 1"
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -66,7 +67,7 @@ def _add_table(doc, headers, rows, col_widths=None):
     return table
 
 
-def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=None):
+def generate_docx(all_results: list[dict], title: str = "AI Bug Automation Readiness Report", org: str | None = None) -> Any:
     if not all_results:
         doc = Document()
         doc.add_heading("No repositories found to assess.", level=1)
@@ -89,18 +90,15 @@ def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=N
     doc.add_heading("Executive Summary", level=1)
     p = doc.add_paragraph()
     p.add_run(f"{d['ready_count']} of {len(d['sorted_results'])}").bold = True
-    p.add_run(f" repositories are partially ready or above for AI-assisted bug fixing. "
-              f"The ecosystem averages ")
+    p.add_run(" repositories are partially ready or above for AI-assisted bug fixing. The ecosystem averages ")
     score_run = p.add_run(f"{d['avg']:.0f}/100")
     score_run.bold = True
     score_run.font.color.rgb = _score_color(d["avg"])
-    p.add_run(f". The biggest gap is \"{d['biggest_gap'][1]}\" (avg {d['biggest_gap'][2]:.0f}/100).")
+    p.add_run(f'. The biggest gap is "{d["biggest_gap"][1]}" (avg {d["biggest_gap"][2]:.0f}/100).')
 
     # How scoring works
     doc.add_heading("How Scoring Works", level=1)
-    doc.add_paragraph(
-        f"Overall score = weighted average of {len(CHECKS)} checks, each scored 0-100."
-    )
+    doc.add_paragraph(f"Overall score = weighted average of {len(CHECKS)} checks, each scored 0-100.")
     doc.add_paragraph(
         f"Phases: Understand ({d['cat_weights'].get('Understand', 0)}%), "
         f"Navigate ({d['cat_weights'].get('Navigate', 0)}%), "
@@ -112,45 +110,52 @@ def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=N
         "the overall score receives a smooth penalty multiplier that scales "
         "linearly from x0.4 (verify avg = 0) to x1.0 (verify avg = 50)."
     )
-    _add_table(doc,
-               ["Level", "Score", "Meaning"],
-               [
-                   [("Ready", _level_color("Ready")), "80+",
-                    "Strong test infrastructure, good context, CI validates fixes"],
-                   [("Partially Ready", _level_color("Partially Ready")), "60-79",
-                    "Workable but has gaps that may cause AI agent failures"],
-                   [("Needs Work", _level_color("Needs Work")), "40-59",
-                    "Missing key capabilities; fix gaps before AI bug bash"],
-                   [("Not Ready", _level_color("Not Ready")), "<40",
-                    "Fundamental gaps in test infrastructure or code structure"],
-               ],
-               col_widths=[1.5, 0.8, 4.2])
+    _add_table(
+        doc,
+        ["Level", "Score", "Meaning"],
+        [
+            [("Ready", _level_color("Ready")), "80+", "Strong test infrastructure, good context, CI validates fixes"],
+            [
+                ("Partially Ready", _level_color("Partially Ready")),
+                "60-79",
+                "Workable but has gaps that may cause AI agent failures",
+            ],
+            [
+                ("Needs Work", _level_color("Needs Work")),
+                "40-59",
+                "Missing key capabilities; fix gaps before AI bug bash",
+            ],
+            [
+                ("Not Ready", _level_color("Not Ready")),
+                "<40",
+                "Fundamental gaps in test infrastructure or code structure",
+            ],
+        ],
+        col_widths=[1.5, 0.8, 4.2],
+    )
 
     # Summary table
     doc.add_heading("Summary", level=1)
-    _add_table(doc,
-               ["Metric", "Value"],
-               [
-                   ["Average Score", f"{d['avg']:.0f}/100"],
-                   [("Ready (80+)", _level_color("Ready")), str(d["tier_counts"]["Ready"])],
-                   [("Partially Ready (60-79)", _level_color("Partially Ready")),
-                    str(d["tier_counts"]["Partially Ready"])],
-                   [("Needs Work (40-59)", _level_color("Needs Work")),
-                    str(d["tier_counts"]["Needs Work"])],
-                   [("Not Ready (<40)", _level_color("Not Ready")),
-                    str(d["tier_counts"]["Not Ready"])],
-               ],
-               col_widths=[3.0, 1.5])
+    _add_table(
+        doc,
+        ["Metric", "Value"],
+        [
+            ["Average Score", f"{d['avg']:.0f}/100"],
+            [("Ready (80+)", _level_color("Ready")), str(d["tier_counts"]["Ready"])],
+            [("Partially Ready (60-79)", _level_color("Partially Ready")), str(d["tier_counts"]["Partially Ready"])],
+            [("Needs Work (40-59)", _level_color("Needs Work")), str(d["tier_counts"]["Needs Work"])],
+            [("Not Ready (<40)", _level_color("Not Ready")), str(d["tier_counts"]["Not Ready"])],
+        ],
+        col_widths=[3.0, 1.5],
+    )
 
     # Phase scores
     doc.add_heading("Phase Scores (Ecosystem Average)", level=1)
     phase_rows = []
     for phase in ["Understand", "Navigate", "Verify", "Submit"]:
         pavg = d["cat_avgs"].get(phase, 0)
-        phase_rows.append([phase, f"{d['cat_weights'].get(phase, 0)}%",
-                           (f"{pavg:.0f}/100", _score_color(pavg))])
-    _add_table(doc, ["Phase", "Weight", "Average"], phase_rows,
-               col_widths=[2.0, 1.0, 1.5])
+        phase_rows.append([phase, f"{d['cat_weights'].get(phase, 0)}%", (f"{pavg:.0f}/100", _score_color(pavg))])
+    _add_table(doc, ["Phase", "Weight", "Average"], phase_rows, col_widths=[2.0, 1.0, 1.5])
 
     # Bug bash shortlist
     doc.add_heading("Bug Bash Shortlist", level=1)
@@ -186,14 +191,15 @@ def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=N
         langs = ", ".join(r["languages"][:3])
         gate = " (verify gate)" if r.get("verify_gate") else ""
         name = f"{org_prefix}{r['repo']}" if org else r["repo"]
-        repo_rows.append([
-            name + gate,
-            (f"{round(r['overall_score'])}/100", _score_color(r["overall_score"])),
-            (level, _level_color(level)),
-            langs,
-        ])
-    _add_table(doc, ["Repository", "Score", "Level", "Languages"], repo_rows,
-               col_widths=[2.5, 1.0, 1.5, 1.5])
+        repo_rows.append(
+            [
+                name + gate,
+                (f"{round(r['overall_score'])}/100", _score_color(r["overall_score"])),
+                (level, _level_color(level)),
+                langs,
+            ]
+        )
+    _add_table(doc, ["Repository", "Score", "Level", "Languages"], repo_rows, col_widths=[2.5, 1.0, 1.5, 1.5])
 
     # Quick wins
     if d["quick_wins"]:
@@ -201,17 +207,14 @@ def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=N
         qw_rows = []
         for name, repos_below, lift, rec, weight in d["quick_wins"][:7]:
             qw_rows.append([name, f"{repos_below} repos", f"{weight}%", rec])
-        _add_table(doc, ["Action", "Repos Below 40", "Weight", "How to Fix"], qw_rows,
-                   col_widths=[1.8, 1.0, 0.7, 3.0])
+        _add_table(doc, ["Action", "Repos Below 40", "Weight", "How to Fix"], qw_rows, col_widths=[1.8, 1.0, 0.7, 3.0])
 
     # All checks ranked
     doc.add_heading("All Checks Ranked by Average Score", level=1)
     check_rows = []
     for cid, name, avg_score, weight in d["worst_checks"]:
-        check_rows.append([name, (f"{avg_score:.0f}/100", _score_color(avg_score)),
-                           f"{weight}%"])
-    _add_table(doc, ["Check", "Avg Score", "Weight"], check_rows,
-               col_widths=[3.0, 1.5, 1.0])
+        check_rows.append([name, (f"{avg_score:.0f}/100", _score_color(avg_score)), f"{weight}%"])
+    _add_table(doc, ["Check", "Avg Score", "Weight"], check_rows, col_widths=[3.0, 1.5, 1.0])
 
     # Per-repository details
     doc.add_heading("Per-Repository Details", level=1)
@@ -222,34 +225,37 @@ def generate_docx(all_results, title="AI Bug Automation Readiness Report", org=N
         if r.get("profile", {}).get("name", "default") != "default":
             p = r["profile"]
             profile_suffix = f" [profile: {p['name']}]"
-        doc.add_heading(
-            f"{r['repo']} -- {round(r['overall_score'])}/100 ({level}){profile_suffix}", level=2
-        )
+        doc.add_heading(f"{r['repo']} -- {round(r['overall_score'])}/100 ({level}){profile_suffix}", level=2)
         detail_rows = []
         for cid in check_ids:
             c = r["checks"][cid]
             if c.get("excluded"):
                 grey = RGBColor(0x9C, 0xA3, 0xAF)
-                detail_rows.append([
-                    c["name"],
-                    c["category"],
-                    f"{c['weight']}%",
-                    ("N/A", grey),
-                    "Excluded by profile",
-                ])
+                detail_rows.append(
+                    [
+                        c["name"],
+                        c["category"],
+                        f"{c['weight']}%",
+                        ("N/A", grey),
+                        "Excluded by profile",
+                    ]
+                )
             else:
                 ev_text = "; ".join(c["evidence"])
                 if c.get("recommendation"):
                     ev_text += f" Rec: {c['recommendation']}"
-                detail_rows.append([
-                    c["name"],
-                    c["category"],
-                    f"{c['weight']}%",
-                    (f"{c['score']:.0f}", _score_color(c["score"])),
-                    ev_text,
-                ])
-        _add_table(doc, ["Check", "Phase", "Weight", "Score", "Evidence"], detail_rows,
-                   col_widths=[1.5, 0.8, 0.6, 0.6, 3.0])
+                detail_rows.append(
+                    [
+                        c["name"],
+                        c["category"],
+                        f"{c['weight']}%",
+                        (f"{c['score']:.0f}", _score_color(c["score"])),
+                        ev_text,
+                    ]
+                )
+        _add_table(
+            doc, ["Check", "Phase", "Weight", "Score", "Evidence"], detail_rows, col_widths=[1.5, 0.8, 0.6, 0.6, 3.0]
+        )
 
     # Footer
     doc.add_paragraph("")

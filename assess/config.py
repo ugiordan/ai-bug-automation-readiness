@@ -19,43 +19,67 @@ GENERATED_HEADER_MARKERS = [
     "AUTO-GENERATED",
 ]
 
-EXCLUDE_DIRS = frozenset({
-    ".git", "vendor", "node_modules", "third_party", "__pycache__",
-    "testdata", ".terraform", "dist", "build",
-})
+EXCLUDE_DIRS = frozenset(
+    {
+        ".git",
+        "vendor",
+        "node_modules",
+        "third_party",
+        "__pycache__",
+        "testdata",
+        ".terraform",
+        "dist",
+        "build",
+    }
+)
 
 # ---------------------------------------------------------------------------
 # Source code file extensions (shared across checks)
 # ---------------------------------------------------------------------------
-SOURCE_EXTS = frozenset({
-    ".go", ".py", ".js", ".ts", ".tsx", ".jsx", ".java", ".rs",
-    ".rb", ".cpp", ".c", ".h", ".kt", ".scala", ".sh",
-})
+SOURCE_EXTS = frozenset(
+    {
+        ".go",
+        ".py",
+        ".js",
+        ".ts",
+        ".tsx",
+        ".jsx",
+        ".java",
+        ".rs",
+        ".rb",
+        ".cpp",
+        ".c",
+        ".h",
+        ".kt",
+        ".scala",
+        ".sh",
+    }
+)
 
 # ---------------------------------------------------------------------------
 # Weights (must sum to 100)
 # ---------------------------------------------------------------------------
 CHECKS = {
-    "agent_context":      {"name": "AI Context Files",              "weight":  8, "category": "Understand"},
-    "bug_template":       {"name": "Bug Report Template Quality",   "weight":  8, "category": "Understand"},
-    "structured_logging": {"name": "Structured Logging / Errors",   "weight":  3, "category": "Understand"},
-    "architecture_docs":  {"name": "Architecture Documentation",    "weight":  3, "category": "Understand"},
-    "fixture_data":       {"name": "Test Fixtures / Sample Data",   "weight":  2, "category": "Understand"},
-    "code_navigability":  {"name": "Code Navigability",             "weight":  5, "category": "Navigate"},
-    "generated_code":     {"name": "Generated Code Ratio",          "weight":  2, "category": "Navigate"},
-    "build_setup":        {"name": "Build / Dependency Setup",      "weight":  5, "category": "Navigate"},
-    "type_safety":        {"name": "Type Safety / Static Analysis", "weight":  3, "category": "Navigate"},
-    "dependency_complexity": {"name": "Dependency Complexity",      "weight":  2, "category": "Navigate"},
-    "codeowners":         {"name": "Code Ownership (CODEOWNERS)",   "weight":  1, "category": "Submit"},
-    "test_ratio":         {"name": "Test-to-Source Ratio",          "weight": 15, "category": "Verify"},
-    "test_execution":     {"name": "One-Command Test Execution",    "weight": 11, "category": "Verify"},
-    "coverage_config":    {"name": "Coverage Configuration",        "weight":  3, "category": "Verify"},
-    "ci_runs_tests":      {"name": "CI Runs Tests on PRs",         "weight": 10, "category": "Verify"},
-    "pr_template":        {"name": "PR Template",                   "weight":  2, "category": "Submit"},
-    "linting_in_ci":      {"name": "Linting / Formatting in CI",   "weight":  5, "category": "Submit"},
-    "contributing_guide": {"name": "Contributing / Dev Guide",      "weight":  5, "category": "Submit"},
-    "test_isolation":     {"name": "Test Isolation (unit vs e2e)",  "weight":  4, "category": "Verify"},
-    "precommit_hooks":    {"name": "Pre-commit / Local Hooks",     "weight":  3, "category": "Verify"},
+    "agent_context": {"name": "AI Context Files", "weight": 8, "category": "Understand"},
+    "bug_template": {"name": "Bug Report Template Quality", "weight": 8, "category": "Understand"},
+    "structured_logging": {"name": "Structured Logging / Errors", "weight": 3, "category": "Understand"},
+    "architecture_docs": {"name": "Architecture Documentation", "weight": 3, "category": "Understand"},
+    "fixture_data": {"name": "Test Fixtures / Sample Data", "weight": 2, "category": "Understand"},
+    "code_navigability": {"name": "Code Navigability", "weight": 5, "category": "Navigate"},
+    "generated_code": {"name": "Generated Code Ratio", "weight": 2, "category": "Navigate"},
+    "build_setup": {"name": "Build / Dependency Setup", "weight": 5, "category": "Navigate"},
+    "type_safety": {"name": "Type Safety / Static Analysis", "weight": 3, "category": "Navigate"},
+    "dependency_complexity": {"name": "Dependency Complexity", "weight": 2, "category": "Navigate"},
+    "codeowners": {"name": "Code Ownership (CODEOWNERS)", "weight": 1, "category": "Submit"},
+    "test_ratio": {"name": "Test-to-Source Ratio", "weight": 15, "category": "Verify"},
+    "test_execution": {"name": "One-Command Test Execution", "weight": 11, "category": "Verify"},
+    "coverage_config": {"name": "Coverage Configuration", "weight": 3, "category": "Verify"},
+    "ci_runs_tests": {"name": "CI Runs Tests on PRs", "weight": 10, "category": "Verify"},
+    "pr_template": {"name": "PR Template", "weight": 2, "category": "Submit"},
+    "linting_in_ci": {"name": "Linting / Formatting in CI", "weight": 5, "category": "Submit"},
+    "contributing_guide": {"name": "Contributing / Dev Guide", "weight": 5, "category": "Submit"},
+    "test_isolation": {"name": "Test Isolation (unit vs e2e)", "weight": 4, "category": "Verify"},
+    "precommit_hooks": {"name": "Pre-commit / Local Hooks", "weight": 3, "category": "Verify"},
 }
 
 # ---------------------------------------------------------------------------

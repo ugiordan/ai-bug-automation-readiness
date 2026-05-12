@@ -1,0 +1,49 @@
+[project]
+name = "ai-bug-automation-readiness"
+version = "1.0.0"
+description = "Assess repositories for AI agent bug-fixing readiness"
+requires-python = ">=3.12"
+
+[project.optional-dependencies]
+dev = [
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+    "ruff>=0.9.0",
+    "mypy>=1.11.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"assess/checks/*.py" = ["E501"]
+"assess/config.py" = ["E501"]
+"assess/engine.py" = ["E501"]
+"assess/profiles.py" = ["E501"]
+"assess/reports/*.py" = ["E501"]
+"tests/*.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.12"
+disallow_untyped_defs = true
+warn_return_any = true
+warn_unused_configs = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "docx.*"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["assess"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true

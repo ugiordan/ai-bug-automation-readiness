@@ -1,17 +1,15 @@
 """Tests for individual check functions."""
 
 import random
+import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch, MagicMock
-import tempfile
-import os
 
 from assess.checks import (
     check_architecture_docs,
     check_contributing_guide,
-    check_structured_logging,
     check_fixture_data,
+    check_structured_logging,
     check_test_ratio,
 )
 
@@ -19,7 +17,7 @@ from assess.checks import (
 class TestCheckArchitectureDocs(unittest.TestCase):
     """Tests for check_architecture_docs - Issue #3 fix."""
 
-    def _make_repo_with_readmes(self, count):
+    def _make_repo_with_readmes(self, count: int) -> tuple[str, list]:
         """Create a temp repo with N module-level READMEs."""
         tmpdir = tempfile.mkdtemp()
         all_files = []
@@ -31,37 +29,44 @@ class TestCheckArchitectureDocs(unittest.TestCase):
             all_files.append(readme)
         return tmpdir, all_files
 
-    def test_no_readmes_scores_zero(self):
+    def test_no_readmes_scores_zero(self) -> None:
+        """Verify repos with no module READMEs score 0."""
         tmpdir = tempfile.mkdtemp()
         score, evidence = check_architecture_docs(tmpdir, all_files=[])
         self.assertEqual(score, 0)
 
-    def test_one_readme_scores_15(self):
+    def test_one_readme_scores_15(self) -> None:
+        """Verify one module README scores 15."""
         tmpdir, all_files = self._make_repo_with_readmes(1)
         score, evidence = check_architecture_docs(tmpdir, all_files=all_files)
         self.assertEqual(score, 15)
 
-    def test_three_readmes_scores_30(self):
+    def test_three_readmes_scores_30(self) -> None:
+        """Verify three module READMEs score 30."""
         tmpdir, all_files = self._make_repo_with_readmes(3)
         score, evidence = check_architecture_docs(tmpdir, all_files=all_files)
         self.assertEqual(score, 30)
 
-    def test_four_readmes_scores_30(self):
+    def test_four_readmes_scores_30(self) -> None:
+        """Verify four module READMEs score 30 (threshold not reached)."""
         tmpdir, all_files = self._make_repo_with_readmes(4)
         score, evidence = check_architecture_docs(tmpdir, all_files=all_files)
         self.assertEqual(score, 30)
 
-    def test_five_readmes_scores_40(self):
+    def test_five_readmes_scores_40(self) -> None:
+        """Verify five module READMEs score 40 (threshold reached)."""
         tmpdir, all_files = self._make_repo_with_readmes(5)
         score, evidence = check_architecture_docs(tmpdir, all_files=all_files)
         self.assertEqual(score, 40)
 
-    def test_many_readmes_scores_40(self):
+    def test_many_readmes_scores_40(self) -> None:
+        """Verify many module READMEs cap at score 40."""
         tmpdir, all_files = self._make_repo_with_readmes(20)
         score, evidence = check_architecture_docs(tmpdir, all_files=all_files)
         self.assertEqual(score, 40)
 
-    def test_arch_doc_plus_five_readmes(self):
+    def test_arch_doc_plus_five_readmes(self) -> None:
+        """Verify architecture doc plus module READMEs scores are additive."""
         tmpdir, all_files = self._make_repo_with_readmes(5)
         arch = Path(tmpdir) / "ARCHITECTURE.md"
         arch.write_text("# Architecture")
@@ -72,57 +77,53 @@ class TestCheckArchitectureDocs(unittest.TestCase):
 class TestCheckContributingGuide(unittest.TestCase):
     """Tests for check_contributing_guide - Issue #5 fix."""
 
-    def test_best_score_across_files(self):
+    def test_best_score_across_files(self) -> None:
         """Sparse CONTRIBUTING.md + rich DEVELOPMENT.md should use best score."""
         tmpdir = tempfile.mkdtemp()
         # Sparse contributing
         (Path(tmpdir) / "CONTRIBUTING.md").write_text("Please contribute.")
         # Rich development guide
-        (Path(tmpdir) / "DEVELOPMENT.md").write_text(
-            "How to test, build, run, setup, install, and debug this project."
-        )
+        (Path(tmpdir) / "DEVELOPMENT.md").write_text("How to test, build, run, setup, install, and debug this project.")
         score, evidence = check_contributing_guide(tmpdir)
         self.assertEqual(score, 100)
         self.assertIn("DEVELOPMENT.md", evidence[0])
 
-    def test_early_return_bug_fixed(self):
+    def test_early_return_bug_fixed(self) -> None:
         """Should NOT return score from first file if second is better."""
         tmpdir = tempfile.mkdtemp()
         # First file: only 1 keyword match → 60
         (Path(tmpdir) / "CONTRIBUTING.md").write_text("Please help us test.")
         # Second file: all 6 keywords → 100
-        (Path(tmpdir) / "DEVELOPMENT.md").write_text(
-            "test build run setup install debug"
-        )
+        (Path(tmpdir) / "DEVELOPMENT.md").write_text("test build run setup install debug")
         score, _ = check_contributing_guide(tmpdir)
         self.assertGreaterEqual(score, 100)
 
-    def test_github_contributing_detected(self):
+    def test_github_contributing_detected(self) -> None:
+        """Verify CONTRIBUTING.md in .github directory is detected."""
         tmpdir = tempfile.mkdtemp()
         gh_dir = Path(tmpdir) / ".github"
         gh_dir.mkdir()
-        (gh_dir / "CONTRIBUTING.md").write_text(
-            "How to test, build, run, setup, install, and debug."
-        )
+        (gh_dir / "CONTRIBUTING.md").write_text("How to test, build, run, setup, install, and debug.")
         score, evidence = check_contributing_guide(tmpdir)
         self.assertEqual(score, 100)
 
-    def test_developer_guide_detected(self):
+    def test_developer_guide_detected(self) -> None:
+        """Verify DEVELOPER_GUIDE.md in docs directory is detected."""
         tmpdir = tempfile.mkdtemp()
         docs_dir = Path(tmpdir) / "docs"
         docs_dir.mkdir()
-        (docs_dir / "DEVELOPER_GUIDE.md").write_text(
-            "test build run setup install debug"
-        )
+        (docs_dir / "DEVELOPER_GUIDE.md").write_text("test build run setup install debug")
         score, evidence = check_contributing_guide(tmpdir)
         self.assertEqual(score, 100)
 
-    def test_no_guide_scores_zero(self):
+    def test_no_guide_scores_zero(self) -> None:
+        """Verify repos without contributing guides score 0."""
         tmpdir = tempfile.mkdtemp()
         score, evidence = check_contributing_guide(tmpdir)
         self.assertEqual(score, 0)
 
-    def test_readme_fallback_still_works(self):
+    def test_readme_fallback_still_works(self) -> None:
+        """Verify README with contributing section is detected as fallback."""
         tmpdir = tempfile.mkdtemp()
         (Path(tmpdir) / "README.md").write_text("## Contributing\nPlease help.")
         score, evidence = check_contributing_guide(tmpdir)
@@ -132,7 +133,7 @@ class TestCheckContributingGuide(unittest.TestCase):
 class TestCheckStructuredLogging(unittest.TestCase):
     """Tests for check_structured_logging - Issue #6 fix."""
 
-    def _make_repo_with_source(self, filenames_content):
+    def _make_repo_with_source(self, filenames_content: dict[str, str]) -> tuple[str, list]:
         """Create repo with source files. Returns (tmpdir, all_files)."""
         tmpdir = tempfile.mkdtemp()
         all_files = []
@@ -143,42 +144,37 @@ class TestCheckStructuredLogging(unittest.TestCase):
             all_files.append(p)
         return tmpdir, all_files
 
-    def test_logger_uppercase_detected(self):
-        tmpdir, all_files = self._make_repo_with_source({
-            f"test_{i}.py": 'LOGGER.info("message")' for i in range(10)
-        })
+    def test_logger_uppercase_detected(self) -> None:
+        """Verify uppercase LOGGER.info pattern is detected."""
+        tmpdir, all_files = self._make_repo_with_source({f"test_{i}.py": 'LOGGER.info("message")' for i in range(10)})
         rng = random.Random(42)
         score, evidence = check_structured_logging(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 80)
 
-    def test_logger_lowercase_detected(self):
-        tmpdir, all_files = self._make_repo_with_source({
-            f"app_{i}.py": 'logger.debug("msg")' for i in range(10)
-        })
+    def test_logger_lowercase_detected(self) -> None:
+        """Verify lowercase logger.debug pattern is detected."""
+        tmpdir, all_files = self._make_repo_with_source({f"app_{i}.py": 'logger.debug("msg")' for i in range(10)})
         rng = random.Random(42)
         score, evidence = check_structured_logging(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 80)
 
-    def test_logging_warning_detected(self):
-        tmpdir, all_files = self._make_repo_with_source({
-            f"svc_{i}.py": 'logging.warning("msg")' for i in range(10)
-        })
+    def test_logging_warning_detected(self) -> None:
+        """Verify logging.warning pattern is detected."""
+        tmpdir, all_files = self._make_repo_with_source({f"svc_{i}.py": 'logging.warning("msg")' for i in range(10)})
         rng = random.Random(42)
         score, evidence = check_structured_logging(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 80)
 
-    def test_underscore_log_detected(self):
-        tmpdir, all_files = self._make_repo_with_source({
-            f"mod_{i}.py": '_log.error("fail")' for i in range(10)
-        })
+    def test_underscore_log_detected(self) -> None:
+        """Verify underscore-prefixed _log.error pattern is detected."""
+        tmpdir, all_files = self._make_repo_with_source({f"mod_{i}.py": '_log.error("fail")' for i in range(10)})
         rng = random.Random(42)
         score, evidence = check_structured_logging(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 80)
 
-    def test_go_pascal_case_still_works(self):
-        tmpdir, all_files = self._make_repo_with_source({
-            f"handler_{i}.go": 'log.Info("starting")' for i in range(10)
-        })
+    def test_go_pascal_case_still_works(self) -> None:
+        """Verify Go PascalCase log.Info pattern is detected."""
+        tmpdir, all_files = self._make_repo_with_source({f"handler_{i}.go": 'log.Info("starting")' for i in range(10)})
         rng = random.Random(42)
         score, evidence = check_structured_logging(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 80)
@@ -187,7 +183,8 @@ class TestCheckStructuredLogging(unittest.TestCase):
 class TestCheckFixtureData(unittest.TestCase):
     """Tests for check_fixture_data - Issue #4 fix."""
 
-    def test_kustomize_e2e_overlay_detected(self):
+    def test_kustomize_e2e_overlay_detected(self) -> None:
+        """Verify kustomize e2e overlay test manifests are detected."""
         tmpdir = tempfile.mkdtemp()
         overlay = Path(tmpdir) / "manifests" / "kustomize" / "overlays" / "e2e"
         overlay.mkdir(parents=True)
@@ -197,7 +194,8 @@ class TestCheckFixtureData(unittest.TestCase):
         score, evidence = check_fixture_data(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 50)
 
-    def test_config_overlays_test_detected(self):
+    def test_config_overlays_test_detected(self) -> None:
+        """Verify config overlay test manifests are detected."""
         tmpdir = tempfile.mkdtemp()
         overlay = Path(tmpdir) / "config" / "overlays" / "test"
         overlay.mkdir(parents=True)
@@ -207,7 +205,8 @@ class TestCheckFixtureData(unittest.TestCase):
         score, evidence = check_fixture_data(tmpdir, all_files=all_files, rng=rng)
         self.assertGreaterEqual(score, 50)
 
-    def test_traditional_testdata_still_works(self):
+    def test_traditional_testdata_still_works(self) -> None:
+        """Verify traditional testdata directory is detected."""
         tmpdir = tempfile.mkdtemp()
         td = Path(tmpdir) / "testdata"
         td.mkdir()
@@ -218,12 +217,14 @@ class TestCheckFixtureData(unittest.TestCase):
         score, evidence = check_fixture_data(tmpdir, all_files=all_files, rng=rng)
         self.assertEqual(score, 90)
 
-    def test_no_fixtures_scores_zero(self):
+    def test_no_fixtures_scores_zero(self) -> None:
+        """Verify repos with no fixtures score 0."""
         tmpdir = tempfile.mkdtemp()
         score, evidence = check_fixture_data(tmpdir, all_files=[], rng=random.Random(42))
         self.assertEqual(score, 0)
 
-    def test_deploy_testdata_detected(self):
+    def test_deploy_testdata_detected(self) -> None:
+        """Verify deploy/kustomize/testdata manifests are detected."""
         tmpdir = tempfile.mkdtemp()
         overlay = Path(tmpdir) / "deploy" / "kustomize" / "testdata"
         overlay.mkdir(parents=True)
@@ -237,8 +238,9 @@ class TestCheckFixtureData(unittest.TestCase):
 class TestCheckTestRatioQuality(unittest.TestCase):
     """Tests for test file quality validation in check_test_ratio - Issue #9."""
 
-    def _make_repo(self, source_content, test_content, num_source=10, num_tests=10,
-                   source_ext=".py", test_prefix="test_"):
+    def _make_repo(
+        self, source_content: str, test_content: str, num_source: int = 10, num_tests: int = 10, source_ext: str = ".py", test_prefix: str = "test_"
+    ) -> tuple[str, list]:
         """Create repo with source and test files. Returns (tmpdir, all_files)."""
         tmpdir = tempfile.mkdtemp()
         all_files = []
@@ -252,7 +254,7 @@ class TestCheckTestRatioQuality(unittest.TestCase):
             all_files.append(p)
         return tmpdir, all_files
 
-    def test_substantial_tests_keep_full_score(self):
+    def test_substantial_tests_keep_full_score(self) -> None:
         """Test files with real assertions should not be penalized."""
         tmpdir, all_files = self._make_repo(
             source_content="def foo():\n    return 1\n",
@@ -271,7 +273,7 @@ class TestCheckTestRatioQuality(unittest.TestCase):
         # Should NOT mention stub/quality issues
         self.assertFalse(any("stub" in e.lower() for e in evidence))
 
-    def test_stub_tests_reduce_score(self):
+    def test_stub_tests_reduce_score(self) -> None:
         """Test files with no assertions should reduce the score."""
         tmpdir, all_files = self._make_repo(
             source_content="def foo():\n    return 1\n",
@@ -283,8 +285,8 @@ class TestCheckTestRatioQuality(unittest.TestCase):
         self.assertLess(score, 100)
         self.assertTrue(any("stub" in e.lower() or "quality" in e.lower() for e in evidence))
 
-    def test_mixed_quality_partial_penalty(self):
-        """Mix of real and stub tests should get partial penalty."""
+    def test_mixed_quality_partial_penalty(self) -> None:
+        """Verify mix of real and stub tests gets partial penalty."""
         tmpdir = tempfile.mkdtemp()
         all_files = []
         # 10 source files
@@ -308,16 +310,16 @@ class TestCheckTestRatioQuality(unittest.TestCase):
         self.assertGreater(score, 0)
         self.assertLess(score, 100)
 
-    def test_go_assertions_detected(self):
-        """Go test assertions (t.Run, t.Error, t.Fatal) should count."""
+    def test_go_assertions_detected(self) -> None:
+        """Verify Go test assertions (t.Run, t.Error, t.Fatal) are detected."""
         tmpdir, all_files = self._make_repo(
             source_content="package main\nfunc Foo() int { return 1 }\n",
             test_content=(
                 "package main\n"
-                "import \"testing\"\n"
+                'import "testing"\n'
                 "func TestFoo(t *testing.T) {\n"
-                "    t.Run(\"case\", func(t *testing.T) {\n"
-                "        if Foo() != 1 { t.Error(\"wrong\") }\n"
+                '    t.Run("case", func(t *testing.T) {\n'
+                '        if Foo() != 1 { t.Error("wrong") }\n'
                 "    })\n"
                 "}\n"
             ),
@@ -330,10 +332,10 @@ class TestCheckTestRatioQuality(unittest.TestCase):
             p = Path(tmpdir) / f"foo_{i}_test.go"
             p.write_text(
                 "package main\n"
-                "import \"testing\"\n"
+                'import "testing"\n'
                 "func TestFoo(t *testing.T) {\n"
-                "    t.Run(\"case\", func(t *testing.T) {\n"
-                "        if Foo() != 1 { t.Error(\"wrong\") }\n"
+                '    t.Run("case", func(t *testing.T) {\n'
+                '        if Foo() != 1 { t.Error("wrong") }\n'
                 "    })\n"
                 "}\n"
             )
@@ -342,16 +344,12 @@ class TestCheckTestRatioQuality(unittest.TestCase):
         score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
         self.assertEqual(score, 100)
 
-    def test_js_expect_assertions_detected(self):
-        """JS/TS test assertions (expect, it, describe) should count."""
+    def test_js_expect_assertions_detected(self) -> None:
+        """Verify JS/TS test assertions (expect, it, describe) are detected."""
         tmpdir, all_files = self._make_repo(
             source_content="export const foo = () => 1;\n",
             test_content=(
-                "describe('foo', () => {\n"
-                "  it('returns 1', () => {\n"
-                "    expect(foo()).toBe(1);\n"
-                "  });\n"
-                "});\n"
+                "describe('foo', () => {\n  it('returns 1', () => {\n    expect(foo()).toBe(1);\n  });\n});\n"
             ),
             source_ext=".ts",
             test_prefix="",
@@ -360,21 +358,15 @@ class TestCheckTestRatioQuality(unittest.TestCase):
         # Add TS test files with .test.ts suffix
         for i in range(10):
             p = Path(tmpdir) / f"foo_{i}.test.ts"
-            p.write_text(
-                "describe('foo', () => {\n"
-                "  it('returns 1', () => {\n"
-                "    expect(foo()).toBe(1);\n"
-                "  });\n"
-                "});\n"
-            )
+            p.write_text("describe('foo', () => {\n  it('returns 1', () => {\n    expect(foo()).toBe(1);\n  });\n});\n")
             all_files.append(p)
         rng = random.Random(42)
         score, evidence = check_test_ratio(tmpdir, all_files=all_files, rng=rng)
         # Frontend-heavy with good ratio and real assertions
         self.assertGreaterEqual(score, 85)
 
-    def test_no_tests_unaffected(self):
-        """Zero test files should still score 0 (quality check doesn't interfere)."""
+    def test_no_tests_unaffected(self) -> None:
+        """Verify zero test files still score 0 (quality check doesn't interfere)."""
         tmpdir, all_files = self._make_repo(
             source_content="def foo():\n    return 1\n",
             test_content="",

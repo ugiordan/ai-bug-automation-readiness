@@ -7,21 +7,21 @@ import sys
 from pathlib import Path
 
 from .engine import assess_repo, readiness_level
-from .profiles import resolve_profile, load_central_profiles
+from .profiles import load_central_profiles, resolve_profile
+from .reports.csv_report import generate_csv
 from .reports.html import generate_html
 from .reports.markdown import generate_markdown
-from .reports.csv_report import generate_csv
 
 __version__ = "1.0.0"
 
 
-def discover_repos(batch_dir, exclude_set):
+def discover_repos(batch_dir: str, exclude_set: set[str]) -> list[tuple[str | None, str, str]]:
     """Discover repos in batch dir. Supports flat and nested (org/repo) layouts.
 
     Returns list of (org, repo_name, repo_path) tuples.
     org is None for flat layout entries.
     """
-    results = []
+    results: list[tuple[str | None, str, str]] = []
     for entry in sorted(os.listdir(batch_dir)):
         entry_path = os.path.join(batch_dir, entry)
         if not os.path.isdir(entry_path):
@@ -43,14 +43,14 @@ def discover_repos(batch_dir, exclude_set):
     return results
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="AI Bug Automation Readiness Assessment",
         epilog="Examples:\n"
-               "  python assess.py /path/to/repo\n"
-               "  python assess.py /path/to/repo --format json\n"
-               "  python assess.py --batch /path/to/repos --format html --org opendatahub-io\n"
-               "\nExit codes: 0 = success, 1 = --fail-under triggered, 2 = error\n",
+        "  python assess.py /path/to/repo\n"
+        "  python assess.py /path/to/repo --format json\n"
+        "  python assess.py --batch /path/to/repos --format html --org opendatahub-io\n"
+        "\nExit codes: 0 = success, 1 = --fail-under triggered, 2 = error\n",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     source = parser.add_mutually_exclusive_group()
@@ -60,26 +60,30 @@ def main():
     parser.add_argument("--output", "-o", help="Output file path")
     parser.add_argument("--org", help="GitHub org for report links")
     parser.add_argument("--title", default="AI Bug Automation Readiness Report")
-    parser.add_argument("--fail-under", type=int, metavar="N",
-                        help="Exit with code 1 if any repo scores below N (0-100)")
-    parser.add_argument("--exclude", nargs="*", default=[], metavar="REPO",
-                        help="Repo names to skip in batch mode")
+    parser.add_argument(
+        "--fail-under", type=int, metavar="N", help="Exit with code 1 if any repo scores below N (0-100)"
+    )
+    parser.add_argument("--exclude", nargs="*", default=[], metavar="REPO", help="Repo names to skip in batch mode")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
-    parser.add_argument("--quiet", "-q", action="store_true",
-                        help="Suppress progress output")
-    parser.add_argument("--list-checks", action="store_true",
-                        help="List all checks and their weights, then exit")
-    parser.add_argument("--profile", metavar="NAME",
-                        help="Named profile (e.g., test-repo). Overrides profiles.json for all repos.")
-    parser.add_argument("--exclude-checks", nargs="*", default=[], metavar="CHECK",
-                        help="Check IDs to skip (e.g., coverage_config test_ratio)")
-    parser.add_argument("--list-profiles", action="store_true",
-                        help="List available profiles, then exit")
+    parser.add_argument("--quiet", "-q", action="store_true", help="Suppress progress output")
+    parser.add_argument("--list-checks", action="store_true", help="List all checks and their weights, then exit")
+    parser.add_argument(
+        "--profile", metavar="NAME", help="Named profile (e.g., test-repo). Overrides profiles.json for all repos."
+    )
+    parser.add_argument(
+        "--exclude-checks",
+        nargs="*",
+        default=[],
+        metavar="CHECK",
+        help="Check IDs to skip (e.g., coverage_config test_ratio)",
+    )
+    parser.add_argument("--list-profiles", action="store_true", help="List available profiles, then exit")
     args = parser.parse_args()
 
     # List checks mode
     if args.list_checks:
         from .config import CHECKS
+
         print(f"{'Check':<40s} {'Weight':>6s}  {'Category'}")
         print("-" * 65)
         for cid, info in CHECKS.items():
@@ -114,8 +118,7 @@ def main():
         try:
             from .reports.docx_report import generate_docx  # noqa: F401
         except ImportError:
-            print("Error: DOCX format requires python-docx. Install with: pip install python-docx",
-                  file=sys.stderr)
+            print("Error: DOCX format requires python-docx. Install with: pip install python-docx", file=sys.stderr)
             sys.exit(2)
 
     exclude_set = set(args.exclude)
@@ -148,9 +151,7 @@ def main():
             cli_exclude_checks=args.exclude_checks or None,
             org=effective_org,
         )
-        result = assess_repo(repo_path,
-                             excluded_checks=profile_info.excluded_checks,
-                             profile_info=profile_info)
+        result = assess_repo(repo_path, excluded_checks=profile_info.excluded_checks, profile_info=profile_info)
         result["org"] = effective_org
         all_results.append(result)
         if not args.quiet:
@@ -158,7 +159,7 @@ def main():
                 level, _ = readiness_level(result["overall_score"])
                 print(f" {round(result['overall_score'])}/100 ({level})", file=sys.stderr)
             else:
-                print(f" N/A (non-code repo)", file=sys.stderr)
+                print(" N/A (non-code repo)", file=sys.stderr)
 
     if not all_results:
         print("No repositories found to assess.", file=sys.stderr)
@@ -166,6 +167,7 @@ def main():
 
     # Determine if multi-org (preserve None keys for single-repo without --org)
     from collections import defaultdict
+
     results_by_org = defaultdict(list)
     for result in all_results:
         results_by_org[result.get("org")].append(result)
@@ -179,6 +181,7 @@ def main():
     elif args.format == "html":
         if use_multi:
             from .reports.html import generate_html_tabbed
+
             output = generate_html_tabbed(dict(named_orgs), title=args.title)
         else:
             effective_org = args.org or next((k for k in results_by_org if k is not None), None)
@@ -186,6 +189,7 @@ def main():
     elif args.format == "markdown":
         if use_multi:
             from .reports.markdown import generate_markdown_multi
+
             output = generate_markdown_multi(dict(named_orgs), title=args.title)
         else:
             effective_org = args.org or next((k for k in results_by_org if k is not None), None)
@@ -194,6 +198,7 @@ def main():
         output = generate_csv(all_results)
     elif args.format == "docx":
         from .reports.docx_report import generate_docx
+
         effective_org = args.org or next((k for k in results_by_org if k is not None), None)
         docx_doc = generate_docx(all_results, title=args.title, org=effective_org)
         out_path = args.output or "report.docx"
@@ -205,7 +210,7 @@ def main():
         # Text summary
         code_results = [r for r in all_results if r["overall_score"] is not None]
         noncode_results = [r for r in all_results if r["overall_score"] is None]
-        lines = [f"\nAI Bug Automation Readiness Assessment", f"{'=' * 50}"]
+        lines = ["\nAI Bug Automation Readiness Assessment", f"{'=' * 50}"]
         for r in sorted(code_results, key=lambda x: x["overall_score"], reverse=True):
             level, _ = readiness_level(r["overall_score"])
             profile_suffix = ""
@@ -218,7 +223,7 @@ def main():
             # Show per-check details for single-repo assessments
             if len(all_results) == 1:
                 lines.append("")
-                checks_by_cat = {}
+                checks_by_cat: dict[str, list[dict]] = {}
                 for cid, c in r["checks"].items():
                     checks_by_cat.setdefault(c["category"], []).append(c)
                 for phase in ["Understand", "Navigate", "Verify", "Submit"]:
@@ -233,7 +238,7 @@ def main():
                                 lines.append(f"        -> {c['recommendation']}")
                     lines.append("")
         if noncode_results:
-            lines.append(f"\n  Non-code repos (excluded from scoring):")
+            lines.append("\n  Non-code repos (excluded from scoring):")
             for r in sorted(noncode_results, key=lambda x: x["repo"]):
                 lines.append(f"    {r['repo']}")
         if len(code_results) > 1:
