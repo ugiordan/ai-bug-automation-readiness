@@ -3,7 +3,7 @@
     "opendatahub-io": {
       "description": "Core OpenDataHub platform components",
       "mode": "all",
-      "exclude": ["odh-build-metadata"]
+      "exclude": ["odh-build-metadata", "architecture-decision-records"]
     },
     "project-codeflare": {
       "description": "CodeFlare distributed computing stack",
