@@ -398,7 +398,9 @@ def check_fixture_data(repo_path: str | Path, *, all_files: list[Path] | None = 
 
     if found_dirs:
         score = 60
-        if total_files >= 10:
+        if total_files >= 20:
+            score = 100
+        elif total_files >= 10:
             score = 90
         elif total_files >= 5:
             score = 80
