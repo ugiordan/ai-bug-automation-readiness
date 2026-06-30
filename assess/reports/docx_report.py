@@ -62,7 +62,7 @@ def _add_table(doc: Any, headers: list[str], rows: list[list], col_widths: list[
     if col_widths:
         for i, w in enumerate(col_widths):
             for row in table.rows:
-                row.cells[i].width = Inches(w)
+                row.cells[i].width = Inches(w)  # type: ignore[attr-defined]
 
     return table
 
@@ -224,7 +224,7 @@ def generate_docx(all_results: list[dict], title: str = "AI Bug Automation Readi
         profile_suffix = ""
         if r.get("profile", {}).get("name", "default") != "default":
             p = r["profile"]
-            profile_suffix = f" [profile: {p['name']}]"
+            profile_suffix = f" [profile: {p['name']}]"  # type: ignore[index]
         doc.add_heading(f"{r['repo']} -- {round(r['overall_score'])}/100 ({level}){profile_suffix}", level=2)
         detail_rows = []
         for cid in check_ids:
