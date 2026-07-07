@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 """Read scan-config.json and clone repos into nested org/repo layout."""
+import shutil
+import stat
 import subprocess
 import sys
 from pathlib import Path
 
 # Allow importing assess package from repo root
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from assess.scan_config import load_scan_config
+from assess.scan_config import load_scan_config  # noqa: E402
+
+
+def _rm_readonly(func, path, _exc_info):
+    """Handle read-only files (e.g. git pack objects) during rmtree."""
+    Path(path).chmod(stat.S_IWUSR | stat.S_IRUSR)
+    func(path)
 
 
 def main() -> None:
@@ -56,7 +64,7 @@ def main() -> None:
                 # Remove .git to save disk; we only need the working tree
                 git_dir = target / ".git"
                 if git_dir.exists():
-                    subprocess.run(["rm", "-rf", str(git_dir)], check=True)
+                    shutil.rmtree(git_dir, onexc=_rm_readonly)
                     git_dir.touch()  # marker for repo detection
                 print(f"  Cloned {org}/{repo}")
             else:
