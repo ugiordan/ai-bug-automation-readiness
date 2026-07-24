@@ -429,9 +429,21 @@ def check_precommit_hooks(repo_path: str | Path, *, all_files: list[Path] | None
         score = 70
         evidence.append(".pre-commit-config.yaml found")
         has_lint = bool(
-            re.search(r"\b(black|ruff|flake8|isort|prettier|eslint|gofmt|golangci)\b", content, re.IGNORECASE)
+            re.search(
+                r"\b(black|ruff|flake8|isort|prettier|eslint|gofmt|golangci|staticcheck|revive|"
+                r"go.vet|rustfmt|clippy|checkstyle|spotbugs|ktlint|scalafmt|rubocop|shellcheck)\b",
+                content,
+                re.IGNORECASE,
+            )
         )
-        has_test = bool(re.search(r"\b(pytest|tests?|mypy|pyright)\b", content, re.IGNORECASE))
+        has_test = bool(
+            re.search(
+                r"\b(pytest|mypy|pyright|go[\s-]test|cargo[\s-]test|junit|maven-surefire|"
+                r"jest|vitest|mocha|nox|tox)\b",
+                content,
+                re.IGNORECASE,
+            )
+        )
         if has_lint and has_test:
             score = 100
             evidence.append("Includes both linting and type/test hooks")
