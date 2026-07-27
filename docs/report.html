@@ -73,7 +73,7 @@
 </head>
 <body>
 <h1>AI Bug Automation Readiness</h1>
-<p class="subtitle">183 repositories across 2 orgs &middot; 2026-07-24 21:23</p>
+<p class="subtitle">183 repositories across 2 orgs &middot; 2026-07-27 09:33</p>
 
 <nav class="tab-bar" role="tablist">
   <button class="tab active" data-tab="opendatahub-io" role="tab" aria-selected="true">opendatahub-io (151)</button>
@@ -117,7 +117,7 @@
     <li><a href="https://github.com/opendatahub-io/opendatahub-tests" target="_blank">opendatahub-tests</a> (89)</li>
     <li><a href="https://github.com/opendatahub-io/odh-dashboard" target="_blank">odh-dashboard</a> (89)</li>
     <li><a href="https://github.com/opendatahub-io/NeMo-Guardrails" target="_blank">NeMo-Guardrails</a> (88)</li>
-    <li><a href="https://github.com/opendatahub-io/opendatahub-operator" target="_blank">opendatahub-operator</a> (88)</li>
+    <li><a href="https://github.com/opendatahub-io/opendatahub-operator" target="_blank">opendatahub-operator</a> (87)</li>
     <li><a href="https://github.com/opendatahub-io/llm-d-async" target="_blank">llm-d-async</a> (86)</li>
     <li><a href="https://github.com/opendatahub-io/batch-gateway" target="_blank">batch-gateway</a> (85)</li>
     <li><a href="https://github.com/opendatahub-io/model-registry" target="_blank">model-registry</a> (85)</li>
@@ -378,8 +378,8 @@
   </tr>
   <tr>
     <td><a href="#opendatahub-operator"><strong>opendatahub-operator</strong></a></td>
-    <td><strong>88</strong></td>
-    <td><span class="bar-bg"><span class="bar" style="width:105px;background:#10B981"></span></span></td>
+    <td><strong>87</strong></td>
+    <td><span class="bar-bg"><span class="bar" style="width:104px;background:#10B981"></span></span></td>
     <td><span class="badge" style="background:#10B981">Ready</span></td>
     <td style="font-size:0.8rem;color:#6B7280">Go, Shell, Python</td>
   </tr>
@@ -906,7 +906,7 @@
     <td><strong>59</strong></td>
     <td><span class="bar-bg"><span class="bar" style="width:70px;background:#F97316"></span></span></td>
     <td><span class="badge" style="background:#F97316">Needs Work</span></td>
-    <td style="font-size:0.8rem;color:#6B7280">Python</td>
+    <td style="font-size:0.8rem;color:#6B7280">Python, JavaScript</td>
   </tr>
   <tr>
     <td><a href="#disconnected-readiness-scorer"><strong>disconnected-readiness-scorer</strong></a></td>
@@ -1715,7 +1715,7 @@
 <td style="background:#D1FAE5">90</td>
 <td style="background:#D1FAE5">90</td>
 </tr>
-<tr><td class="repo-col">opendatahub-operator</td><td><strong>88</strong></td>
+<tr><td class="repo-col">opendatahub-operator</td><td><strong>87</strong></td>
 <td style="background:#D1FAE5">100</td>
 <td style="background:#D1FAE5">100</td>
 <td style="background:#D1FAE5">90</td>
@@ -1734,7 +1734,7 @@
 <td style="background:#D1FAE5">100</td>
 <td style="background:#D1FAE5">80</td>
 <td style="background:#D1FAE5">100</td>
-<td style="background:#D1FAE5">100</td>
+<td style="background:#D1FAE5">85</td>
 <td style="background:#D1FAE5">100</td>
 </tr>
 <tr><td class="repo-col">llm-d-async</td><td><strong>86</strong></td>
@@ -4942,23 +4942,23 @@
 <tbody>
 <tr><td>AI Context Files</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CLAUDE.md found (1/7 quality keywords)</li><li>AGENTS.md found (6/7 quality keywords)</li></ul></td></tr>
 <tr><td>Bug Report Template Quality</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Found: .github/ISSUE_TEMPLATE/bug_report.md</li><li>Has reproduction steps</li><li>Has expected/actual behavior fields</li><li>Has environment/version fields</li><li>Has log/error output fields</li></ul></td></tr>
-<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Python structured logging found in pyproject.toml</li><li>Some logging (10/50 sampled files)</li><li>Error wrapping patterns (14 files)</li></ul></td></tr>
+<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Python structured logging found in pyproject.toml</li><li>Some logging (10/50 sampled files)</li><li>Error wrapping patterns (11 files)</li></ul></td></tr>
 <tr><td>Architecture Documentation</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Architecture doc: ARCHITECTURE.md</li><li>ADR directory: docs/adr (13 records)</li><li>29 module-level READMEs</li></ul></td></tr>
 <tr><td>Test Fixtures / Sample Data</td><td>Understand</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Fixture directories: tests/testdata, examples (14 files)</li></ul></td></tr>
-<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Average file: 205 lines (219 source files, generated excluded)</li><li>Files &gt;500 lines: 23 (11%)</li><li>Largest: test_update_build_args_from_versions.py (2188L), update_build_args_from_versions.py (1696L), test_main.py (1029L)</li></ul></td></tr>
-<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>0/228 files are generated (0%)</li></ul></td></tr>
+<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Average file: 206 lines (221 source files, generated excluded)</li><li>Files &gt;500 lines: 23 (10%)</li><li>Largest: test_update_build_args_from_versions.py (2188L), update_build_args_from_versions.py (1696L), test_main.py (1029L)</li></ul></td></tr>
+<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>0/230 files are generated (0%)</li></ul></td></tr>
 <tr><td>Build / Dependency Setup</td><td>Navigate</td><td>5%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Lockfiles: uv lockfile</li><li>Build/install targets in Makefile</li><li>Dev container configuration</li></ul></td></tr>
 <tr><td>Type Safety / Static Analysis</td><td>Navigate</td><td>3%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Statically typed language(s): Go</li></ul></td></tr>
-<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>43 direct dependencies / 228 source files (ratio: 0.19)</li></ul></td></tr>
+<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>43 direct dependencies / 230 source files (ratio: 0.19)</li></ul></td></tr>
 <tr><td>Code Ownership (CODEOWNERS)</td><td>Submit</td><td>1%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>OWNERS file found (OpenShift/Kubernetes-style), 28 entries</li></ul></td></tr>
-<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F97316;font-weight:600'>53</td><td><ul class='evidence'><li>84 test files / 144 source files (ratio: 0.58)</li><li>Mixed test quality: 11/20 sampled test files have assertions</li></ul><div class='rec'>Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files.</div></td></tr>
+<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F97316;font-weight:600'>53</td><td><ul class='evidence'><li>85 test files / 145 source files (ratio: 0.59)</li><li>Mixed test quality: 13/20 sampled test files have assertions</li></ul><div class='rec'>Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files.</div></td></tr>
 <tr><td>One-Command Test Execution</td><td>Verify</td><td>11%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Makefile targets: test, test-unit, test-integration, unit-test, integration-test</li><li>Multiple test types available</li><li>pytest.ini found</li></ul></td></tr>
 <tr><td>Coverage Configuration</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Codecov configured</li><li>Go coverage flags in Makefile</li><li>Coverage in CI workflow: code-quality.yaml</li><li>Multiple coverage signals detected</li></ul></td></tr>
 <tr><td>CI Runs Tests on PRs</td><td>Verify</td><td>10%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CI runs tests on pull requests</li><li>Tests found in 8 CI workflow(s): code-quality.yaml, piplock-renewal.yaml, software-versions.yaml</li></ul></td></tr>
 <tr><td>PR Template</td><td>Submit</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>PR template found: .github/pull_request_template.md</li><li>Mentions testing</li><li>Has checklist items</li><li>Mentions review</li></ul></td></tr>
 <tr><td>Linting / Formatting in CI</td><td>Submit</td><td>5%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Linting in CI: sec-scan.yml, auto-add-issue-to-project.yml, pr-notifications.yml</li></ul></td></tr>
 <tr><td>Contributing / Dev Guide</td><td>Submit</td><td>5%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Found: CONTRIBUTING.md</li><li>6/6 development keywords</li></ul></td></tr>
-<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>~90% unit tests, ~10% infra-dependent (27/30 sampled)</li><li>Makefile separates unit and integration test targets</li></ul></td></tr>
+<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>~77% unit tests, ~23% infra-dependent (23/30 sampled)</li><li>Makefile separates unit and integration test targets</li></ul></td></tr>
 <tr><td>Pre-commit / Local Hooks</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>.pre-commit-config.yaml found</li><li>Includes both linting and type/test hooks</li></ul></td></tr>
 </tbody></table></details>
 <details id="model-metadata-collection">
@@ -5020,23 +5020,23 @@
 <tbody>
 <tr><td>AI Context Files</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CLAUDE.md found (5/7 quality keywords)</li><li>AGENTS.md found (5/7 quality keywords)</li></ul></td></tr>
 <tr><td>Bug Report Template Quality</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Found: .github/ISSUE_TEMPLATE/bug_report.yaml</li><li>Has reproduction steps</li><li>Has expected/actual behavior fields</li><li>Has environment/version fields</li><li>Has log/error output fields</li><li>YAML template with required fields</li></ul></td></tr>
-<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#EF4444;font-weight:600'>20</td><td><ul class='evidence'><li>Error wrapping patterns (3 files)</li></ul><div class='rec'>Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python, Sentry for frontend) and wrap errors with context.</div></td></tr>
-<tr><td>Architecture Documentation</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Architecture doc: docs/architecture.md</li><li>ADR directory: docs/adr (4 records)</li><li>95 module-level READMEs</li></ul></td></tr>
+<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#EF4444;font-weight:600'>20</td><td><ul class='evidence'><li>Error wrapping patterns (6 files)</li></ul><div class='rec'>Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python, Sentry for frontend) and wrap errors with context.</div></td></tr>
+<tr><td>Architecture Documentation</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Architecture doc: docs/architecture.md</li><li>ADR directory: docs/adr (4 records)</li><li>88 module-level READMEs</li></ul></td></tr>
 <tr><td>Test Fixtures / Sample Data</td><td>Understand</td><td>2%</td><td style='color:#F97316;font-weight:600'>50</td><td><ul class='evidence'><li>Test manifests in overlay/config dirs (4 files)</li></ul><div class='rec'>Add test fixtures or sample data directories (testdata/, fixtures/, examples/) to help AI agents understand expected inputs and reproduce bugs.</div></td></tr>
-<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Average file: 136 lines (8197 source files, generated excluded)</li><li>Files &gt;500 lines: 338 (4%)</li><li>Largest: docs.go (7410L), mockPipelineSpec.ts (5220L), data-contracts.ts (4180L)</li></ul></td></tr>
-<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>75/8284 files are generated (1%)</li><li>Examples: zz_generated.deepcopy.go, subscriptions_mock.go, policies_mock.go, externalmodels_mock.go, yaml_mock.go</li></ul></td></tr>
+<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Average file: 136 lines (8200 source files, generated excluded)</li><li>Files &gt;500 lines: 338 (4%)</li><li>Largest: docs.go (7410L), mockPipelineSpec.ts (5220L), data-contracts.ts (4180L)</li></ul></td></tr>
+<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>75/8287 files are generated (1%)</li><li>Examples: zz_generated.deepcopy.go, subscriptions_mock.go, policies_mock.go, externalmodels_mock.go, yaml_mock.go</li></ul></td></tr>
 <tr><td>Build / Dependency Setup</td><td>Navigate</td><td>5%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Lockfiles: npm lockfile</li><li>Build/install targets in Makefile</li><li>Dockerfile/Containerfile for reproducible builds</li></ul></td></tr>
 <tr><td>Type Safety / Static Analysis</td><td>Navigate</td><td>3%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Statically typed language(s): Go</li></ul></td></tr>
-<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>6 direct dependencies / 8209 source files (ratio: 0.00)</li></ul></td></tr>
+<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>6 direct dependencies / 8212 source files (ratio: 0.00)</li></ul></td></tr>
 <tr><td>Code Ownership (CODEOWNERS)</td><td>Submit</td><td>1%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>OWNERS file found (OpenShift/Kubernetes-style), OWNERS_ALIASES present</li></ul></td></tr>
-<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#10B981;font-weight:600'>85</td><td><ul class='evidence'><li>1979 test files / 6230 source files (ratio: 0.32)</li><li>Frontend-heavy repo (relaxed thresholds)</li></ul></td></tr>
+<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#10B981;font-weight:600'>85</td><td><ul class='evidence'><li>1981 test files / 6231 source files (ratio: 0.32)</li><li>Frontend-heavy repo (relaxed thresholds)</li></ul></td></tr>
 <tr><td>One-Command Test Execution</td><td>Verify</td><td>11%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Makefile targets: dashboard-operator/test, packages/maas/test</li><li>npm test script defined</li></ul></td></tr>
 <tr><td>Coverage Configuration</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Codecov configured</li><li>Coverage in CI workflow: test.yml</li><li>Multiple coverage signals detected</li></ul></td></tr>
 <tr><td>CI Runs Tests on PRs</td><td>Verify</td><td>10%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CI runs tests on pull requests</li><li>Tests found in 11 CI workflow(s): autorag-bff-tests.yml, mlflow-bff-tests.yml, automl-bff-tests.yml</li></ul></td></tr>
 <tr><td>PR Template</td><td>Submit</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>PR template found: .github/pull_request_template.md</li><li>Mentions testing</li><li>Has checklist items</li><li>Mentions review</li></ul></td></tr>
 <tr><td>Linting / Formatting in CI</td><td>Submit</td><td>5%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Linting in CI: autorag-bff-tests.yml, mlflow-bff-tests.yml, automl-bff-tests.yml</li></ul></td></tr>
 <tr><td>Contributing / Dev Guide</td><td>Submit</td><td>5%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Found: CONTRIBUTING.md</li><li>4/6 development keywords</li></ul></td></tr>
-<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>~86% unit tests, ~14% infra-dependent (25/29 sampled)</li></ul></td></tr>
+<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>~90% unit tests, ~10% infra-dependent (26/29 sampled)</li></ul></td></tr>
 <tr><td>Pre-commit / Local Hooks</td><td>Verify</td><td>3%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Husky git hooks configured</li><li>.husky/ directory found</li></ul></td></tr>
 </tbody></table></details>
 <details id="NeMo-Guardrails">
@@ -5066,29 +5066,29 @@
 <tr><td>Pre-commit / Local Hooks</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>.pre-commit-config.yaml found</li><li>Includes linting hooks</li></ul></td></tr>
 </tbody></table></details>
 <details id="opendatahub-operator">
-<summary>opendatahub-operator <span class="badge" style="background:#10B981">88/100 - Ready</span></summary>
+<summary>opendatahub-operator <span class="badge" style="background:#10B981">87/100 - Ready</span></summary>
 <table style="font-size:0.85rem">
 <thead><tr><th>Check</th><th>Phase</th><th>Weight</th><th>Score</th><th>Evidence & Recommendation</th></tr></thead>
 <tbody>
 <tr><td>AI Context Files</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CLAUDE.md found (0/7 quality keywords)</li><li>AGENTS.md found (5/7 quality keywords)</li></ul></td></tr>
 <tr><td>Bug Report Template Quality</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Found: .github/ISSUE_TEMPLATE/bug_report.yml</li><li>Has reproduction steps</li><li>Has expected/actual behavior fields</li><li>Has environment/version fields</li><li>Has log/error output fields</li><li>YAML template with required fields</li></ul></td></tr>
-<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Go structured logging (zap) found in go.mod</li><li>Go structured logging (logr) found in go.mod</li><li>Kubernetes-style logging (klog) found in go.mod</li><li>Error wrapping patterns (15 files)</li></ul></td></tr>
+<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Go structured logging (zap) found in go.mod</li><li>Go structured logging (logr) found in go.mod</li><li>Kubernetes-style logging (klog) found in go.mod</li><li>Some logging (9/50 sampled files)</li><li>Error wrapping patterns (15 files)</li></ul></td></tr>
 <tr><td>Architecture Documentation</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Architecture doc: docs/DESIGN.md</li><li>ADR directory: docs/adr (1 records)</li><li>9 module-level READMEs</li></ul></td></tr>
 <tr><td>Test Fixtures / Sample Data</td><td>Understand</td><td>2%</td><td style='color:#F59E0B;font-weight:600'>60</td><td><ul class='evidence'><li>Fixture directories: config/samples (4 files)</li></ul></td></tr>
-<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Average file: 209 lines (768 source files, generated excluded)</li><li>Files &gt;500 lines: 76 (10%)</li><li>Largest: monitoring_test.go (3139L), mutating_test.go (2759L), test_context_test.go (2289L)</li></ul></td></tr>
-<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>17/786 files are generated (2%)</li><li>Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go</li></ul></td></tr>
+<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Average file: 208 lines (764 source files, generated excluded)</li><li>Files &gt;500 lines: 76 (10%)</li><li>Largest: monitoring_test.go (3139L), mutating_test.go (2759L), test_context_test.go (2289L)</li></ul></td></tr>
+<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>17/782 files are generated (2%)</li><li>Examples: zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go</li></ul></td></tr>
 <tr><td>Build / Dependency Setup</td><td>Navigate</td><td>5%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Lockfiles: Go lockfile</li><li>Build/install targets in Makefile</li></ul></td></tr>
 <tr><td>Type Safety / Static Analysis</td><td>Navigate</td><td>3%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Statically typed language(s): Go</li></ul></td></tr>
-<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>137 direct dependencies / 769 source files (ratio: 0.18)</li></ul></td></tr>
+<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>137 direct dependencies / 765 source files (ratio: 0.18)</li></ul></td></tr>
 <tr><td>Code Ownership (CODEOWNERS)</td><td>Submit</td><td>1%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>OWNERS file found (OpenShift/Kubernetes-style), OWNERS_ALIASES present</li></ul></td></tr>
-<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F97316;font-weight:600'>53</td><td><ul class='evidence'><li>271 test files / 498 source files (ratio: 0.54)</li><li>Mixed test quality: 13/20 sampled test files have assertions</li></ul><div class='rec'>Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files.</div></td></tr>
+<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F97316;font-weight:600'>53</td><td><ul class='evidence'><li>269 test files / 496 source files (ratio: 0.54)</li><li>Mixed test quality: 11/20 sampled test files have assertions</li></ul><div class='rec'>Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files.</div></td></tr>
 <tr><td>One-Command Test Execution</td><td>Verify</td><td>11%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Makefile targets: test, unit-test, e2e, e2e-test, e2e-test, unit-test-cli</li><li>Multiple test types available</li></ul></td></tr>
 <tr><td>Coverage Configuration</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Codecov configured</li><li>Go coverage flags in Makefile</li><li>Coverage in CI workflow: test-gateway-integration.yaml</li><li>Multiple coverage signals detected</li></ul></td></tr>
 <tr><td>CI Runs Tests on PRs</td><td>Verify</td><td>10%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CI runs tests on pull requests</li><li>Tests found in 6 CI workflow(s): test-gateway-integration.yaml, test-unit.yaml, test-kind-odh-e2e.yaml</li></ul></td></tr>
 <tr><td>PR Template</td><td>Submit</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>PR template found: .github/PULL_REQUEST_TEMPLATE.md</li><li>Mentions testing</li><li>Has checklist items</li><li>Mentions review</li></ul></td></tr>
 <tr><td>Linting / Formatting in CI</td><td>Submit</td><td>5%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Linting in CI: test-linter.yaml</li></ul></td></tr>
 <tr><td>Contributing / Dev Guide</td><td>Submit</td><td>5%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Found: CONTRIBUTING.md</li><li>6/6 development keywords</li></ul></td></tr>
-<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>~81% unit tests, ~19% infra-dependent (22/27 sampled)</li><li>Makefile separates unit and integration test targets</li></ul></td></tr>
+<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>85</td><td><ul class='evidence'><li>~57% unit tests, ~43% infra-dependent (16/28 sampled)</li><li>Makefile separates unit and integration test targets</li></ul></td></tr>
 <tr><td>Pre-commit / Local Hooks</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>.pre-commit-config.yaml found</li><li>Includes both linting and type/test hooks</li></ul></td></tr>
 </tbody></table></details>
 <details id="llm-d-async">
@@ -5566,23 +5566,23 @@
 <tbody>
 <tr><td>AI Context Files</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CLAUDE.md found (5/7 quality keywords)</li><li>AGENTS.md found (5/7 quality keywords)</li></ul></td></tr>
 <tr><td>Bug Report Template Quality</td><td>Understand</td><td>8%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Found: .github/ISSUE_TEMPLATE/bug_report.md</li><li>Has reproduction steps</li><li>Has environment/version fields</li><li>Has log/error output fields</li></ul></td></tr>
-<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Go structured logging (zap) found in go.mod</li><li>Go structured logging (logr) found in go.mod</li><li>Kubernetes-style logging (klog) found in go.mod</li><li>Some logging (8/50 sampled files)</li><li>Error wrapping patterns (12 files)</li></ul></td></tr>
+<tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Go structured logging (zap) found in go.mod</li><li>Go structured logging (logr) found in go.mod</li><li>Kubernetes-style logging (klog) found in go.mod</li><li>Some logging (9/50 sampled files)</li><li>Error wrapping patterns (13 files)</li></ul></td></tr>
 <tr><td>Architecture Documentation</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Architecture doc: docs/architecture.md</li><li>135 module-level READMEs</li></ul></td></tr>
 <tr><td>Test Fixtures / Sample Data</td><td>Understand</td><td>2%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Test manifests in overlay/config dirs (24 files)</li></ul></td></tr>
-<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#EF4444;font-weight:600'>30</td><td><ul class='evidence'><li>Average file: 1561 lines (1399 source files, generated excluded)</li><li>Files &gt;500 lines: 259 (19%)</li><li>Largest: llmisvc-full-install-with-manifests.sh (109373L), llmisvc-full-install-with-manifests.sh (94221L), llmisvc-full-install-with-manifests.sh (92605L)</li></ul><div class='rec'>Break large files (&gt;500 lines) into smaller, focused modules. Exclude generated files from linting.</div></td></tr>
-<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>118/1520 files are generated (8%)</li><li>Examples: openapi_generated.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.defaults.go, zz_generated.deepcopy.go</li></ul></td></tr>
+<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#EF4444;font-weight:600'>30</td><td><ul class='evidence'><li>Average file: 1556 lines (1403 source files, generated excluded)</li><li>Files &gt;500 lines: 260 (19%)</li><li>Largest: llmisvc-full-install-with-manifests.sh (107982L), llmisvc-full-install-with-manifests.sh (94221L), llmisvc-full-install-with-manifests.sh (92605L)</li></ul><div class='rec'>Break large files (&gt;500 lines) into smaller, focused modules. Exclude generated files from linting.</div></td></tr>
+<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>118/1524 files are generated (8%)</li><li>Examples: openapi_generated.go, zz_generated.deepcopy.go, zz_generated.deepcopy.go, zz_generated.defaults.go, zz_generated.deepcopy.go</li></ul></td></tr>
 <tr><td>Build / Dependency Setup</td><td>Navigate</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Lockfiles: Go lockfile</li><li>Dockerfile/Containerfile for reproducible builds</li></ul></td></tr>
 <tr><td>Type Safety / Static Analysis</td><td>Navigate</td><td>3%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Statically typed language(s): Go</li></ul></td></tr>
-<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>219 direct dependencies / 1402 source files (ratio: 0.16)</li></ul></td></tr>
+<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>219 direct dependencies / 1406 source files (ratio: 0.16)</li></ul></td></tr>
 <tr><td>Code Ownership (CODEOWNERS)</td><td>Submit</td><td>1%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>OWNERS file found (OpenShift/Kubernetes-style), 31 entries</li></ul></td></tr>
-<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F97316;font-weight:600'>43</td><td><ul class='evidence'><li>615 test files / 787 source files (ratio: 0.78)</li><li>Low test quality: 7/20 sampled test files have assertions (stub penalty applied)</li></ul><div class='rec'>Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files.</div></td></tr>
+<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F97316;font-weight:600'>43</td><td><ul class='evidence'><li>618 test files / 788 source files (ratio: 0.78)</li><li>Low test quality: 9/20 sampled test files have assertions (stub penalty applied)</li></ul><div class='rec'>Add unit tests for critical code paths. Aim for at least 1 test file per 2 source files.</div></td></tr>
 <tr><td>One-Command Test Execution</td><td>Verify</td><td>11%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Makefile targets: check, test, python/huggingfaceserver/test, python/custom_transformer/test, python/aiffairness/test, python/lgbserver/test, python/pmmlserver/test, python/kserve/test, python/artexplainer/test, python/xgbserver/test, python/autogluonserver/test, python/custom_model/test, python/paddleserver/test, python/predictiveserver/test, python/sklearnserver/test, tools/tf2openapi/test</li><li>Multiple test types available</li></ul></td></tr>
 <tr><td>Coverage Configuration</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Go coverage flags in Makefile</li><li>Coverage in CI workflow: go.yml</li><li>Multiple coverage signals detected</li></ul></td></tr>
 <tr><td>CI Runs Tests on PRs</td><td>Verify</td><td>10%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CI runs tests on pull requests</li><li>Tests found in 7 CI workflow(s): go.yml, precommit-check.yml, e2e-test-kserve-module.yml</li></ul></td></tr>
 <tr><td>PR Template</td><td>Submit</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>PR template found: .github/PULL_REQUEST_TEMPLATE.md</li><li>Mentions testing</li><li>Has checklist items</li><li>Mentions review</li></ul></td></tr>
 <tr><td>Linting / Formatting in CI</td><td>Submit</td><td>5%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Linting via .pre-commit-config.yaml (lint hooks configured)</li></ul></td></tr>
 <tr><td>Contributing / Dev Guide</td><td>Submit</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>60</td><td><ul class='evidence'><li>Found: CONTRIBUTING.md</li><li>1/6 development keywords</li></ul></td></tr>
-<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>~83% unit tests, ~17% infra-dependent (24/29 sampled)</li></ul></td></tr>
+<tr><td>Test Isolation (unit vs e2e)</td><td>Verify</td><td>4%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>~74% unit tests, ~26% infra-dependent (20/27 sampled)</li></ul></td></tr>
 <tr><td>Pre-commit / Local Hooks</td><td>Verify</td><td>3%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>.pre-commit-config.yaml found</li><li>Includes linting hooks</li></ul></td></tr>
 </tbody></table></details>
 <details id="odh-model-controller">
@@ -6115,7 +6115,7 @@
 <tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>Good logging coverage (24/50 sampled files)</li><li>Error wrapping patterns (17 files)</li></ul></td></tr>
 <tr><td>Architecture Documentation</td><td>Understand</td><td>3%</td><td style='color:#F97316;font-weight:600'>40</td><td><ul class='evidence'><li>16 module-level READMEs</li></ul><div class='rec'>Add architecture documentation (ARCHITECTURE.md, docs/design/, or module-level READMEs) to help AI agents understand codebase structure.</div></td></tr>
 <tr><td>Test Fixtures / Sample Data</td><td>Understand</td><td>2%</td><td style='color:#F97316;font-weight:600'>40</td><td><ul class='evidence'><li>Some fixture patterns in 2/20 sampled test files</li></ul><div class='rec'>Add test fixtures or sample data directories (testdata/, fixtures/, examples/) to help AI agents understand expected inputs and reproduce bugs.</div></td></tr>
-<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F97316;font-weight:600'>50</td><td><ul class='evidence'><li>Average file: 387 lines (232 source files, generated excluded)</li><li>Files &gt;500 lines: 47 (20%)</li><li>Largest: maasauthpolicy_controller_test.go (3032L), aitenant_controller_test.go (2819L), test_subscription.py (2511L)</li></ul><div class='rec'>Break large files (&gt;500 lines) into smaller, focused modules. Exclude generated files from linting.</div></td></tr>
+<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F97316;font-weight:600'>50</td><td><ul class='evidence'><li>Average file: 388 lines (232 source files, generated excluded)</li><li>Files &gt;500 lines: 47 (20%)</li><li>Largest: maasauthpolicy_controller_test.go (3032L), aitenant_controller_test.go (3020L), test_subscription.py (2511L)</li></ul><div class='rec'>Break large files (&gt;500 lines) into smaller, focused modules. Exclude generated files from linting.</div></td></tr>
 <tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>2/234 files are generated (1%)</li><li>Examples: store_mock.go, zz_generated.deepcopy.go</li></ul></td></tr>
 <tr><td>Build / Dependency Setup</td><td>Navigate</td><td>5%</td><td style='color:#EF4444;font-weight:600'>0</td><td><ul class='evidence'><li>No dependency lockfiles or build configuration found</li></ul><div class='rec'>Add dependency lockfiles (go.sum, package-lock.json, poetry.lock) and a documented build setup to ensure reproducible builds.</div></td></tr>
 <tr><td>Type Safety / Static Analysis</td><td>Navigate</td><td>3%</td><td style='color:#10B981;font-weight:600'>80</td><td><ul class='evidence'><li>Statically typed language(s): Go</li></ul></td></tr>
@@ -7025,13 +7025,13 @@
 <tr><td>Structured Logging / Errors</td><td>Understand</td><td>3%</td><td style='color:#EF4444;font-weight:600'>20</td><td><ul class='evidence'><li>Error wrapping patterns (7 files)</li></ul><div class='rec'>Adopt a structured logging library (e.g., logr/zap for Go, structlog for Python, Sentry for frontend) and wrap errors with context.</div></td></tr>
 <tr><td>Architecture Documentation</td><td>Understand</td><td>3%</td><td style='color:#F97316;font-weight:600'>40</td><td><ul class='evidence'><li>5 module-level READMEs</li></ul><div class='rec'>Add architecture documentation (ARCHITECTURE.md, docs/design/, or module-level READMEs) to help AI agents understand codebase structure.</div></td></tr>
 <tr><td>Test Fixtures / Sample Data</td><td>Understand</td><td>2%</td><td style='color:#F59E0B;font-weight:600'>60</td><td><ul class='evidence'><li>Fixture directories: tests/fixtures, examples (4 files)</li></ul></td></tr>
-<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Average file: 278 lines (114 source files, generated excluded)</li><li>Files &gt;500 lines: 15 (13%)</li><li>Largest: report.py (2755L), score.py (1971L), config.py (1172L)</li></ul></td></tr>
-<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>0/119 files are generated (0%)</li></ul></td></tr>
+<tr><td>Code Navigability</td><td>Navigate</td><td>5%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>Average file: 273 lines (119 source files, generated excluded)</li><li>Files &gt;500 lines: 15 (13%)</li><li>Largest: report.py (2755L), score.py (1971L), config.py (1172L)</li></ul></td></tr>
+<tr><td>Generated Code Ratio</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>0/124 files are generated (0%)</li></ul></td></tr>
 <tr><td>Build / Dependency Setup</td><td>Navigate</td><td>5%</td><td style='color:#EF4444;font-weight:600'>20</td><td><ul class='evidence'><li>Build/install targets in Makefile</li></ul><div class='rec'>Add dependency lockfiles (go.sum, package-lock.json, poetry.lock) and a documented build setup to ensure reproducible builds.</div></td></tr>
-<tr><td>Type Safety / Static Analysis</td><td>Navigate</td><td>3%</td><td style='color:#F97316;font-weight:600'>50</td><td><ul class='evidence'><li>Some type annotations (8/20 sampled)</li></ul><div class='rec'>Enable type checking (mypy for Python, tsconfig strict for TypeScript) or add type annotations to help AI agents understand function contracts.</div></td></tr>
-<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>6 direct dependencies / 119 source files (ratio: 0.05)</li></ul></td></tr>
+<tr><td>Type Safety / Static Analysis</td><td>Navigate</td><td>3%</td><td style='color:#F97316;font-weight:600'>50</td><td><ul class='evidence'><li>Some type annotations (9/20 sampled)</li></ul><div class='rec'>Enable type checking (mypy for Python, tsconfig strict for TypeScript) or add type annotations to help AI agents understand function contracts.</div></td></tr>
+<tr><td>Dependency Complexity</td><td>Navigate</td><td>2%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>6 direct dependencies / 124 source files (ratio: 0.05)</li></ul></td></tr>
 <tr><td>Code Ownership (CODEOWNERS)</td><td>Submit</td><td>1%</td><td style='color:#EF4444;font-weight:600'>0</td><td><ul class='evidence'><li>No CODEOWNERS or OWNERS file</li></ul><div class='rec'>Create a .github/CODEOWNERS file mapping directories to team members for automated PR review assignment.</div></td></tr>
-<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>44 test files / 75 source files (ratio: 0.59)</li></ul></td></tr>
+<tr><td>Test-to-Source Ratio</td><td>Verify</td><td>15%</td><td style='color:#F59E0B;font-weight:600'>70</td><td><ul class='evidence'><li>44 test files / 80 source files (ratio: 0.55)</li></ul></td></tr>
 <tr><td>One-Command Test Execution</td><td>Verify</td><td>11%</td><td style='color:#10B981;font-weight:600'>90</td><td><ul class='evidence'><li>Makefile targets: test, test-e2e</li><li>pytest configured in pyproject.toml</li></ul></td></tr>
 <tr><td>Coverage Configuration</td><td>Verify</td><td>3%</td><td style='color:#F59E0B;font-weight:600'>60</td><td><ul class='evidence'><li>Coverage config in pyproject.toml</li></ul></td></tr>
 <tr><td>CI Runs Tests on PRs</td><td>Verify</td><td>10%</td><td style='color:#10B981;font-weight:600'>100</td><td><ul class='evidence'><li>CI runs tests on pull requests</li><li>Tests found in 1 CI workflow(s): tests.yml</li></ul></td></tr>
@@ -9318,6 +9318,6 @@
 })();
 </script>
 <div class="footer">
-  <p>AI Bug Automation Readiness Report &middot; Generated 2026-07-24 21:23</p>
+  <p>AI Bug Automation Readiness Report &middot; Generated 2026-07-27 09:33</p>
 </div>
 </body></html>
