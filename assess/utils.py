@@ -17,8 +17,12 @@ def find_files(repo_path: str | Path, pattern: str, exclude_dirs: list[str] | No
 
 
 def find_all_files_cached(repo_path: str | Path) -> list[Path]:
-    """Single directory traversal per repo — returns all non-excluded files."""
-    return find_files(repo_path, "*")
+    """Single directory traversal per repo — returns all non-excluded files.
+
+    Results are sorted for deterministic ordering across platforms (macOS
+    enumerates directories alphabetically while Linux uses inode order).
+    """
+    return sorted(find_files(repo_path, "*"))
 
 
 @lru_cache(maxsize=8192)
